@@ -1,0 +1,113 @@
+/* ==========================================================
+   font.css — 서울교덕체 (fonts/ 폴더에 파일이 있으면 자동 적용)
+   html[data-font="all"]   사이트 전체
+   html[data-font="title"] 제목·메뉴만
+   html[data-font="off"]   기본 글꼴
+   ========================================================== */
+@font-face {
+  font-family: 'SeoulGyodeok';
+  src: url('../fonts/SeoulGyodeok.woff2') format('woff2'),
+       url('../fonts/SeoulGyodeok.ttf') format('truetype'),
+       url('../fonts/SeoulGyodeok.otf') format('opentype');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+
+/* 서울교덕체는 획이 가늘어서 글자 테두리로 두께를 더해요 (엑스트라 볼드 느낌).
+   html[data-fw]  n=보통  b=굵게  xb=아주 굵게(기본) */
+html { --fstroke: .05em; }
+html[data-fw="n"] { --fstroke: 0em; }
+html[data-fw="b"] { --fstroke: .03em; }
+html[data-fw="xb"] { --fstroke: .05em; }
+html[data-fontok="1"][data-font="all"] body,
+html[data-fontok="1"][data-font="all"] button,
+html[data-fontok="1"][data-font="all"] input,
+html[data-fontok="1"][data-font="all"] textarea,
+html[data-fontok="1"][data-font="all"] select,
+html[data-fontok="1"][data-font="title"] .stn-sign b,
+html[data-fontok="1"][data-font="title"] .brand,
+html[data-fontok="1"][data-font="title"] .page-title,
+html[data-fontok="1"][data-font="title"] .sub-title,
+html[data-fontok="1"][data-font="title"] .post-title,
+html[data-fontok="1"][data-font="title"] .menubar a,
+html[data-fontok="1"][data-font="title"] .menubar .dd-btn,
+html[data-fontok="1"][data-font="title"] .dr-link,
+html[data-fontok="1"][data-font="title"] .dr-grp summary,
+html[data-fontok="1"][data-font="title"] .ti { -webkit-text-stroke: var(--fstroke) currentColor; }
+html[data-fontok="1"][data-font="all"] pre, html[data-fontok="1"][data-font="all"] code,
+html[data-fontok="1"][data-font="all"] .fp-code, html[data-fontok="1"] .fp-code { -webkit-text-stroke: 0; }
+
+/* 글자 하나하나가 없으면 자동으로 기본 글꼴이 대신 보여요 */
+html[data-fontok="1"][data-font="all"] {
+  --ifont: 'SeoulGyodeok', 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', system-ui, sans-serif;
+  --font: var(--ifont);
+}
+html[data-fontok="1"][data-font="all"] body { letter-spacing: 0; }
+html[data-fontok="1"][data-font="all"] button, html[data-fontok="1"][data-font="all"] input,
+html[data-fontok="1"][data-font="all"] textarea, html[data-fontok="1"][data-font="all"] select { font-family: inherit; }
+
+html[data-fontok="1"][data-font="title"] .stn-sign b,
+html[data-fontok="1"][data-font="title"] .brand,
+html[data-fontok="1"][data-font="title"] .page-title,
+html[data-fontok="1"][data-font="title"] .sub-title,
+html[data-fontok="1"][data-font="title"] .post-title,
+html[data-fontok="1"][data-font="title"] .menubar a,
+html[data-fontok="1"][data-font="title"] .menubar .dd-btn,
+html[data-fontok="1"][data-font="title"] .dr-link,
+html[data-fontok="1"][data-font="title"] .dr-grp summary,
+html[data-fontok="1"][data-font="title"] .post-body h3,
+html[data-fontok="1"][data-font="title"] .post-body h4,
+html[data-fontok="1"][data-font="title"] .bio-body h3,
+html[data-fontok="1"][data-font="title"] .bio-body h4,
+html[data-fontok="1"][data-font="title"] .ti { font-family: 'SeoulGyodeok', var(--ifont); }
+
+/* 서울교덕체 글자 견본 */
+.fontpage .fp-hero { -webkit-text-stroke: var(--fstroke) currentColor; font-family: 'SeoulGyodeok', var(--ifont, sans-serif); font-size: clamp(34px, 7vw, 64px); line-height: 1.25; margin: 6px 0 4px; font-weight: 700; word-break: keep-all; }
+.fontpage .fp-tester { width: 100%; min-height: 90px; font-family: 'SeoulGyodeok', var(--ifont, sans-serif); line-height: 1.3; }
+.fontpage .fp-view { -webkit-text-stroke: var(--fp-stroke, 0) currentColor; font-family: 'SeoulGyodeok', var(--ifont, sans-serif); padding: 18px 20px; border-radius: 12px; border: 1px solid var(--c-line, #888); min-height: 120px; word-break: break-all; white-space: pre-wrap; line-height: 1.3; overflow-wrap: anywhere; }
+.fontpage .fp-ctl { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; margin: 10px 0; font-size: 14px; }
+.fontpage .fp-ctl input[type=range] { width: 180px; }
+.fontpage .fp-chars { -webkit-text-stroke: var(--fstroke) currentColor; font-family: 'SeoulGyodeok', var(--ifont, sans-serif); font-size: 26px; line-height: 1.6; word-break: break-all; }
+.fontpage .fp-dl { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.fontpage .fp-dl a { display: block; padding: 12px 14px; border-radius: 12px; text-decoration: none; border: 1px solid var(--c-line, #888); color: inherit; }
+.fontpage .fp-dl a b { font-size: 18px; display: block; }
+.fontpage .fp-dl a:hover { border-color: var(--c-acc, #000080); box-shadow: 0 2px 10px rgba(0, 0, 0, .12); }
+.fontpage .fp-code { background: #1e1e24; color: #e8e8ee; border-radius: 10px; padding: 12px 14px; overflow-x: auto; font: 13px/1.6 Consolas, 'D2Coding', monospace; white-space: pre; }
+.fontpage .fp-lic { display: grid; gap: 8px; }
+.fontpage .fp-lic div { padding: 10px 14px; border-radius: 10px; background: var(--c-surface2, rgba(128, 128, 128, .12)); line-height: 1.6; }
+.fontpage .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+
+.fontpage .fp-dl .fp-off { padding: 12px 14px; border-radius: 12px; border: 1px dashed var(--c-line, #888); opacity: .6; }
+.fontpage .fp-dl small { opacity: .75; }
+
+/* 글자 크기 (본문 영역) */
+html[data-fs="s"] #content { zoom: .92; }
+html[data-fs="l"] #content { zoom: 1.12; }
+html[data-fs="xl"] #content { zoom: 1.26; }
+
+/* 푸터 설정 */
+.prefs { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; width: 100%; font-size: 13px; }
+.prefs select { font: inherit; padding: 3px 6px; border-radius: 8px; max-width: 150px; }
+.prefs a { margin-left: auto; }
+
+/* 맨 위로 */
+#totop { position: fixed; right: 18px; bottom: 84px; z-index: 900; width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(128,128,128,.4); background: var(--c-surface, #fff); color: var(--c-txt, #111); font-size: 20px; line-height: 1; cursor: pointer; box-shadow: 0 3px 12px rgba(0,0,0,.2); }
+#totop[hidden] { display: none; }
+@media (max-width: 720px) { #totop { bottom: 140px; right: 12px; } }
+
+/* 출석부 */
+.ck-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.ck-cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; max-width: 460px; text-align: center; }
+.ck-cal > b { font-size: 12px; opacity: .65; padding: 4px 0; }
+.ck-d { padding: 10px 0; border-radius: 10px; border: 1px solid rgba(128,128,128,.3); font-size: 14px; }
+.ck-d.on { background: var(--c-acc, #0a84ff); color: #fff; border-color: transparent; font-weight: 700; }
+.ck-d.today { outline: 2px solid var(--c-acc, #0a84ff); outline-offset: 1px; }
+
+/* 스크랩 버튼 */
+#bmBtn.on { background: #ffd60a; color: #222; border-color: #d9b400; }
+
+/* "서울교덕체" 이름이 들어간 제목·메뉴는 설정과 상관없이 항상 서울교덕체 */
+.fontpage .page-title, .menubar a[href="#/font"], #tree a[href="#/font"], #startmenu a[href="#/font"] {
+  font-family: 'SeoulGyodeok', var(--ifont, sans-serif) !important;
+}
+html[data-fontok="1"] .fontpage .page-title, html[data-fontok="1"] .menubar a[href="#/font"],
+html[data-fontok="1"] #tree a[href="#/font"] { -webkit-text-stroke: var(--fstroke) currentColor; }

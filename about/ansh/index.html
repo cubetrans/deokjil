@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>안수현 · 포트폴리오</title>
+<meta name="description" content="2019년부터 버스·철도를 좋아해 온 교통 덕후 안수현의 포트폴리오 — 활동, 프로젝트, 채널을 노선도처럼 모았어요.">
+<meta property="og:title" content="안수현 · 포트폴리오">
+<meta property="og:description" content="버스·철도 덕질 7년차, 안수현의 노선도형 포트폴리오">
+<meta name="theme-color" content="#0b3d91">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%9A%89%3C/text%3E%3C/svg%3E">
+<style>
+@font-face { font-family: 'SeoulGyodeok'; src: url('/fonts/SeoulGyodeok.woff2') format('woff2'); font-display: swap; }
+:root {
+  --bg: #f3f6fb; --card: #ffffff; --txt: #0f1b33; --txt2: #4a5878; --line: #d5ddec;
+  --blue: #0b3d91; --blue2: #1f6fe0; --yel: #ffc82e; --ink: #ffffff;
+  --l1: #0052a4; --l2: #00a84d; --l3: #ef7c1c; --l4: #00a5de; --l5: #996cac; --l6: #cd7c2f; --l7: #747f00; --l8: #e6186c; --l9: #bdb092;
+  --shadow: 0 10px 30px rgba(11, 61, 145, .12);
+  --font: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0a1220; --card: #111c32; --txt: #eef3ff; --txt2: #9fb0d0; --line: #24334f; --blue: #1f6fe0; --blue2: #5b9bff; --shadow: 0 10px 30px rgba(0, 0, 0, .45); }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--txt); font: 16px/1.7 var(--font); letter-spacing: -.01em; overflow-x: hidden; }
+a { color: inherit; }
+.wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+.hd { font-family: 'SeoulGyodeok', var(--font); }
+
+/* 맨 위 노선색 띠 + 읽은 만큼 차오르는 진행 띠 */
+.strip { height: 6px; background: linear-gradient(90deg, var(--l1) 0 11.1%, var(--l2) 0 22.2%, var(--l3) 0 33.3%, var(--l4) 0 44.4%, var(--l5) 0 55.5%, var(--l6) 0 66.6%, var(--l7) 0 77.7%, var(--l8) 0 88.8%, var(--l9) 0 100%); position: relative; }
+.strip::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,.85), transparent); width: 30%; animation: sweep 4.5s ease-in-out infinite; }
+#prog { position: fixed; top: 0; left: 0; height: 4px; width: 100%; transform-origin: 0 50%; transform: scaleX(0); background: var(--yel); z-index: 50; }
+@keyframes sweep { from { transform: translateX(-120%); } to { transform: translateX(420%); } }
+
+/* 히어로 */
+.hero { padding: 54px 0 70px; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; width: 520px; height: 520px; right: -160px; top: -160px; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--blue2) 28%, transparent), transparent 65%); animation: float 9s ease-in-out infinite; }
+.hero::after { content: ''; position: absolute; width: 380px; height: 380px; left: -140px; bottom: -150px; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--l8) 18%, transparent), transparent 65%); animation: float 11s ease-in-out infinite reverse; }
+@keyframes float { 50% { transform: translate(-24px, 18px) scale(1.06); } }
+.hero .wrap { position: relative; z-index: 1; }
+.stn { display: inline-flex; flex-direction: column; align-items: flex-start; background: var(--blue); color: #fff; border-radius: 22px; padding: 18px 30px 16px; box-shadow: 0 14px 34px rgba(11, 61, 145, .35); position: relative; overflow: hidden; animation: signin .9s cubic-bezier(.2, .9, .3, 1.2) both; }
+.stn b { font-size: clamp(44px, 12vw, 84px); line-height: 1.05; font-weight: 800; letter-spacing: .02em; }
+.stn .ar { position: relative; width: 100%; height: 5px; background: var(--yel); margin-top: 10px; border-radius: 3px; }
+.stn .ar::after { content: ''; position: absolute; right: -4px; top: 50%; transform: translateY(-50%); border-left: 16px solid var(--yel); border-top: 11px solid transparent; border-bottom: 11px solid transparent; }
+.stn::after { content: ''; position: absolute; top: 0; left: -60%; width: 40%; height: 100%; background: linear-gradient(100deg, transparent, rgba(255,255,255,.35), transparent); transform: skewX(-18deg); animation: shine 4.2s ease-in-out 1.2s infinite; }
+@keyframes shine { 0% { left: -60%; } 55%, 100% { left: 140%; } }
+@keyframes signin { from { opacity: 0; transform: translateY(-34px) scale(.92); } to { opacity: 1; transform: none; } }
+.en { margin: 12px 0 0 4px; font-weight: 700; letter-spacing: .28em; color: var(--txt2); font-size: 14px; }
+.lead { font-size: clamp(20px, 4.6vw, 30px); font-weight: 800; margin: 26px 0 8px; line-height: 1.4; }
+.lead em { font-style: normal; background: linear-gradient(transparent 62%, color-mix(in srgb, var(--yel) 75%, transparent) 0); }
+.sub { color: var(--txt2); max-width: 600px; margin: 0; }
+.board { margin-top: 28px; display: inline-flex; align-items: center; gap: 12px; background: #0a0d14; color: #ffb02e; border-radius: 12px; padding: 10px 18px; font-weight: 800; font-size: 15px; box-shadow: var(--shadow); max-width: 100%; }
+.board .dot { width: 9px; height: 9px; border-radius: 50%; background: #35e07a; animation: blink 1.6s infinite; flex: none; }
+.board span#t { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.board span#t::after { content: '▌'; margin-left: 2px; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: .15; } }
+.cta { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 10px; }
+.btn { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; font-weight: 800; padding: 11px 20px; border-radius: 12px; background: var(--card); border: 1px solid var(--line); transition: transform .18s, box-shadow .18s, background .18s; }
+.btn:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.btn.pri { background: var(--blue); color: #fff; border-color: transparent; }
+
+/* 섹션 공통 */
+section { padding: 62px 0 8px; }
+.sec { display: flex; align-items: center; gap: 12px; margin-bottom: 26px; }
+.sec .no { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; color: #fff; background: var(--c, var(--blue)); box-shadow: 0 0 0 5px color-mix(in srgb, var(--c, var(--blue)) 20%, transparent); flex: none; }
+.sec h2 { margin: 0; font-size: clamp(24px, 5.5vw, 34px); }
+.sec .bar { flex: 1; height: 3px; border-radius: 2px; background: linear-gradient(90deg, var(--c, var(--blue)), transparent); }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 22px 24px; box-shadow: var(--shadow); }
+.rv { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s cubic-bezier(.2, .8, .2, 1); transition-delay: var(--d, 0s); }
+.rv.in { opacity: 1; transform: none; }
+
+/* 소개 */
+.about { display: grid; grid-template-columns: 1.4fr 1fr; gap: 18px; }
+.about p { margin: 0 0 12px; }
+.stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; align-content: start; }
+.stat { background: color-mix(in srgb, var(--blue2) 9%, var(--card)); border-radius: 14px; padding: 14px 16px; text-align: center; }
+.stat b { display: block; font-size: 34px; line-height: 1.1; color: var(--blue2); }
+.stat small { color: var(--txt2); font-weight: 700; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.chip { padding: 6px 14px; border-radius: 999px; font-weight: 700; font-size: 14px; background: color-mix(in srgb, var(--c, var(--blue2)) 14%, var(--card)); color: var(--c, var(--blue2)); border: 1px solid color-mix(in srgb, var(--c, var(--blue2)) 35%, transparent); transition: transform .18s; }
+.chip:hover { transform: translateY(-3px) rotate(-1.5deg); }
+
+/* 노선도 타임라인 */
+.tl { position: relative; padding-left: 52px; }
+.tl::before { content: ''; position: absolute; left: 17px; top: 6px; bottom: 6px; width: 8px; border-radius: 4px; background: var(--line); }
+.tl .fill { position: absolute; left: 17px; top: 6px; width: 8px; border-radius: 4px; background: linear-gradient(var(--l1), var(--l4), var(--l5), var(--l8)); height: 0; }
+.tl .train { position: absolute; left: 8px; top: 0; font-size: 24px; transform: translateY(0); filter: drop-shadow(0 3px 4px rgba(0,0,0,.25)); }
+.st { position: relative; margin-bottom: 26px; }
+.st::before { content: ''; position: absolute; left: -45px; top: 8px; width: 20px; height: 20px; border-radius: 50%; background: var(--card); border: 5px solid var(--c, var(--blue)); transition: transform .4s cubic-bezier(.2, 1.6, .4, 1); transform: scale(0); }
+.st.in::before { transform: scale(1); }
+.st .yr { display: inline-block; font-weight: 800; color: #fff; background: var(--c, var(--blue)); padding: 2px 12px; border-radius: 999px; font-size: 13px; }
+.st h3 { margin: 6px 0 2px; font-size: 20px; }
+.st p { margin: 0; color: var(--txt2); }
+
+/* 프로젝트 */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 16px; }
+.pj { display: block; text-decoration: none; position: relative; overflow: hidden; transition: transform .25s, box-shadow .25s; }
+.pj::before { content: ''; position: absolute; left: 0; top: 0; right: 0; height: 6px; background: var(--c, var(--blue)); }
+.pj:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(11, 61, 145, .22); }
+.pj .tag { display: inline-block; font-size: 12px; font-weight: 800; padding: 2px 10px; border-radius: 999px; color: #fff; background: var(--c, var(--blue)); margin-bottom: 8px; }
+.pj h3 { margin: 0 0 6px; font-size: 20px; }
+.pj p { margin: 0; color: var(--txt2); font-size: 15px; }
+.pj .go { margin-top: 12px; font-weight: 800; color: var(--c, var(--blue)); }
+
+/* 기술 */
+.skills { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; }
+.sk { display: flex; gap: 12px; align-items: center; padding: 14px 16px; }
+.sk i { font-style: normal; font-size: 28px; }
+.sk b { display: block; }
+.sk small { color: var(--txt2); }
+
+/* 링크 */
+.links { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; }
+.lk { text-decoration: none; display: flex; flex-direction: column; gap: 2px; transition: transform .22s, box-shadow .22s; }
+.lk:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 16px 36px rgba(11, 61, 145, .2); }
+.lk .ic { font-size: 30px; }
+.lk b { font-size: 18px; }
+.lk small { color: var(--txt2); }
+.lk.off { opacity: .55; pointer-events: none; }
+
+footer { margin-top: 70px; background: var(--blue); color: #fff; padding: 34px 0 40px; text-align: center; }
+footer .nx { display: inline-block; text-decoration: none; background: #fff; color: var(--blue); font-weight: 800; padding: 10px 24px; border-radius: 999px; margin-bottom: 14px; transition: transform .2s; }
+footer .nx:hover { transform: scale(1.06); }
+footer p { margin: 4px 0 0; opacity: .85; font-size: 14px; }
+
+@media (max-width: 720px) {
+  .about { grid-template-columns: 1fr; }
+  .hero { padding-top: 36px; }
+  section { padding-top: 48px; }
+  .tl { padding-left: 46px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .rv { opacity: 1; transform: none; } .st::before { transform: scale(1); }
+}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+<div class="strip" aria-hidden="true"></div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="stn"><b class="hd">안수현</b><span class="ar"></span></div>
+    <div class="en">AN SOOHYUN · SEOUL GYODUCK</div>
+    <h1 class="lead">버스와 철도를 <em>사랑하는</em><br>교통 덕후입니다.</h1>
+    <p class="sub">2019년부터 노선과 역을 덕질해 왔고, 이제는 직접 사이트와 글꼴을 만들며 덕질을 키우고 있어요.</p>
+    <div class="board"><i class="dot"></i><span id="t"></span></div>
+    <div class="cta">
+      <a class="btn pri" href="#projects">작품 보기 →</a>
+      <a class="btn" href="#links">채널 바로가기</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="about" style="--c:var(--l1)">
+    <div class="sec rv"><span class="no">1</span><h2 class="hd">소개</h2><span class="bar"></span></div>
+    <div class="about">
+      <div class="card rv">
+        <p>안녕하세요, <b>안수현</b>입니다. 5살이던 <b>2019년</b>부터 버스와 철도를 좋아하기 시작했어요. 버스를 타 보고, 열차 편성을 외우고, 사진을 찍으러 다니는 게 제 덕질이에요.</p>
+        <p>작년(2025년)부터는 네이버 블로그·유튜브 등에서 본격적으로 활동하고 있고, 올해는 제 이름을 건 커뮤니티 <b>덕질역</b>을 직접 만들었어요.</p>
+        <div class="chips">
+          <span class="chip" style="--c:var(--l1)">🚌 버스 탑사기</span>
+          <span class="chip" style="--c:var(--l2)">🚆 철도 탑승기</span>
+          <span class="chip" style="--c:var(--l3)">📷 출사</span>
+          <span class="chip" style="--c:var(--l5)">🎮 여러 교통 관련 게임</span>
+          <span class="chip" style="--c:var(--l4)">💻 코딩</span>
+        </div>
+      </div>
+      <div class="stats rv" style="--d:.12s">
+        <div class="stat"><b data-n="7">0</b><small>년차 교통 덕후</small></div>
+        <div class="stat"><b data-n="6">0</b><small>활용 가능 코딩 언어</small></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="timeline" style="--c:var(--l2)">
+    <div class="sec rv"><span class="no" style="--c:var(--l2)">2</span><h2 class="hd">활동 노선도</h2><span class="bar" style="--c:var(--l2)"></span></div>
+    <div class="tl" id="tl">
+      <div class="fill" id="fill"></div><div class="train" id="train">🚄</div>
+      <div class="st rv" style="--c:var(--l1)"><span class="yr">2019</span><h3>덕질 출발역</h3><p>5살, 버스와 철도에 푹 빠지기 시작했어요.</p></div>
+      <div class="st rv" style="--c:var(--l2)"><span class="yr">2025</span><h3>본격 활동 시작</h3><p>네이버 블로그, 유튜브등 SNS로 덕질을 공유하기 시작했어요.</p></div>
+      <div class="st rv" style="--c:var(--l3)"><span class="yr">2026</span><h3>서울교덕체 제작</h3><p>손글씨로 나만의 글꼴을 만들어 영상 자막과 썸네일, 사이트에 쓰고 있어요.</p></div>
+      <div class="st rv" style="--c:var(--l5)"><span class="yr">2026</span><h3>덕질역 개장</h3><p>글·댓글·포인트·장터·테마가 있는 교통 덕후 커뮤니티를 직접 만들어 열었어요.</p></div>
+    </div>
+  </section>
+
+  <section id="projects" style="--c:var(--l3)">
+    <div class="sec rv"><span class="no" style="--c:var(--l3)">3</span><h2 class="hd">작품·프로젝트</h2><span class="bar" style="--c:var(--l3)"></span></div>
+    <div class="grid">
+      <a class="card pj rv" href="/" style="--c:var(--l1)"><span class="tag">운영 중</span><h3>🚉 덕질역</h3><p>버스·철도 덕후를 위한 커뮤니티. 게시판, 등급, 포인트 상점, 중고거래 장터, 17가지 노선 테마가 있어요.</p><div class="go">방문하기 →</div></a>
+      <a class="card pj rv" href="/#/font" style="--c:var(--l8); --d:.06s"><span class="tag">공개</span><h3>🔤 서울교덕체</h3><p>직접 쓴 손글씨로 AI와 만든 글꼴. 사이트에서 켜 보고 내려받을 수 있어요.</p><div class="go">글꼴 보기 →</div></a>
+      <div class="card pj rv" style="--c:var(--l2); --d:.18s"><span class="tag">제작</span><h3>📝 숙제 플래너</h3><p>학원 숙제를 정리하고 타이머와 포인트로 꾸준함을 이어 주는 웹앱이에요.</p></div>
+    </div>
+  </section>
+
+  <section id="skills" style="--c:var(--l5)">
+    <div class="sec rv"><span class="no" style="--c:var(--l5)">4</span><h2 class="hd">할 수 있는 것</h2><span class="bar" style="--c:var(--l5)"></span></div>
+    <div class="skills">
+      <div class="card sk rv"><i>🌐</i><div><b>HTML · CSS · JavaScript</b><small>AI와 함께 웹사이트 제작</small></div></div>
+      <div class="card sk rv" style="--d:.06s"><i>⚙️</i><div><b>C, C++</b><small>요즘 배우고 있는 언어</small></div></div>
+      <div class="card sk rv" style="--d:.12s"><i>🐍</i><div><b>파이썬</b><small>텍스트 코딩</small></div></div>
+      <div class="card sk rv" style="--d:.18s"><i>🧩</i><div><b>엔트리</b><small>블록 코딩</small></div></div>
+      <div class="card sk rv" style="--d:.24s"><i>🐱</i><div><b>스크래치</b><small>블록 코딩</small></div></div>
+      <div class="card sk rv" style="--d:.3s"><i>🎬</i><div><b>영상 편집</b><small>유튜브 영상 제작</small></div></div>
+    </div>
+  </section>
+
+  <section id="links" style="--c:var(--l8)">
+    <div class="sec rv"><span class="no" style="--c:var(--l8)">5</span><h2 class="hd">채널·연락</h2><span class="bar" style="--c:var(--l8)"></span></div>
+    <div class="links" id="linkbox"></div>
+    <p class="rv" style="color:var(--txt2); margin-top:14px">연락은 ansh110@naver.com 이나 덕질역의 <a href="/#/inquiry">문의·건의</a>로 남겨 주세요.</p>
+  </section>
+
+</main>
+
+<footer>
+  <a class="nx hd" href="/">다음 역 · 덕질역 →</a>
+  <p>© 안수현</p>
+</footer>
+
+<script>
+/* ▼ 채널 주소 — 여기만 고치면 돼요. 비워 두면 "준비 중"으로 흐리게 보여요. */
+var LINKS = [
+  { ic: '🎬', n: '유튜브',     d: '영상 보러 가기',     u: 'https://www.youtube.com/@%EC%84%9C%EC%9A%B8%EA%B5%90%EB%8D%95' },
+  { ic: '📷', n: '인스타그램', d: '사진·소식',          u: 'https://instagram.com/seoul_gyoduck' },
+  { ic: '📒', n: '네이버 블로그', d: '긴 글 기록',       u: 'https://blog.naver.com/cubetrans_' },
+  { ic: '🚉', n: '덕질역',     d: '커뮤니티 놀러 오기', u: '/' }
+];
+(function () {
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // 링크
+  document.getElementById('linkbox').innerHTML = LINKS.map(function (l, i) {
+    var on = !!l.u;
+    return '<' + (on ? 'a href="' + l.u + '"' + (/^https?:/.test(l.u) ? ' target="_blank" rel="noopener"' : '') : 'div') + ' class="card lk rv' + (on ? '' : ' off') + '" style="--d:' + (i * .06) + 's"><span class="ic">' + l.ic + '</span><b>' + l.n + '</b><small>' + (on ? l.d : '준비 중') + '</small></' + (on ? 'a' : 'div') + '>';
+  }).join('');
+
+  // 전광판 타자 효과
+  var msgs = ['이번 역은 서울교덕입니다', '버스·철도 덕질 7년차', '다음 역: 작품·프로젝트', '내리실 문은 오른쪽입니다'];
+  var t = document.getElementById('t'), mi = 0, ci = 0, del = false;
+  function tick() {
+    var m = msgs[mi];
+    if (reduce) { t.textContent = m; setTimeout(function () { mi = (mi + 1) % msgs.length; tick(); }, 2600); return; }
+    ci += del ? -1 : 1; t.textContent = m.slice(0, ci);
+    var wait = del ? 30 : 75;
+    if (!del && ci === m.length) { del = true; wait = 1700; }
+    else if (del && ci === 0) { del = false; mi = (mi + 1) % msgs.length; wait = 350; }
+    setTimeout(tick, wait);
+  }
+  tick();
+
+  // 스크롤 등장 + 숫자 올라가기
+  var io = 'IntersectionObserver' in window ? new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (!e.isIntersecting) return; e.target.classList.add('in'); io.unobserve(e.target);
+      e.target.querySelectorAll('[data-n]').forEach(count);
+    });
+  }, { threshold: .15 }) : null;
+  function count(el) {
+    var to = +el.dataset.n; if (reduce) { el.textContent = to; return; }
+    var s = performance.now();
+    (function f(n) { var p = Math.min(1, (n - s) / 1100); el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(f); })(s);
+  }
+  document.querySelectorAll('.rv').forEach(function (el) { if (io) io.observe(el); else { el.classList.add('in'); el.querySelectorAll('[data-n]').forEach(function (x) { x.textContent = x.dataset.n; }); } });
+
+  // 진행 띠 + 노선도 열차
+  var prog = document.getElementById('prog'), tl = document.getElementById('tl'), fill = document.getElementById('fill'), train = document.getElementById('train');
+  function onScroll() {
+    var h = document.documentElement, max = h.scrollHeight - innerHeight;
+    prog.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, scrollY / max) : 0) + ')';
+    var r = tl.getBoundingClientRect(), total = r.height;
+    var p = Math.max(0, Math.min(1, (innerHeight * .6 - r.top) / total));
+    fill.style.height = (p * (total - 12)) + 'px';
+    train.style.transform = 'translateY(' + (p * (total - 30)) + 'px)';
+  }
+  addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll); onScroll();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+/* 서비스 상태 페이지 — theme.css 의 색 변수(--txt, --acc, --glass …)를 그대로 써서 덕질역 테마를 따라가요 */
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page, #f5f6f8); color: var(--txt, #1c1c1e); font: 15px/1.6 var(--ifont, system-ui, sans-serif); min-height: 100vh; display: flex; flex-direction: column; }
+a { color: var(--acc); }
+.st-top { border-bottom: 1px solid var(--sep); background: var(--glass); position: sticky; top: 0; z-index: 5; }
+.st-in { max-width: 860px; margin: 0 auto; padding: 12px 16px; display: flex; align-items: center; gap: 12px; justify-content: space-between; }
+.st-brand { font-weight: 800; font-size: 18px; text-decoration: none; color: var(--txt); }
+.st-brand span { color: var(--txt3); font-weight: 600; font-size: 14px; margin-left: 4px; }
+.st-top nav a { text-decoration: none; font-weight: 600; font-size: 14px; }
+.st-main { max-width: 860px; width: 100%; margin: 0 auto; padding: 20px 16px 40px; flex: 1; }
+.st-load { text-align: center; padding: 60px 0; color: var(--txt3); }
+.st-foot { max-width: 860px; width: 100%; margin: 0 auto; padding: 16px; color: var(--txt3); font-size: 12px; display: flex; gap: 6px 16px; flex-wrap: wrap; justify-content: space-between; border-top: 1px solid var(--sep); }
+
+.st-banner { display: flex; align-items: center; gap: 12px; padding: 18px 20px; border-radius: 16px; color: #fff; font-weight: 800; font-size: 19px; box-shadow: var(--shadow); }
+.st-banner small { display: block; font-weight: 500; font-size: 13px; opacity: .92; margin-top: 2px; }
+.st-banner .ic { font-size: 26px; }
+.st-banner.ok { background: var(--ok); } .st-banner.slow { background: var(--warn); } .st-banner.down { background: var(--danger); }
+.st-meta { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin: 10px 2px 18px; color: var(--txt3); font-size: 12.5px; flex-wrap: wrap; }
+.st-btn { border: 1px solid var(--sep); background: var(--glass); color: var(--txt); border-radius: 999px; padding: 5px 14px; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+.st-btn:disabled { opacity: .5; cursor: default; }
+
+.st-card { background: var(--glass); border: 1px solid var(--glass-brd, var(--sep)); border-radius: 16px; margin-bottom: 18px; overflow: hidden; }
+.st-card > h2 { margin: 0; padding: 14px 18px; font-size: 15px; border-bottom: 1px solid var(--sep); }
+.st-row { padding: 14px 18px; border-top: 1px solid var(--sep); }
+.st-card > .st-row:first-of-type { border-top: 0; }
+.st-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.st-name { font-weight: 700; }
+.st-lat { color: var(--txt3); font-size: 12px; }
+.st-state { margin-left: auto; font-weight: 700; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; }
+.st-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--txt3); flex: none; }
+.ok .st-dot, .st-dot.ok { background: var(--ok); } .slow .st-dot, .st-dot.slow { background: var(--warn); } .down .st-dot, .st-dot.down { background: var(--danger); }
+.st-state.ok { color: var(--ok); } .st-state.slow { color: var(--warn); } .st-state.down { color: var(--danger); } .st-state.na { color: var(--txt3); }
+.st-note { margin: 6px 0 0; font-size: 13px; color: var(--txt2); }
+
+.st-bars { display: flex; gap: 2px; margin-top: 10px; height: 28px; }
+.st-bar { flex: 1; min-width: 2px; border-radius: 2px; background: var(--ok); opacity: .85; }
+.st-bar.slow { background: var(--warn); opacity: 1; } .st-bar.down { background: var(--danger); opacity: 1; } .st-bar.info { background: var(--acc); opacity: 1; }
+.st-bar:hover { outline: 2px solid var(--txt3); outline-offset: 1px; }
+.st-bar-legend { display: flex; justify-content: space-between; color: var(--txt3); font-size: 11px; margin-top: 4px; }
+
+.st-inc { padding: 14px 18px; border-top: 1px solid var(--sep); }
+.st-card > .st-inc:first-of-type { border-top: 0; }
+.st-inc h3 { margin: 0 0 4px; font-size: 15px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.st-tag { font-size: 11.5px; font-weight: 700; padding: 2px 9px; border-radius: 999px; background: var(--fill); color: var(--txt2); }
+.st-tag.slow { background: color-mix(in srgb, var(--warn) 18%, transparent); color: var(--warn); }
+.st-tag.down { background: color-mix(in srgb, var(--danger) 16%, transparent); color: var(--danger); }
+.st-tag.ok { background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok); }
+.st-ups { list-style: none; margin: 8px 0 0; padding: 0 0 0 12px; border-left: 2px solid var(--sep); }
+.st-ups li { margin: 0 0 10px; }
+.st-ups b { font-size: 13.5px; }
+.st-ups small { color: var(--txt3); display: block; }
+.st-empty { padding: 22px 18px; color: var(--txt3); text-align: center; }
+.st-day { padding: 8px 18px; font-size: 12px; font-weight: 700; color: var(--txt3); background: var(--fill2); border-top: 1px solid var(--sep); }
+@media (max-width: 520px) { .st-banner { font-size: 16px; padding: 14px; } .st-state { margin-left: 0; width: 100%; } .st-bars { height: 22px; } }
+html body { background: var(--page); }

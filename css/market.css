@@ -1,0 +1,51 @@
+/* 덕질역 중고거래 — 모든 테마에서 어울리도록 theme.css 변수를 써요 */
+.mk-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.mk-search { display: flex; gap: 4px; flex: 1; min-width: 220px; max-width: 420px; }
+.mk-search .input { flex: 1; }
+.mk-bar-r { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.mk-cats { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.mk-chip { border: 1px solid rgba(128,128,128,.35); background: transparent; color: inherit; border-radius: 999px; padding: 4px 11px; cursor: pointer; font: inherit; }
+.mk-chip.on { background: var(--acc, #2563eb); color: var(--acc-ink, #fff); border-color: var(--acc, #2563eb); }
+.mk-notice { margin: 8px 0 12px; border: 1px solid rgba(217,115,30,.45); background: rgba(217,115,30,.08); border-radius: 12px; padding: 8px 12px; }
+.mk-notice summary { cursor: pointer; font-weight: 700; }
+.mk-rules { margin: 8px 0 2px 18px; padding: 0; line-height: 1.55; }
+.mk-rules li { margin-bottom: 5px; }
+.mk-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+.mk-card { display: block; text-decoration: none; color: inherit; border: 1px solid rgba(128,128,128,.28); border-radius: 14px; overflow: hidden; background: rgba(128,128,128,.04); transition: transform .12s, border-color .12s; }
+.mk-card:hover { border-color: var(--acc, #2563eb); transform: translateY(-2px); }
+.mk-card.done { opacity: .62; }
+.mk-thumb { position: relative; aspect-ratio: 1 / 1; background: rgba(128,128,128,.12); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.mk-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mk-noimg { font-size: 48px; opacity: .6; }
+.mk-noimg.big { font-size: 96px; display: flex; align-items: center; justify-content: center; min-height: 220px; width: 100%; background: rgba(128,128,128,.12); border-radius: 12px; }
+.mk-over { position: absolute; inset: auto 0 0 0; background: rgba(0,0,0,.55); color: #fff; text-align: center; padding: 3px; font-weight: 700; font-size: 13px; }
+.mk-info { padding: 8px 10px 10px; }
+.mk-t { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mk-p { color: var(--acc, #2563eb); font-weight: 800; margin: 2px 0; }
+.mk-m { font-size: 12px; opacity: .7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mk-st { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; color: #fff; background: #2e8b57; }
+.mk-st.mk-reserved { background: #d9731a; } .mk-st.mk-sold { background: #777; } .mk-st.mk-hidden, .mk-st.mk-removed { background: #b00000; }
+.mk-detail { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 16px; margin: 10px 0; }
+.mk-gal { display: grid; gap: 8px; align-content: start; }
+.mk-gal img { width: 100%; border-radius: 12px; display: block; max-height: 460px; object-fit: contain; background: rgba(128,128,128,.1); }
+.mk-price { font-size: 26px; font-weight: 800; color: var(--acc, #2563eb); margin: 4px 0 8px; }
+.mk-dl { display: grid; grid-template-columns: 76px 1fr; gap: 3px 8px; margin: 0 0 10px; }
+.mk-dl dt { opacity: .65; } .mk-dl dd { margin: 0; }
+.mk-seller { padding: 8px 10px; border: 1px solid rgba(128,128,128,.28); border-radius: 10px; margin-bottom: 10px; }
+.mk-acts { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin: 8px 0; }
+.mk-staff { padding: 8px 10px; border: 1px dashed #d9731a; border-radius: 10px; }
+.mk-body { padding: 12px; line-height: 1.7; word-break: break-word; margin-bottom: 10px; }
+.mk-rv { margin: 10px 0; }
+.mk-rate { display: flex; gap: 12px; flex-wrap: wrap; margin: 6px 0; }
+.mk-rvs { display: grid; gap: 6px; margin-bottom: 8px; }
+.mk-rvi { padding: 8px 10px; border: 1px solid rgba(128,128,128,.25); border-radius: 10px; }
+.mk-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.mk-imgs { display: flex; gap: 8px; flex-wrap: wrap; margin: 6px 0; }
+.mk-im { position: relative; width: 84px; height: 84px; border-radius: 10px; overflow: hidden; border: 1px solid rgba(128,128,128,.35); }
+.mk-im img { width: 100%; height: 100%; object-fit: cover; }
+.mk-im button { position: absolute; top: 2px; right: 2px; border: 0; background: rgba(0,0,0,.65); color: #fff; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; line-height: 20px; padding: 0; }
+.mk-agree { display: block; margin: 8px 0; line-height: 1.5; }
+@media (max-width: 720px) {
+  .mk-detail { grid-template-columns: 1fr; }
+  .mk-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+}

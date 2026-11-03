@@ -1,0 +1,66 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+/* ==========================================================
+   theme.css — 덕질역 색 테마 (모든 페이지 공통)
+   기본 테마 "역사"는 실제 기차역 안내 사인처럼 흰 바탕 + 남색 사인판 + 노선색 포인트예요.
+   다른 테마는 변수 몇 개만 바꿔요. (data-theme 값 = 상점 상품 id)
+   ========================================================== */
+
+/* ---------- 기본: 역사 ---------- */
+:root, .tprev {
+  --font: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', system-ui, sans-serif;
+  --ifont: var(--font);
+  --txt: #15181f; --txt2: #4a5160; --txt3: #7b8392;
+  --acc: #0052a4; --acc-ink: #ffffff;
+  --acc-soft: color-mix(in srgb, var(--acc) 11%, transparent);
+  --page: color-mix(in srgb, var(--acc) 5%, #eef0f3);
+  --glass: #ffffff; --glass2: #ffffff; --glass-brd: rgba(15, 25, 50, .10);
+  --fill: rgba(20, 30, 60, .07); --fill2: rgba(20, 30, 60, .04);
+  --sep: rgba(15, 25, 50, .11);
+  --sign: #0b2a52; --sign-ink: #ffffff;           /* 안내판(남색) */
+  --danger: #d92d20; --ok: #16874a; --warn: #b86e00;
+  --shadow: 0 10px 30px rgba(10, 20, 45, .16), 0 2px 6px rgba(10, 20, 45, .08);
+  --c-txt: var(--txt); --c-txt2: var(--txt2); --c-acc: var(--acc); --c-acc-ink: var(--acc-ink);
+  --c-surface: var(--glass); --c-surface2: var(--fill); --c-line: var(--sep); --c-radius: 12px;
+  color-scheme: light;
+}
+
+/* ---------- 어두운 계열 ---------- */
+[data-theme="ios-dark"], [data-theme="midnight"], [data-theme="night-bus"] {
+  --txt: #eef0f6; --txt2: #c0c5d2; --txt3: #8a91a3;
+  --acc: #4ea1ff; --acc-ink: #04101f;
+  --page: #0e1117; --glass: #171b24; --glass2: #1c212c; --glass-brd: rgba(255, 255, 255, .10);
+  --fill: rgba(235, 240, 255, .13); --fill2: rgba(235, 240, 255, .07); --sep: rgba(255, 255, 255, .12);
+  --sign: #0a3566; --sign-ink: #ffffff;
+  --danger: #ff6b61; --ok: #4cd072; --warn: #ffb340;
+  --shadow: 0 14px 44px rgba(0, 0, 0, .55), 0 2px 8px rgba(0, 0, 0, .35);
+  color-scheme: dark;
+}
+[data-theme="midnight"] { --acc: #8ab4ff; --acc-ink: #07122b; --page: #090d1c; --glass: #11172c; --glass2: #161d36; --sign: #1b2a66; }
+[data-theme="night-bus"] { --acc: #29e3d2; --acc-ink: #02201d; --page: #05080e; --glass: #0d1219; --glass2: #121923; --sign: #0b3a40; }
+
+/* ---------- 고대비 (흑백) ---------- */
+[data-theme="mono"] {
+  --txt: #000; --txt2: #222; --txt3: #444; --acc: #111; --acc-ink: #fff;
+  --page: #f2f2f2; --glass: #fff; --glass2: #fff; --glass-brd: #000; --fill: rgba(0, 0, 0, .09); --fill2: rgba(0, 0, 0, .05); --sep: rgba(0, 0, 0, .35);
+  --sign: #000; --sign-ink: #fff; --danger: #b00000; --ok: #006b2e; --warn: #7a4a00;
+}
+
+/* ---------- 노선색 테마 (밝은 바탕, 포인트 색만 바뀜) ---------- */
+[data-theme="line1"]  { --acc: #0052a4; --sign: #0a2e5c; }
+[data-theme="line2"]  { --acc: #00883f; --sign: #0b3d27; }
+[data-theme="line3"]  { --acc: #c75a08; --sign: #4a2308; }
+[data-theme="line4"]  { --acc: #0089bd; --sign: #0a3b52; }
+[data-theme="line5"]  { --acc: #7a4a94; --sign: #33204a; }
+[data-theme="line6"]  { --acc: #b8661a; --sign: #4a2c0e; }
+[data-theme="line7"]  { --acc: #6b7500; --sign: #323700; }
+[data-theme="line8"]  { --acc: #d4155f; --sign: #5a0b2b; }
+[data-theme="line9"]  { --acc: #8c6a0c; --sign: #3d2f06; }
+[data-theme="ktx"]    { --acc: #c8102e; --sign: #0b1f4b; --page: #eef0f6; }
+[data-theme="airport"]{ --acc: #0090d4; --sign: #05345a; --page: #ecf4fa; }
+[data-theme="sand"]   { --acc: #9a5b13; --sign: #3b2a14; --page: #f3ede2; --glass: #fffdf8; --glass2: #fffdf8; --txt: #241d12; --txt2: #5a4d38; --txt3: #8c7e66; }
+
+/* 상점 미리보기 카드 */
+.tprev { background: var(--page); color: var(--txt); }
+.tprev .tw { width: 78%; height: 70%; border-radius: 10px; background: var(--glass2); border: 1px solid var(--glass-brd); box-shadow: 0 3px 10px rgba(0, 0, 0, .15); padding: 6px 8px; font-size: 10px; font-weight: 700; overflow: hidden; }
+.tprev .tw i { display: block; height: 5px; margin-top: 4px; border-radius: 3px; background: var(--acc); }
+.tprev .tw i + i { background: var(--fill); width: 70%; }
