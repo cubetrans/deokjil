@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>덕질역 서비스 상태</title>
+<meta name="description" content="덕질역과 RAIL의 서비스 상태를 바로 확인해요.">
+<meta name="theme-color" content="#2563eb">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%A1%3C/text%3E%3C/svg%3E">
+<script>
+(function(){var t='station',f='off',z='m';try{t=localStorage.getItem('deokjil_theme')||(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'ios-dark':'station');f=localStorage.getItem('deokjil_font')||'off';z=localStorage.getItem('deokjil_fs')||'m'}catch(e){}
+if(t==='ios'||t==='win98')t='station';var d=document.documentElement;d.dataset.theme=t;d.dataset.font=f;d.dataset.fs=z;})();
+</script>
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="css/status.css">
+</head>
+<body>
+<header class="st-top"><div class="st-in">
+  <a class="st-brand" href="index.html">🚉 덕질역 <span>서비스 상태</span></a>
+  <nav><a href="index.html">← 덕질역으로</a></nav>
+</div></header>
+<main class="st-main" id="app"><div class="st-load">⏳ 상태를 확인하고 있어요…</div></main>
+<footer class="st-foot">
+  <span>자동 점검은 이 브라우저에서 직접 해요 · 1분마다 새로 확인해요</span>
+  <span>문제가 보이면 덕질역 문의·건의 게시판으로 알려 주세요.</span>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="void 0"></script>
+<script src="js/config.js"></script>
+<script src="js/session-store.js"></script>
+<script src="js/api.js"></script>
+<script src="js/status.js"></script>
+</body>
+</html>
