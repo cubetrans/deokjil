@@ -328,3 +328,14 @@ textarea.code { font-family: Consolas, 'D2Coding', monospace; font-size: 13px; l
 .code-hist { display: flex; flex-direction: column; gap: 4px; margin: 6px 0; align-items: flex-start; }
 @media (max-width: 760px) { .code-wrap { grid-template-columns: 1fr; } .code-files { max-height: 180px; } }
 html[data-theme=dark] .code-files { background: var(--face); }
+
+/* ---- 모바일: 왼쪽 메뉴가 옆으로 길어져 화면이 넓어지는 문제 고침 ---- */
+@media (max-width: 760px) {
+  .wbody, .adm { align-items: stretch; max-width: 100%; }
+  #tree, .adm-nav { overflow-x: auto; overflow-y: hidden; max-width: 100%; min-width: 0; -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
+  #tree .ti, #tree .ti-cat, .adm-nav .ti { flex: none; white-space: nowrap; }
+  #tree .ti-sep { display: none; }
+  #content, .adm-main { width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box; }
+  #content img, #content video, #content iframe, #content table { max-width: 100%; }
+  .post-body pre, .post-body table { max-width: 100%; overflow-x: auto; }
+}
