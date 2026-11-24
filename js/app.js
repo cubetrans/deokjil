@@ -146,21 +146,92 @@
       <div class="share-banner" role="note"><span class="em">🚌</span><div>
         <div><b class="g">이 글은 퍼가셔도 좋은 글입니다.</b></div>
         <small>다만, 출처가 없으면 불펌으로 보일 수 있으니 출처(${esc(C.name)})를 밝혀 주세요.</small>
-        </div></div>
+        <div><b class="b">공감과 댓글은 저에게 큰 힘이 됩니다.</b></div></div></div>
       <div class="post-body">${renderBody(p.body)}</div>
       ${(p.tags || []).length ? `<div style="margin-top:12px">${p.tags.map(t => `<a class="tag" href="#/tag/${encodeURIComponent(t)}">#${esc(t)}</a>`).join('')}</div>` : ''}
-      <div class="like-wrap"><button class="btn" id="copyBtn" type="button">🔗 주소 복사</button></div>
+      <div class="like-wrap"><button class="btn primary" id="likeBtn" type="button"></button> <button class="btn" id="copyBtn" type="button">🔗 주소 복사</button></div>
+      <div id="cbox"></div>
       <div class="navrows">
         ${newer ? `<div>▲ 다음 글: <a href="#/post/${esc(newer.id)}">${esc(newer.title)}</a></div>` : ''}
         ${older ? `<div>▼ 이전 글: <a href="#/post/${esc(older.id)}">${esc(older.title)}</a></div>` : ''}
       </div>
       <a class="btn" href="#/board/${esc(b.id)}">📋 목록으로</a>`;
+    const likeBtn = $('#likeBtn');
+    const drawLike = q => { likeBtn.textContent = (q.liked ? '💙 공감함 ' : '🤍 공감 ') + q.likes; likeBtn.classList.toggle('on', q.liked); };
+    drawLike(p);
+    likeBtn.onclick = async () => { try { drawLike(await A.toggleLike(p.id)); } catch (e) { alertBox(e.message, '오류', '⚠️'); } };
     $('#copyBtn').onclick = async () => {
       try { await navigator.clipboard.writeText(location.href); alertBox('주소를 복사했어요. 퍼 가실 땐 출처를 밝혀 주세요!', '복사 완료', '✅'); }
       catch (e) { alertBox(location.href, '주소', '🔗'); }
     };
-    setStatus(`조회 ${p.views}`, '');
+    mountComments($('#cbox'), p.id, {});
+    setStatus(`조회 ${p.views} · 공감 ${p.likes}`, '');
   }
+
+  /* ---------- 댓글 ---------- */
+  function mountComments(box, target, opts) {
+    const word = opts.guest ? '방명록' : '댓글';
+    async function draw() {
+      let list;
+      try { list = await A.listComments(target); } catch (e) { box.innerHTML = errBox(e); return; }
+      const roots = list.filter(c => !c.parentId), kids = id => list.filter(c => c.parentId === id);
+      const visible = list.filter(c => c.status === 'ok').length;
+      const item = (c, reply) => `<div class="cmt${reply ? ' reply' : ''}" data-id="${esc(c.id)}" data-nick="${esc(c.nick)}">
+        <div class="cmt-h"><b class="nick${c.role && c.role !== 'user' ? ' admin' : ''}">${roleMark(c.role)}${esc(c.nick)}</b><span class="date">${fmtDate(c.created)}</span>
+          ${c.status === 'pending' ? '<span class="pending-tag">🕓 검토 대기 중 (관리자에게만 보여요)</span>' : ''}
+          <span class="acts"><a data-act="reply" role="button" tabindex="0">답글</a>${isAdmin() ? '<a data-act="del" role="button" tabindex="0">삭제</a>' : ''}</span></div>
+        <div class="cmt-b">${esc(c.body)}</div></div>`;
+      box.innerHTML = `<div class="cmt-head">💬 ${word} ${visible}</div>
+        ${roots.length ? roots.map(r => item(r, false) + kids(r.id).map(k => item(k, true)).join('')).join('') : `<div class="empty">첫 ${word}을 남겨 보세요!</div>`}
+        <div data-form-slot>${formHtml(null)}</div>`;
+      bindForm(box.querySelector('[data-form-slot]'), null);
+    }
+    function formHtml(parentNick) {
+      return `<form class="cmt-form raised${parentNick ? ' inline' : ''}">
+        <label for="cb-t" style="font-weight:bold">${parentNick ? '↪ ' + esc(parentNick) + '님에게 답글' : '익명으로 ' + word + ' 쓰기'}</label>
+        <textarea class="input" maxlength="${C.commentMax}" ${parentNick ? '' : 'id="cb-t"'} name="body" placeholder="${opts.guest ? '다녀가신 흔적을 남겨 주세요 :)' : '따뜻한 한마디를 남겨 주세요 :)'}" required></textarea>
+        <div class="row"><small class="cnt-ind" style="color:#555">0 / ${C.commentMax}</small><span class="row">${parentNick ? '<button class="btn sm" type="button" data-cancel>취소</button>' : ''}<button class="btn primary sm" type="submit">등록</button></span></div>
+        <small style="color:#777">닉네임은 접속 IP로 자동 정해져요. (IP는 공개되지 않아요)</small><div class="err-line" role="alert"></div></form>`;
+    }
+    function bindForm(slot, parentId) {
+      const f = slot.querySelector('form'); if (!f) return;
+      const ind = f.querySelector('.cnt-ind');
+      f.body.addEventListener('input', () => { ind.textContent = f.body.value.length + ' / ' + C.commentMax; });
+      const cancel = f.querySelector('[data-cancel]'); if (cancel) cancel.onclick = () => slot.remove();
+      f.onsubmit = async e => {
+        e.preventDefault();
+        const btn = f.querySelector('[type=submit]'); btn.disabled = true;
+        try {
+          const c = await A.addComment(target, parentId, f.body.value);
+          if (c.status === 'pending') await alertBox('표현을 확인하기 위해 운영진 검토 후에 표시돼요.', '검토 대기', '🕓');
+          await draw();
+        } catch (x) { f.querySelector('.err-line').textContent = '⚠ ' + x.message; btn.disabled = false; }
+      };
+    }
+    box.addEventListener('click', async e => {
+      const a = e.target.closest('[data-act]'); if (!a) return;
+      const cm = a.closest('.cmt'), id = cm.dataset.id;
+      if (a.dataset.act === 'del') {
+        if (!(await confirmBox('이 댓글을 삭제할까요?\n(달린 답글도 함께 지워져요)', '삭제 확인'))) return;
+        try { await A.deleteComment(id); await draw(); } catch (x) { alertBox(x.message, '오류', '⚠️'); }
+      } else if (a.dataset.act === 'reply') {
+        const old = box.querySelector('[data-reply-slot]'); if (old) old.remove();
+        // 대댓글은 1단계: 답글의 답글은 원댓글 아래에 붙고 @닉네임을 앞에 붙여 줘요
+        let last = cm; while (last.nextElementSibling && last.nextElementSibling.classList.contains('reply')) last = last.nextElementSibling;
+        if (!cm.classList.contains('reply') || true) {
+          const slot = document.createElement('div'); slot.dataset.replySlot = '1'; slot.innerHTML = formHtml(cm.dataset.nick);
+          last.after(slot); bindForm(slot, id);
+          const ta = slot.querySelector('textarea');
+          if (cm.classList.contains('reply')) ta.value = '@' + cm.dataset.nick + ' ';
+          ta.focus();
+        }
+      }
+    });
+    box.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-act]')) { e.preventDefault(); e.target.click(); } });
+    box.__redraw = draw;
+    return draw();
+  }
+
 
   /* ---------- 링크/소개 ---------- */
   /* ---------- 지난 글 보관함 (개편 전 글, DB 백업에서 읽기 전용) ---------- */
@@ -262,7 +333,6 @@
   }
   function bindChrome() {
     $('#mRandom').onclick = randomPost;
-    $('#btnLogin').onclick = () => { location.href = 'admin.html'; };
     $('#sform').onsubmit = e => { e.preventDefault(); const q = $('#q').value.trim(); if (q) location.hash = '#/search/' + encodeURIComponent(q); };
   }
 

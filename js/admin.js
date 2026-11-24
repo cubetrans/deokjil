@@ -15,25 +15,75 @@
   const errBox = e => `<div class="msg err">😵 ${esc(e && e.message || e)}</div>`;
 
   /* ---------- 로그인 게이트 ---------- */
-  function pinDialog() {
+  const NICKS = ['서울교덕', '지철덕'];
+  const INIT_PW = '123456';
+  /* 비밀번호만 입력 → 비밀번호로 누구인지 구분. (초기 비밀번호 123456이 겹치면 이름을 골라요) */
+  function pwDialog() {
     return new Promise(res => {
       let val = null;
       const w = openWin({
         title: '🔑 운영진 로그인', width: 340, onClose: () => res(val),
         html: `<form class="dlg-body" style="display:block" autocomplete="off">
-          <div class="field"><label>누구신가요?</label><select class="input" name="nick"><option>서울교덕</option><option>지철덕</option></select></div>
-          <div class="field"><label for="pinIn">비밀번호 (숫자 6자리)</label><input class="input" id="pinIn" name="pin" type="password" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="current-password" required></div>
-          <label class="check"><input type="checkbox" name="first"> 처음이에요 (비밀번호 새로 만들기)</label>
+          <div class="field"><label for="pwIn">비밀번호</label><input class="input" id="pwIn" name="pw" type="password" autocomplete="current-password" required></div>
           <div class="err-line" role="alert" style="min-height:1.4em;color:#c0392b"></div>
           <div class="dlg-btns"><button class="btn primary" type="submit">들어가기</button><button class="btn" type="button" data-c>취소</button></div></form>`
       });
-      const f = w.el.querySelector('form'), err = f.querySelector('.err-line'); f.pin.focus();
+      const body = w.el.querySelector('.dlg-body');
+      const f = () => w.el.querySelector('form'), err = () => w.el.querySelector('.err-line');
+      const pick = text => new Promise(ok => {
+        body.innerHTML = `<p>${text}</p><div class="dlg-btns">${NICKS.map(n => `<button class="btn primary" type="button" data-n="${n}">${n}</button>`).join('')}</div><div class="err-line" role="alert" style="min-height:1.4em;color:#c0392b"></div>`;
+        body.querySelectorAll('[data-n]').forEach(b => b.onclick = () => ok(b.dataset.n));
+      });
+      const finish = async (user, pw) => { if (user && pw === INIT_PW) await mustChange(user); val = A.me(); w.close(); };
+      const bind = () => {
+        const form = f(); form.pw.focus();
+        form.querySelector('[data-c]').onclick = () => w.close();
+        form.onsubmit = async e => {
+          e.preventDefault(); err().textContent = '';
+          const pw = form.pw.value;
+          if (pw.length < 6) { err().textContent = '비밀번호는 6글자 이상이에요.'; return; }
+          try {
+            const ok = [];
+            for (const n of NICKS) { try { await A.login(n, pw); ok.push(n); } catch (x) {} }
+            let who = null;
+            if (ok.length === 2) who = await pick('초기 비밀번호가 같아요. 누구신가요?');
+            else if (ok.length === 1) who = ok[0];
+            else if (pw === INIT_PW) {
+              who = await pick('처음이시네요! 누구신가요?');
+              try { await A.signup(who, INIT_PW); } catch (x) { body.querySelector('.err-line').textContent = /이미 사용|exists|registered/i.test(x.message) ? '이 이름은 이미 다른 비밀번호로 만들어져 있어요.' : x.message; return; }
+            } else { err().textContent = '비밀번호가 맞지 않아요.'; return; }
+            const u = ok.length ? await A.login(who, pw) : A.me();
+            await finish(u, pw);
+          } catch (x) { err().textContent = x.message; }
+        };
+      };
+      bind();
+    });
+  }
+  /* 초기 비밀번호로 들어왔으면 내 비밀번호로 바꾸기 (바꾸기 전엔 못 들어가요) */
+  async function mustChange(user) {
+    const done = await pwChangeDialog({ force: true, oldPw: INIT_PW });
+    if (!done) await A.logout();
+  }
+  function pwChangeDialog({ force = false, oldPw = '' } = {}) {
+    return new Promise(res => {
+      let done = false;
+      const w = openWin({
+        title: force ? '🔐 내 비밀번호 정하기' : '🔑 비밀번호 바꾸기', width: 360, onClose: () => res(done),
+        html: `<form class="dlg-body" style="display:block" autocomplete="off">
+          ${force ? '<p>지금은 초기 비밀번호(123456)예요.<br><b>나만의 비밀번호</b>를 정해야 들어갈 수 있어요.</p>' : '<div class="field"><label>현재 비밀번호</label><input class="input" name="old" type="password" autocomplete="current-password" required></div>'}
+          <div class="field"><label>새 비밀번호 (6글자 이상)</label><input class="input" name="n1" type="password" autocomplete="new-password" required></div>
+          <div class="field"><label>새 비밀번호 한 번 더</label><input class="input" name="n2" type="password" autocomplete="new-password" required></div>
+          <div class="err-line" role="alert" style="min-height:1.4em;color:#c0392b"></div>
+          <div class="dlg-btns"><button class="btn primary" type="submit">바꾸기</button><button class="btn" type="button" data-c>${force ? '로그아웃' : '취소'}</button></div></form>`
+      });
+      const f = w.el.querySelector('form'), err = f.querySelector('.err-line');
       f.querySelector('[data-c]').onclick = () => w.close();
       f.onsubmit = async e => {
         e.preventDefault(); err.textContent = '';
-        if (!/^\d{6}$/.test(f.pin.value)) { err.textContent = '숫자 6자리로 입력해 주세요.'; return; }
-        try { val = f.first.checked ? await A.signup(f.nick.value, f.pin.value) : await A.login(f.nick.value, f.pin.value); w.close(); }
-        catch (x) { err.textContent = /맞지 않/.test(x.message) ? '비밀번호가 맞지 않아요.' : x.message; }
+        if (f.n1.value !== f.n2.value) { err.textContent = '새 비밀번호가 서로 달라요.'; return; }
+        try { await A.changePassword(force ? oldPw : f.old.value, f.n1.value); done = true; w.close(); if (!force) alertBox('비밀번호를 바꿨어요. 이제부터 새 비밀번호로 들어와요.', '완료', '✅'); }
+        catch (x) { err.textContent = x.message; }
       };
     });
   }
@@ -48,8 +98,8 @@
       <a class="btn" href="index.html">사이트로 돌아가기</a></p></div>`;
     $('#gLogin').onclick = async () => {
       if (kind === 'denied') { await A.logout(); }
-      const u = await pinDialog();
-      if (u || kind === 'denied') start();
+      const u = await pwDialog();
+      if (A.me() || kind === 'denied') start();
     };
     setStatus('로그인이 필요해요', '');
   }
@@ -57,7 +107,7 @@
   /* ---------- 틀 ---------- */
   const NAV = [
     ['#/', '📊', '대시보드'], ['#/posts', '📝', '글 관리'], ['#/new', '✏️', '새 글 쓰기'], ['#/boards', '🗂️', '게시판'],
-    ['#/memo', '📨', '쪽지'], ['#/design', '🎨', '디자인'], ['#/code', '🧩', '코드'], ['#/settings', '⚙️', '설정']
+    ['#/comments', '💬', '댓글 관리', 'pending'], ['#/memo', '📨', '쪽지'], ['#/design', '🎨', '디자인'], ['#/code', '🧩', '코드'], ['#/settings', '⚙️', '설정']
   ];
   const NAV_AUTHOR = [['#/posts', '📝', '내 글'], ['#/new', '✏️', '새 글 쓰기']];
   function buildShell() {
@@ -94,6 +144,7 @@
       else if (p === 'edit') await viewEditor(a);
       else if (p === 'boards') await viewBoards();
       else if (p === 'memo') await viewMemo();
+      else if (p === 'comments') await viewComments(a || (pending ? 'pending' : 'all'));
       else if (p === 'design') await window.AdminCode.viewDesign(main);
       else if (p === 'code') await window.AdminCode.viewCode(main);
       else if (p === 'settings') await viewSettings();
@@ -494,12 +545,16 @@
         <div class="err-line" role="alert"></div>
         <button class="btn primary" type="submit">💾 설정 저장</button>
       </form>
+      <div class="sub-title" style="margin-top:20px"><span>🔑 내 비밀번호</span></div>
+      <div class="msg info">지금 로그인한 <b>${esc(me.nick)}</b>의 비밀번호를 바꿔요. 바꾸면 이전 비밀번호는 더 이상 쓸 수 없어요. 비밀번호로 누구인지 구분하니까 <b>두 사람이 서로 다른 비밀번호</b>를 써야 해요.</div>
+      <div class="row"><button class="btn" type="button" id="pwChg">🔑 비밀번호 바꾸기</button></div>
       <div class="sub-title" style="margin-top:20px"><span>🗄 데이터</span></div>
       ${A.mode === 'local' ? `<div class="msg info">지금은 <b>로컬 데모 모드</b>예요. 모든 데이터가 이 브라우저에만 저장돼요. 다른 사람이 가입·댓글을 쓰게 하려면 README대로 Supabase를 연결하세요. 그 전에는 백업을 자주 받아 두세요.</div>
         <div class="row"><button class="btn" type="button" id="bkExp">💾 백업 내려받기</button><label class="btn" for="bkImp">📂 백업 불러오기</label><input type="file" id="bkImp" accept=".json,application/json" hidden>
         <button class="btn danger" type="button" id="bkReset">🧨 전부 초기화</button></div>`
         : `<div class="msg info">데이터는 Supabase에 저장돼요. 백업은 Supabase 대시보드(Database → Backups)나 Table Editor에서 CSV로 내려받을 수 있어요.</div>`}`;
     const f = $('#sf');
+    $('#pwChg').onclick = () => pwChangeDialog();
     f.onsubmit = async e => {
       e.preventDefault(); const err = f.querySelector('.err-line'); err.textContent = '';
       const links = {};

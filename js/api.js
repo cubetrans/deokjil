@@ -48,6 +48,12 @@
   function validatePw(pw) {
     if (!pw || pw.length < 6) throw new Error('비밀번호는 6글자 이상이어야 해요.');
   }
+  const OTHER_WRITER = n => (n === '서울교덕' ? '지철덕' : '서울교덕');
+  function validateNewPw(pw) {
+    validatePw(pw);
+    if (pw.length > 72) throw new Error('비밀번호는 72글자까지만 쓸 수 있어요. (로그인 시스템의 한계예요)');
+    if (pw === '123456') throw new Error('초기 비밀번호(123456)는 다시 쓸 수 없어요. 다른 비밀번호를 정해 주세요.');
+  }
 
   const DEFAULT_BOARDS = C.boards.map(b => ({ id: b.id, icon: b.icon, name: b.name, desc: b.desc, cat: '' }));
   const defaultSettings = () => ({
@@ -102,12 +108,14 @@
     const checkMemoBody = (b, max) => { b = String(b || '').trim(); if (!b) throw new Error('내용을 적어 주세요.'); if (b.length > max) throw new Error(`${max}자 이내로 적어 주세요.`); return b; };
     const isWriter = () => !!me && (me.role === 'admin' || me.role === 'author');
 
+    const anonId = () => { let v = null; try { v = localStorage.getItem('deokjil_anon'); if (!v) { v = uid() + uid(); localStorage.setItem('deokjil_anon', v); } } catch (e) {} return v || 'anon0000'; };
+    const anonNick = () => '익명 ' + anonId().replace(/[^0-9a-z]/g, '').slice(0, 4);
     const postOut = p => ({
       id: p.id, board: p.board, title: p.title, body: p.body, tags: p.tags || [], pinned: !!p.pinned,
       author: p.author || '', authorId: p.authorId || null,
       views: p.views || 0, created: p.created, updated: p.updated,
       publishAt: p.publishAt || null, scheduled: !!p.publishAt && new Date(p.publishAt) > new Date(),
-      likes: p.likes.length, liked: !!me && p.likes.includes(me.id),
+      likes: p.likes.length, liked: p.likes.includes(anonId()),
       comments: db.comments.filter(c => c.target === p.id && c.status === 'ok').length
     });
     const cmtOut = c => {
@@ -142,6 +150,15 @@
         store.set(SES, u.id); me = pubUser(u); return me;
       },
       async logout() { try { localStorage.removeItem(SES); } catch (e) {} me = null; },
+      async changePassword(oldPw, newPw) {
+        if (!me) throw new Error('로그인이 필요해요.');
+        const u = userById(me.id);
+        if (!u || u.hash !== await sha256(u.salt + oldPw)) throw new Error('현재 비밀번호가 맞지 않아요.');
+        validateNewPw(newPw);
+        const o = db.users.find(x => x.nick === OTHER_WRITER(u.nick));
+        if (o && o.hash === await sha256(o.salt + newPw)) throw new Error('다른 운영진이 이미 쓰고 있는 비밀번호예요. 다른 걸로 정해 주세요.');
+        u.salt = uid(); u.hash = await sha256(u.salt + newPw); save();
+      },
 
       async listPosts(opt) {
         const all = !!(opt && opt.all) && isWriter();
@@ -183,20 +200,18 @@
         db.comments = db.comments.filter(c => c.target !== id); save();
       },
       async toggleLike(id) {
-        if (!me) throw new Error('로그인이 필요해요.');
         const p = db.posts.find(x => x.id === id); if (!p) return null;
-        const i = p.likes.indexOf(me.id);
-        if (i >= 0) p.likes.splice(i, 1); else p.likes.push(me.id);
+        const k = anonId(), i = p.likes.indexOf(k);
+        if (i >= 0) p.likes.splice(i, 1); else p.likes.push(k);
         save(); return postOut(p);
       },
 
       async listComments(target) {
         return db.comments
-          .filter(c => c.target === target && (c.status === 'ok' || (me && (c.userId === me.id || me.role === 'admin'))))
+          .filter(c => c.target === target && (c.status === 'ok' || (me && me.role === 'admin')))
           .sort((a, b) => new Date(a.created) - new Date(b.created)).map(cmtOut);
       },
       async addComment(target, parentId, body) {
-        if (!me) throw new Error('로그인이 필요해요.');
         body = (body || '').trim();
         if (!body) throw new Error('내용을 입력해 주세요.');
         if (body.length > C.commentMax) throw new Error(`댓글은 ${C.commentMax}자까지 쓸 수 있어요.`);
@@ -205,8 +220,9 @@
           if (!par) throw new Error('답글을 달 댓글이 없어요.');
           if (par.parentId) parentId = par.parentId; // 대댓글은 1단계만
         }
-        const status = me.role === 'admin' ? 'ok' : (isBad(body, db.settings.banned) ? 'pending' : 'ok');
-        const c = { id: uid(), target, parentId: parentId || null, userId: me.id, nick: me.nick, body, created: new Date().toISOString(), status };
+        const isAdm = !!me && me.role === 'admin';
+        const status = isAdm ? 'ok' : (isBad(body, db.settings.banned) ? 'pending' : 'ok');
+        const c = { id: uid(), target, parentId: parentId || null, userId: isAdm ? me.id : null, nick: isAdm ? me.nick : anonNick(), body, created: new Date().toISOString(), status };
         db.comments.push(c); save(); return cmtOut(c);
       },
       async deleteComment(id) {
@@ -311,10 +327,16 @@
       author: r.author_nick || '', authorId: r.author_id || null,
       views: r.views || 0, created: r.created_at, updated: r.updated_at,
       publishAt: r.publish_at || null, scheduled: !!r.publish_at && new Date(r.publish_at) > new Date(),
-      likes: likes.filter(l => l.post_id === r.id).length,
-      liked: !!me && likes.some(l => l.post_id === r.id && l.user_id === me.id),
+      likes: ((likes.find(l => l.post_id === r.id) || {}).n) | 0,
+      liked: mineLikes.has(r.id),
       comments: cm.filter(c => c.target === r.id && c.status === 'ok').length
     });
+    let mineLikes = new Set();
+    async function loadLikes() {
+      const [a, b] = await Promise.all([sb.rpc('like_counts'), sb.rpc('my_likes')]);
+      mineLikes = new Set(Array.isArray(b.data) ? b.data.map(x => (x && x.my_likes) || x) : []);
+      return Array.isArray(a.data) ? a.data : [];
+    }
     const needStaffSb = () => { if (!me || me.role !== 'admin') throw new Error('운영진만 쓸 수 있어요.'); };
     const checkMemoBodySb = (b, max) => { b = String(b || '').trim(); if (!b) throw new Error('내용을 적어 주세요.'); if (b.length > max) throw new Error(`${max}자 이내로 적어 주세요.`); return b; };
     const memoRow = r => ({ id: r.id, body: r.body, authorId: r.author_id, authorNick: r.author_nick, created: r.created_at });
@@ -350,15 +372,29 @@
         await loadMe(); return me;
       },
       async logout() { await sb.auth.signOut(); me = null; },
+      async changePassword(oldPw, newPw) {
+        if (!me) throw new Error('로그인이 필요해요.');
+        const nick = me.nick;
+        const ok = await sb.auth.signInWithPassword({ email: await emailOf(nick), password: oldPw });
+        if (ok.error) throw new Error('현재 비밀번호가 맞지 않아요.');
+        validateNewPw(newPw);
+        const other = await sb.auth.signInWithPassword({ email: await emailOf(OTHER_WRITER(nick)), password: newPw });
+        const back = await sb.auth.signInWithPassword({ email: await emailOf(nick), password: oldPw });
+        if (back.error) throw new Error('다시 로그인하지 못했어요. 잠시 뒤에 다시 해 주세요.');
+        if (!other.error) throw new Error('다른 운영진이 이미 쓰고 있는 비밀번호예요. 다른 걸로 정해 주세요.');
+        const r = await sb.auth.updateUser({ password: newPw });
+        if (r.error) throw new Error(/same/i.test(r.error.message) ? '지금 비밀번호와 같아요.' : r.error.message);
+        await loadMe();
+      },
 
       async listPosts(opt) {
         const all = !!(opt && opt.all);
         const [p, l, c] = await Promise.all([
           sb.from('posts').select('*').order('created_at', { ascending: false }),
-          sb.from('post_likes').select('post_id,user_id'),
+          loadLikes(),
           sb.from('comments').select('target,status')
         ]);
-        const posts = must(p), likes = must(l), cm = must(c);
+        const posts = must(p), likes = l, cm = must(c);
         return posts.map(r => postOut(r, likes, cm)).filter(x => all || !x.scheduled);
       },
       async getPost(id, countView) {
@@ -368,8 +404,8 @@
           const seen = JSON.parse(sess.get('deokjil_seen') || '[]');
           if (!seen.includes(id)) { await sb.rpc('bump_view', { pid: id }); row.views = (row.views || 0) + 1; seen.push(id); sess.set('deokjil_seen', JSON.stringify(seen)); }
         }
-        const [l, c] = await Promise.all([sb.from('post_likes').select('post_id,user_id').eq('post_id', id), sb.from('comments').select('target,status').eq('target', id)]);
-        return postOut(row, must(l), must(c));
+        const [l, c] = await Promise.all([loadLikes(), sb.from('comments').select('target,status').eq('target', id)]);
+        return postOut(row, l, must(c));
       },
       async savePost(d) {
         const title = (d.title || '').trim(), body = (d.body || '').trim();
@@ -383,10 +419,8 @@
       },
       async deletePost(id) { must(await sb.from('posts').delete().eq('id', id)); },
       async toggleLike(id) {
-        if (!me) throw new Error('로그인이 필요해요.');
-        const ex = must(await sb.from('post_likes').select('post_id').eq('post_id', id).eq('user_id', me.id));
-        if (ex.length) must(await sb.from('post_likes').delete().eq('post_id', id).eq('user_id', me.id));
-        else must(await sb.from('post_likes').insert({ post_id: id, user_id: me.id }));
+        const r = await sb.rpc('toggle_like', { p_post: id });
+        if (r.error) throw new Error(/빨리/.test(r.error.message) ? '너무 빨리 누르고 있어요. 잠시 뒤에 다시 해 주세요.' : '공감을 처리하지 못했어요. SQL(익명 댓글·공감 부분)을 실행했는지 확인해 주세요.');
         return api.getPost(id, false);
       },
 
@@ -395,17 +429,13 @@
         return must(d).map(r => cmtOut(r, ad));
       },
       async addComment(target, parentId, body) {
-        if (!me) throw new Error('로그인이 필요해요.');
         body = (body || '').trim();
         if (!body) throw new Error('내용을 입력해 주세요.');
         if (body.length > C.commentMax) throw new Error(`댓글은 ${C.commentMax}자까지 쓸 수 있어요.`);
-        if (parentId) {
-          const par = must(await sb.from('comments').select('id,parent_id').eq('id', parentId).maybeSingle());
-          if (!par) throw new Error('답글을 달 댓글이 없어요.');
-          if (par.parent_id) parentId = par.parent_id;
-        }
-        const r = await sb.from('comments').insert({ target, parent_id: parentId || null, body }).select().single();
-        return cmtOut(must(r), new Map([[me.id, me.role]]));
+        const r = await sb.rpc('add_comment', { p_target: String(target), p_parent: parentId || null, p_body: body });
+        if (r.error) throw new Error(/빨리|많이/.test(r.error.message) ? r.error.message.replace(/^.*?:\s*/, '') : '댓글을 달지 못했어요. SQL(익명 댓글·공감 부분)을 실행했는지 확인해 주세요.');
+        const row = Array.isArray(r.data) ? r.data[0] : r.data;
+        return cmtOut(row, new Map(me ? [[me.id, me.role]] : []));
       },
       async deleteComment(id) { must(await sb.from('comments').delete().eq('id', id)); },
 
