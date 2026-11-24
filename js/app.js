@@ -75,7 +75,7 @@
       <div id="phStrip"></div>
       <div class="led" aria-label="안내 전광판"><span>${esc(settings.marquee)}${posts[0] ? ' ▶ 새 글: ' + esc(posts[0].title) : ''}</span></div>
       <div class="panel raised">
-        <b>${esc(C.since)}년부터 덕질해온 ${years}년차 교통 덕후의 블로그</b>
+        <b>${years}년차 교통 덕후 서울교덕과 지철덕의 블로그</b>
         <div style="margin-top:6px">${esc(settings.intro).replace(/\n/g, '<br>')}</div>
       </div>
       <div class="cols">
@@ -144,8 +144,8 @@
           ${canEdit(p) ? `<a href="admin.html#/edit/${esc(p.id)}">✏ 수정</a>` : ''}</div>
       </div>
       <div class="share-banner" role="note"><span class="em">🚌</span><div>
-        <div><b class="g">이 글은 퍼가셔도 좋은 글입니다.</b></div>
-        <small>다만, 출처가 없으면 불펌으로 보일 수 있으니 출처(${esc(C.name)})를 밝혀 주세요.</small>
+        <div><b class="g">이 글은 출처를 남기시면 퍼가실 수 있습니다.</b></div>
+        <small>출처가 없으면 불펌이니 출처(${esc(C.name)})를 밝혀 주세요.</small>
         <div><b class="b">공감과 댓글은 저에게 큰 힘이 됩니다.</b></div></div></div>
       <div class="post-body">${renderBody(p.body)}</div>
       ${(p.tags || []).length ? `<div style="margin-top:12px">${p.tags.map(t => `<a class="tag" href="#/tag/${encodeURIComponent(t)}">#${esc(t)}</a>`).join('')}</div>` : ''}
