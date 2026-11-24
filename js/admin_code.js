@@ -1,0 +1,144 @@
+/* 운영진 센터 — 🎨 디자인(CSS 바로 수정) · 🧩 코드(GitHub 파일 수정) */
+(function () {
+  'use strict';
+  const A = window.API, { esc, alertBox, confirmBox } = window.Common;
+  const $ = (s, r = document) => r.querySelector(s);
+
+  /* ---------- 🎨 디자인: 추가 CSS (DB에 저장, 배포 필요 없음) ---------- */
+  async function viewDesign(main) {
+    const s = await A.getSettings();
+    const css = s.customCss || '';
+    main.innerHTML = `<h2 class="page-title">🎨 디자인 (추가 CSS)</h2>
+      <div class="msg info">여기에 쓴 CSS는 사이트 모든 페이지에 <b>기본 디자인 위에 덮어서</b> 적용돼요. 저장하면 <b>배포 없이 바로</b> 반영돼요. 지우면 원래대로 돌아와요.</div>
+      <form id="cf" class="form">
+        <div class="field"><label for="cssIn">추가 CSS</label>
+          <textarea class="input code" id="cssIn" rows="18" spellcheck="false" maxlength="30000" placeholder="/* 예시 */\n:root { --brand: #e11d48; }\n.site-title { letter-spacing: 2px; }">${esc(css)}</textarea>
+          <small id="cssCount"></small></div>
+        <div class="row"><button class="btn" type="button" id="cssPrev">👀 이 화면에서 미리보기</button>
+          <button class="btn primary" type="submit">💾 저장해서 사이트에 적용</button>
+          <button class="btn" type="button" id="cssClear">🧹 모두 지우기</button></div>
+        <div class="err-line" role="alert"></div>
+      </form>
+      <details class="panel raised" style="margin-top:12px"><summary><b>자주 쓰는 색 변수</b></summary>
+        <p><code>--brand</code> 포인트 색 · <code>--gnb</code> 위쪽 메뉴 줄 색 · <code>--ink</code> 글자색 · <code>--line</code> 테두리색 · <code>--r</code> 모서리 둥글기<br>
+        예) <code>:root { --gnb: #7c3aed; --r: 10px; }</code></p></details>`;
+    const ta = $('#cssIn'), cnt = $('#cssCount');
+    const upd = () => { cnt.textContent = `${ta.value.length.toLocaleString()} / 30,000자`; };
+    ta.oninput = upd; upd();
+    const st = () => { let e = $('#previewCss'); if (!e) { e = document.createElement('style'); e.id = 'previewCss'; document.head.appendChild(e); } return e; };
+    $('#cssPrev').onclick = () => { st().textContent = ta.value.replace(/<\/style/gi, ''); alertBox('이 화면에만 임시로 적용했어요. 마음에 들면 [저장]을 눌러 주세요.', '미리보기', '👀'); };
+    $('#cssClear').onclick = async () => { if (await confirmBox('추가 CSS를 모두 지울까요?', '지우기', '지우기')) { ta.value = ''; upd(); st().textContent = ''; } };
+    $('#cf').onsubmit = async e => {
+      e.preventDefault();
+      try {
+        const cur = await A.getSettings();
+        await A.saveSettings({ ...cur, customCss: ta.value.replace(/<\/style/gi, '').slice(0, 30000) });
+        st().textContent = '';
+        alertBox('저장했어요! 사이트를 새로고침하면 바로 적용돼요.', '저장 완료', '✅');
+      } catch (x) { $('#cf .err-line').textContent = x.message; }
+    };
+  }
+
+  /* ---------- 🧩 코드: GitHub 저장소의 파일을 직접 수정 ---------- */
+  const KEY = 'deokjil_gh_v1';
+  const TEXT_EXT = /\.(html?|css|js|json|svg|txt|xml|md)$/i;
+  const DANGER = /^(js\/(admin|api|common|config)\.js|admin\.html)$/;
+  const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } };
+  const keep = v => { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} };
+  const b64d = b => new TextDecoder().decode(Uint8Array.from(atob(String(b).replace(/\s/g, '')), c => c.charCodeAt(0)));
+  const b64e = t => { const u = new TextEncoder().encode(t); let s = ''; for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); };
+
+  function gh(cfg) {
+    const base = `https://api.github.com/repos/${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}`;
+    const call = async (path, opt = {}) => {
+      const r = await fetch(base + path, { ...opt, headers: { Accept: 'application/vnd.github+json', Authorization: 'Bearer ' + cfg.token, 'X-GitHub-Api-Version': '2022-11-28', ...(opt.body ? { 'Content-Type': 'application/json' } : {}) } });
+      if (!r.ok) {
+        const m = r.status === 401 ? '토큰이 맞지 않거나 만료됐어요.' : r.status === 403 ? '권한이 부족해요. 토큰의 Contents 권한을 Read and write로 해 주세요.' : r.status === 404 ? '저장소나 파일을 찾을 수 없어요. 이름과 토큰의 저장소 선택을 확인해 주세요.' : r.status === 409 || r.status === 422 ? '그 사이에 파일이 바뀌었어요. 파일을 다시 열어 주세요.' : 'GitHub 오류 (' + r.status + ')';
+        throw new Error(m);
+      }
+      return r.json();
+    };
+    return {
+      tree: async () => (await call('/git/trees/' + encodeURIComponent(cfg.branch) + '?recursive=1')).tree.filter(x => x.type === 'blob' && TEXT_EXT.test(x.path)).map(x => x.path).sort(),
+      get: async (path, ref) => { const j = await call('/contents/' + path.split('/').map(encodeURIComponent).join('/') + '?ref=' + encodeURIComponent(ref || cfg.branch)); if (j.content == null || j.encoding !== 'base64') throw new Error('이 파일은 너무 커서 여기서 열 수 없어요.'); return { text: b64d(j.content), sha: j.sha }; },
+      put: (path, text, sha, msg) => call('/contents/' + path.split('/').map(encodeURIComponent).join('/'), { method: 'PUT', body: JSON.stringify({ message: msg, content: b64e(text), sha, branch: cfg.branch }) }),
+      log: async path => (await call('/commits?sha=' + encodeURIComponent(cfg.branch) + '&path=' + encodeURIComponent(path) + '&per_page=10'))
+    };
+  }
+
+  async function viewCode(main) {
+    const cfg = load();
+    if (!cfg.token || !cfg.owner || !cfg.repo) return connectForm(main, cfg);
+    const g = gh(cfg);
+    main.innerHTML = '<div class="loading">⏳ GitHub에서 파일 목록을 불러오는 중…</div>';
+    let files;
+    try { files = await g.tree(); } catch (e) { main.innerHTML = `<div class="msg err">${esc(e.message)}</div><p><button class="btn" id="reconf" type="button">🔧 연결 설정 다시 하기</button></p>`; $('#reconf').onclick = () => connectForm(main, cfg); return; }
+    main.innerHTML = `<h2 class="page-title">🧩 코드 편집 <small style="font-weight:400">${esc(cfg.owner)}/${esc(cfg.repo)} · ${esc(cfg.branch)}</small></h2>
+      <div class="msg info">저장하면 GitHub에 반영되고, 호스팅이 자동으로 <b>1~2분 안에</b> 사이트를 새로 올려요. 잘못 고쳤으면 [기록]에서 예전 버전을 불러와 다시 저장하면 돼요.</div>
+      <div class="code-wrap">
+        <div class="code-files" role="listbox" aria-label="파일 목록">${files.map(f => `<button type="button" class="code-f" data-p="${esc(f)}">${esc(f)}</button>`).join('')}</div>
+        <div class="code-ed">
+          <div class="code-bar"><b id="cPath">파일을 골라 주세요</b><span id="cMsg"></span></div>
+          <textarea class="input code" id="cText" spellcheck="false" rows="26" disabled></textarea>
+          <div class="row"><button class="btn primary" type="button" id="cSave" disabled>💾 GitHub에 저장</button>
+            <button class="btn" type="button" id="cHist" disabled>🕘 기록(예전 버전)</button>
+            <button class="btn" type="button" id="cOut">🔌 연결 해제</button></div>
+          <div id="cHistBox"></div>
+        </div></div>`;
+    let cur = null, sha = null, orig = '';
+    const msg = (t, bad) => { const m = $('#cMsg'); m.textContent = t; m.style.color = bad ? '#c0392b' : ''; };
+    const dirty = () => cur && $('#cText').value !== orig;
+    main.querySelectorAll('.code-f').forEach(b => b.onclick = async () => {
+      if (dirty() && !(await confirmBox('저장하지 않은 수정이 있어요. 그래도 다른 파일을 열까요?', '확인', '열기'))) return;
+      try {
+        msg('불러오는 중…'); const r = await g.get(b.dataset.p);
+        cur = b.dataset.p; sha = r.sha; orig = r.text;
+        $('#cText').value = r.text; $('#cText').disabled = false; $('#cSave').disabled = false; $('#cHist').disabled = false; $('#cPath').textContent = cur; $('#cHistBox').innerHTML = '';
+        main.querySelectorAll('.code-f').forEach(x => x.classList.toggle('on', x === b)); msg('');
+      } catch (e) { msg(e.message, true); }
+    });
+    $('#cSave').onclick = async () => {
+      const text = $('#cText').value;
+      if (/\.js$/i.test(cur)) { try { new Function(text); } catch (e) { if (!(await confirmBox('이 JS 파일에 문법 오류가 있어요:\n' + e.message + '\n\n그대로 저장하면 사이트가 깨질 수 있어요. 그래도 저장할까요?', '문법 오류', '그래도 저장'))) return; } }
+      if (DANGER.test(cur) && !(await confirmBox('이 파일은 사이트·운영진 센터의 핵심 파일이에요.\n잘못 고치면 운영진 센터가 안 열려서 고치기 어려울 수 있어요. (GitHub 웹사이트에서는 언제든 되돌릴 수 있어요.)\n\n계속할까요?', '핵심 파일', '계속'))) return;
+      try {
+        msg('저장 중…'); $('#cSave').disabled = true;
+        const r = await g.put(cur, text, sha, '운영진 센터에서 수정: ' + cur);
+        sha = r.content.sha; orig = text; msg('✅ 저장했어요. 1~2분 뒤 사이트에 반영돼요.');
+      } catch (e) { msg(e.message, true); } finally { $('#cSave').disabled = false; }
+    };
+    $('#cHist').onclick = async () => {
+      try {
+        const l = await g.log(cur);
+        $('#cHistBox').innerHTML = l.length ? `<div class="sub-title"><span>🕘 ${esc(cur)} 기록</span></div><div class="code-hist">${l.map(c => `<button type="button" class="btn sm" data-sha="${esc(c.sha)}">${esc((c.commit.author.date || '').slice(0, 16).replace('T', ' '))} · ${esc((c.commit.message || '').split('\n')[0].slice(0, 50))}</button>`).join('')}</div><small>누르면 그 버전이 편집창에 들어와요. [GitHub에 저장]을 눌러야 적용돼요.</small>` : '<small>기록이 없어요.</small>';
+        $('#cHistBox').querySelectorAll('[data-sha]').forEach(b => b.onclick = async () => { try { const r = await g.get(cur, b.dataset.sha); $('#cText').value = r.text; msg('예전 버전을 불러왔어요. 저장해야 적용돼요.'); } catch (e) { msg(e.message, true); } });
+      } catch (e) { msg(e.message, true); }
+    };
+    $('#cOut').onclick = async () => { if (await confirmBox('이 브라우저에 저장된 GitHub 연결(토큰)을 지울까요?', '연결 해제', '해제')) { keep({}); viewCode(main); } };
+  }
+
+  function connectForm(main, cfg) {
+    main.innerHTML = `<h2 class="page-title">🧩 코드 편집 — GitHub 연결</h2>
+      <div class="msg info">사이트 코드를 GitHub 저장소에 올려 두면, 여기서 파일을 열어 고치고 저장할 수 있어요. 저장하면 호스팅(GitHub Pages 등)이 알아서 새로 배포해요.</div>
+      <ol class="hint"><li>GitHub → 오른쪽 위 프로필 → <b>Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token</b></li>
+        <li><b>Repository access</b>: Only select repositories → 덕질역 저장소 하나만 고르기</li>
+        <li><b>Permissions → Repository permissions → Contents: Read and write</b></li>
+        <li>만들어진 토큰(<code>github_pat_…</code>)을 아래에 붙여넣기</li></ol>
+      <form id="gf" class="form">
+        <div class="field"><label>GitHub 사용자 이름</label><input class="input" name="owner" value="${esc(cfg.owner || '')}" required maxlength="60" autocomplete="off"></div>
+        <div class="field"><label>저장소 이름</label><input class="input" name="repo" value="${esc(cfg.repo || '')}" required maxlength="100" autocomplete="off"></div>
+        <div class="field"><label>브랜치</label><input class="input" name="branch" value="${esc(cfg.branch || 'main')}" required maxlength="60" autocomplete="off"></div>
+        <div class="field"><label>토큰 (이 브라우저에만 저장돼요)</label><input class="input" name="token" type="password" value="${esc(cfg.token || '')}" required autocomplete="off"></div>
+        <div class="err-line" role="alert"></div>
+        <button class="btn primary" type="submit">🔌 연결하기</button>
+      </form>
+      <div class="msg info" style="margin-top:12px">⚠️ 토큰은 비밀번호와 같아요. <b>남의 컴퓨터에서는 쓰지 말고</b>, 다 쓴 뒤에는 [연결 해제]로 지워 주세요. 이 사이트의 DB에는 저장하지 않아요.</div>`;
+    $('#gf').onsubmit = async e => {
+      e.preventDefault(); const f = e.target;
+      const v = { owner: f.owner.value.trim(), repo: f.repo.value.trim(), branch: f.branch.value.trim(), token: f.token.value.trim() };
+      try { await gh(v).tree(); keep(v); viewCode(main); } catch (x) { $('#gf .err-line').textContent = x.message; }
+    };
+  }
+
+  window.AdminCode = { viewDesign, viewCode };
+})();
