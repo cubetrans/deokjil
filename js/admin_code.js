@@ -1,7 +1,7 @@
 /* 운영진 센터 — 🎨 디자인(CSS 바로 수정) · 🧩 코드(GitHub 파일 수정) */
 (function () {
   'use strict';
-  const A = window.API, { esc, alertBox, confirmBox } = window.Common;
+  const A = window.API, { esc, alertBox, confirmBox, openWin } = window.Common;
   const $ = (s, r = document) => r.querySelector(s);
 
   /* ---------- 🎨 디자인: 추가 CSS (DB에 저장, 배포 필요 없음) ---------- */
@@ -48,6 +48,42 @@
   const b64d = b => new TextDecoder().decode(Uint8Array.from(atob(String(b).replace(/\s/g, '')), c => c.charCodeAt(0)));
   const b64e = t => { const u = new TextEncoder().encode(t); let s = ''; for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); };
 
+  /* 서버 방식: 토큰은 Supabase 서버에 있고, 로그인한 운영진만 쓸 수 있어요 */
+  function ghServer(url, anon, token) {
+    const call = async body => {
+      const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: anon, Authorization: 'Bearer ' + token }, body: JSON.stringify(body) });
+      let j = {}; try { j = await r.json(); } catch (e) {}
+      if (!r.ok || j.error) throw new Error(j.error || (r.status === 404 ? '코드 편집 서버 함수(code)가 아직 없어요. Supabase에 배포해 주세요.' : '서버 오류 (' + r.status + ')'));
+      return j;
+    };
+    return {
+      info: null,
+      tree: async function () { const j = await call({ action: 'tree' }); this.info = { repo: j.repo, branch: j.branch }; return j.files; },
+      get: (path, ref) => call({ action: 'get', path, ref }),
+      put: async (path, text, sha, msg) => { const j = await call({ action: 'put', path, text, sha, message: msg }); return { content: { sha: j.sha } }; },
+      log: async path => (await call({ action: 'log', path })).log
+    };
+  }
+  async function pickBackend() {
+    const C = window.SITE_CONFIG || {};
+    const token = A.accessToken ? await A.accessToken() : null;
+    if (token && C.supabaseUrl) return { g: ghServer(C.supabaseUrl.replace(/\/$/, '') + '/functions/v1/code', C.supabaseAnonKey, token), server: true };
+    return null;
+  }
+  async function reauth() {
+    return new Promise(res => {
+      let ok = false;
+      const w = openWin({ title: '🔒 비밀번호 확인', width: 320, onClose: () => res(ok),
+        html: `<form class="dlg-body" style="display:block" autocomplete="off"><p>사이트 코드를 바꾸는 중요한 작업이에요.<br>비밀번호를 한 번 더 입력해 주세요.</p>
+          <div class="field"><input class="input" name="pw" type="password" autocomplete="current-password" required></div>
+          <div class="err-line" role="alert" style="min-height:1.4em;color:#c0392b"></div>
+          <div class="dlg-btns"><button class="btn primary" type="submit">확인</button><button class="btn" type="button" data-c>취소</button></div></form>` });
+      const f = w.el.querySelector('form'); f.pw.focus();
+      f.querySelector('[data-c]').onclick = () => w.close();
+      f.onsubmit = async e => { e.preventDefault(); try { await A.login(A.me().nick, f.pw.value); ok = true; w.close(); } catch (x) { f.querySelector('.err-line').textContent = '비밀번호가 맞지 않아요.'; } };
+    });
+  }
+
   function gh(cfg) {
     const base = `https://api.github.com/repos/${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}`;
     const call = async (path, opt = {}) => {
@@ -67,13 +103,14 @@
   }
 
   async function viewCode(main) {
-    const cfg = load();
-    if (!cfg.token || !cfg.owner || !cfg.repo) return connectForm(main, cfg);
-    const g = gh(cfg);
+    const be = await pickBackend();
+    const cfg = be ? { owner: '', repo: '', branch: '' } : load();
+    if (!be && (!cfg.token || !cfg.owner || !cfg.repo)) return connectForm(main, cfg);
+    const g = be ? be.g : gh(cfg);
     main.innerHTML = '<div class="loading">⏳ GitHub에서 파일 목록을 불러오는 중…</div>';
     let files;
-    try { files = await g.tree(); } catch (e) { main.innerHTML = `<div class="msg err">${esc(e.message)}</div><p><button class="btn" id="reconf" type="button">🔧 연결 설정 다시 하기</button></p>`; $('#reconf').onclick = () => connectForm(main, cfg); return; }
-    main.innerHTML = `<h2 class="page-title">🧩 코드 편집 <small style="font-weight:400">${esc(cfg.owner)}/${esc(cfg.repo)} · ${esc(cfg.branch)}</small></h2>
+    try { files = await g.tree(); } catch (e) { main.innerHTML = `<div class="msg err">${esc(e.message)}</div>${be ? '<p><small>Supabase Edge Function <code>code</code>와 비밀 값(GITHUB_TOKEN, GITHUB_REPO)을 확인해 주세요.</small></p>' : '<p><button class="btn" id="reconf" type="button">🔧 연결 설정 다시 하기</button></p>'}`; if ($('#reconf')) $('#reconf').onclick = () => connectForm(main, cfg); return; }
+    main.innerHTML = `<h2 class="page-title">🧩 코드 편집 <small style="font-weight:400">${be ? esc((g.info || {}).repo || '') + ' · ' + esc((g.info || {}).branch || '') : esc(cfg.owner) + '/' + esc(cfg.repo) + ' · ' + esc(cfg.branch)}</small></h2>
       <div class="msg info">저장하면 GitHub에 반영되고, 호스팅이 자동으로 <b>1~2분 안에</b> 사이트를 새로 올려요. 잘못 고쳤으면 [기록]에서 예전 버전을 불러와 다시 저장하면 돼요.</div>
       <div class="code-wrap">
         <div class="code-files" role="listbox" aria-label="파일 목록">${files.map(f => `<button type="button" class="code-f" data-p="${esc(f)}">${esc(f)}</button>`).join('')}</div>
@@ -82,7 +119,7 @@
           <textarea class="input code" id="cText" spellcheck="false" rows="26" disabled></textarea>
           <div class="row"><button class="btn primary" type="button" id="cSave" disabled>💾 GitHub에 저장</button>
             <button class="btn" type="button" id="cHist" disabled>🕘 기록(예전 버전)</button>
-            <button class="btn" type="button" id="cOut">🔌 연결 해제</button></div>
+            ${be ? '' : '<button class="btn" type="button" id="cOut">🔌 연결 해제</button>'}</div>
           <div id="cHistBox"></div>
         </div></div>`;
     let cur = null, sha = null, orig = '';
@@ -101,6 +138,7 @@
       const text = $('#cText').value;
       if (/\.js$/i.test(cur)) { try { new Function(text); } catch (e) { if (!(await confirmBox('이 JS 파일에 문법 오류가 있어요:\n' + e.message + '\n\n그대로 저장하면 사이트가 깨질 수 있어요. 그래도 저장할까요?', '문법 오류', '그래도 저장'))) return; } }
       if (DANGER.test(cur) && !(await confirmBox('이 파일은 사이트·운영진 센터의 핵심 파일이에요.\n잘못 고치면 운영진 센터가 안 열려서 고치기 어려울 수 있어요. (GitHub 웹사이트에서는 언제든 되돌릴 수 있어요.)\n\n계속할까요?', '핵심 파일', '계속'))) return;
+      if (be && !(await reauth())) return;
       try {
         msg('저장 중…'); $('#cSave').disabled = true;
         const r = await g.put(cur, text, sha, '운영진 센터에서 수정: ' + cur);
@@ -114,7 +152,7 @@
         $('#cHistBox').querySelectorAll('[data-sha]').forEach(b => b.onclick = async () => { try { const r = await g.get(cur, b.dataset.sha); $('#cText').value = r.text; msg('예전 버전을 불러왔어요. 저장해야 적용돼요.'); } catch (e) { msg(e.message, true); } });
       } catch (e) { msg(e.message, true); }
     };
-    $('#cOut').onclick = async () => { if (await confirmBox('이 브라우저에 저장된 GitHub 연결(토큰)을 지울까요?', '연결 해제', '해제')) { keep({}); viewCode(main); } };
+    if ($('#cOut')) $('#cOut').onclick = async () => { if (await confirmBox('이 브라우저에 저장된 GitHub 연결(토큰)을 지울까요?', '연결 해제', '해제')) { keep({}); viewCode(main); } };
   }
 
   function connectForm(main, cfg) {
