@@ -150,6 +150,7 @@
         store.set(SES, u.id); me = pubUser(u); return me;
       },
       async logout() { try { localStorage.removeItem(SES); } catch (e) {} me = null; },
+      async accessToken() { return null; },
       async changePassword(oldPw, newPw) {
         if (!me) throw new Error('로그인이 필요해요.');
         const u = userById(me.id);
@@ -372,6 +373,7 @@
         await loadMe(); return me;
       },
       async logout() { await sb.auth.signOut(); me = null; },
+      async accessToken() { const r = await sb.auth.getSession(); return (r.data && r.data.session && r.data.session.access_token) || null; },
       async changePassword(oldPw, newPw) {
         if (!me) throw new Error('로그인이 필요해요.');
         const nick = me.nick;
