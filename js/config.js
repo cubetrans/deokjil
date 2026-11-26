@@ -4,7 +4,7 @@
 window.SITE_CONFIG = {
   name: '덕질역',
   subtitle: '버스·철도 덕질 기록소',
-  since: 2019,
+  since: '2026.10',
 
   /* ▼ Supabase 연결 (README 참고)
      - 둘 다 비워 두면 "로컬 데모 모드": 이 브라우저에만 저장돼요. (혼자 써 보기용)

@@ -68,14 +68,13 @@
     const tags = {}; posts.forEach(p => (p.tags || []).forEach(t => { tags[t] = (tags[t] || 0) + 1; }));
     const authors = {}; posts.forEach(p => { if (p.author) authors[p.author] = (authors[p.author] || 0) + 1; });
     const day = Math.floor(Date.now() / 864e5);
-    const years = new Date().getFullYear() - C.since;
     const digits = String(visit.total).padStart(6, '0').split('').map(d => `<i>${d}</i>`).join('');
     content.innerHTML = `
       <h2 class="page-title">🚉 ${esc(C.name)} — ${esc(C.subtitle)}</h2>
       <div id="phStrip"></div>
       <div class="led" aria-label="안내 전광판"><span>${esc(settings.marquee)}${posts[0] ? ' ▶ 새 글: ' + esc(posts[0].title) : ''}</span></div>
       <div class="panel raised">
-        <b>${years}년차 교통 덕후 서울교덕과 지철덕의 블로그</b>
+        <b>Since. ${esc(C.since)} · 교통 덕후 서울교덕과 지철덕의 블로그</b>
         <div style="margin-top:6px">${esc(settings.intro).replace(/\n/g, '<br>')}</div>
       </div>
       <div class="cols">
@@ -269,13 +268,12 @@
   }
   function viewAbout() {
     setAddr('덕질역 소개', '덕질역 소개');
-    const years = new Date().getFullYear() - C.since;
     content.innerHTML = `<h2 class="page-title">ℹ️ 덕질역 소개</h2>
-      <div class="panel raised"><b>${esc(C.name)}</b> — ${esc(C.subtitle)}<br>${esc(C.since)}년부터 ${years}년째, 버스와 철도를 좋아하는 교통 덕후가 쓰는 기록장이에요.</div>
+      <div class="panel raised"><b>${esc(C.name)}</b> — ${esc(C.subtitle)}<br>Since. ${esc(C.since)} — 버스와 철도를 좋아하는 교통 덕후가 쓰는 기록장이에요.</div>
       <div class="sub-title"><span>🚏 이용 안내</span></div>
       <div class="panel sunken">
         <p>• 글은 글쓴이(운영진)만 쓸 수 있어요. 글쓴이 이름을 누르면 그 사람 글만 모아 볼 수 있어요.</p>
-        <p>• 닉네임으로 가입하면(이메일 없이) 댓글·대댓글·방명록·공감을 쓸 수 있어요.</p>
+        <p>• 가입 없이 댓글·대댓글·공감을 쓸 수 있어요. 닉네임은 접속 IP로 만든 '익명 xxxx'로 자동 정해져요.</p>
         <p>• 심한 욕설이 포함된 댓글은 운영자가 확인할 때까지 보류돼요.</p>
         <p>• 글을 퍼 가실 땐 출처만 밝혀 주세요.</p>
       </div>
