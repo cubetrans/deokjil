@@ -187,10 +187,10 @@
     }
     function formHtml(parentNick) {
       return `<form class="cmt-form raised${parentNick ? ' inline' : ''}">
-        <label for="cb-t" style="font-weight:bold">${parentNick ? '↪ ' + esc(parentNick) + '님에게 답글' : '익명으로 ' + word + ' 쓰기'}</label>
+        <label for="cb-t" style="font-weight:bold">${parentNick ? '↪ ' + esc(parentNick) + '님에게 답글' : (isAdmin() ? esc(me.nick) + ' 이름으로 ' : '익명으로 ') + word + ' 쓰기'}</label>
         <textarea class="input" maxlength="${C.commentMax}" ${parentNick ? '' : 'id="cb-t"'} name="body" placeholder="${opts.guest ? '다녀가신 흔적을 남겨 주세요 :)' : '따뜻한 한마디를 남겨 주세요 :)'}" required></textarea>
         <div class="row"><small class="cnt-ind" style="color:#555">0 / ${C.commentMax}</small><span class="row">${parentNick ? '<button class="btn sm" type="button" data-cancel>취소</button>' : ''}<button class="btn primary sm" type="submit">등록</button></span></div>
-        <small style="color:#777">닉네임은 접속 IP로 자동 정해져요. (IP는 공개되지 않아요)</small><div class="err-line" role="alert"></div></form>`;
+        <small style="color:#777">${isAdmin() ? '운영진 닉네임으로 등록돼요.' : '닉네임은 접속 IP로 자동 정해져요. (IP는 공개되지 않아요)'}</small><div class="err-line" role="alert"></div></form>`;
     }
     function bindForm(slot, parentId) {
       const f = slot.querySelector('form'); if (!f) return;
@@ -320,6 +320,17 @@
   /* ---------- 로그인 상태 · 방문자 · 랜덤 글 ---------- */
   function refreshUser() {
     $('#trayVisit').textContent = `오늘 ${visit.today} / 전체 ${visit.total}`;
+    const mb = $('#meBtn');
+    if (mb) {
+      if (isAdmin()) {
+        mb.hidden = false; mb.textContent = '👤 ' + me.nick; mb.title = '누르면 로그아웃돼요';
+        mb.onclick = async () => {
+          if (!(await confirmBox(`${me.nick}님, 로그아웃할까요?`, '로그아웃', '로그아웃'))) return;
+          try { await A.logout(); } catch (e) {}
+          location.reload();
+        };
+      } else mb.hidden = true;
+    }
   }
   async function randomPost() {
     const l = await A.listPosts(); if (!l.length) return alertBox('아직 글이 없어요.');
