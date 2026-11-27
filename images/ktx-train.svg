@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 2120 140" width="2120" height="140"><defs>
+<linearGradient id="cream" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fdfcf8"/><stop offset=".55" stop-color="#ebe8e0"/><stop offset="1" stop-color="#cfccc3"/></linearGradient>
+<linearGradient id="blue" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6575dd"/><stop offset=".5" stop-color="#3d4fc0"/><stop offset="1" stop-color="#27358f"/></linearGradient>
+<linearGradient id="skirt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c9cddb"/><stop offset="1" stop-color="#9aa0b4"/></linearGradient>
+<linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a4256"/><stop offset="1" stop-color="#12151f"/></linearGradient>
+
+<!-- 중간 객차 (길이 460) -->
+<symbol id="mid" viewBox="0 0 460 140" overflow="visible">
+  <rect x="0" y="28" width="460" height="80" rx="7" fill="url(#cream)"/>
+  <rect x="0" y="24" width="460" height="6" rx="3" fill="#9fa6bd"/>
+  <rect x="0" y="100" width="460" height="14" fill="url(#skirt)"/>
+  <rect x="10" y="38" width="440" height="22" rx="5" fill="#161925"/>
+  <rect x="50" y="38" width="4" height="22" fill="#d9d6ce"/><rect x="94" y="38" width="4" height="22" fill="#d9d6ce"/><rect x="138" y="38" width="4" height="22" fill="#d9d6ce"/><rect x="182" y="38" width="4" height="22" fill="#d9d6ce"/><rect x="226" y="38" width="4" height="22" fill="#d9d6ce"/><rect x="270" y="38" width="4" height="22" fill="#d9d6ce"/><rect x="314" y="38" width="4" height="22" fill="#d9d6ce"/><rect x="358" y="38" width="4" height="22" fill="#d9d6ce"/><rect x="402" y="38" width="4" height="22" fill="#d9d6ce"/>
+  <rect x="14" y="41" width="430" height="3" rx="1.5" fill="#fff" opacity=".12"/>
+  <rect x="14" y="66" width="86" height="34" rx="6" fill="url(#blue)"/>
+  <rect x="360" y="66" width="86" height="34" rx="6" fill="url(#blue)"/>
+  <rect x="26" y="70" width="38" height="28" rx="4" fill="#3446b4" stroke="#8fa0f0" stroke-width="1.5"/>
+  <ellipse cx="45" cy="82" rx="6" ry="9" fill="url(#glass)"/>
+  <rect x="396" y="70" width="38" height="28" rx="4" fill="#3446b4" stroke="#8fa0f0" stroke-width="1.5"/>
+  <ellipse cx="415" cy="82" rx="6" ry="9" fill="url(#glass)"/>
+  <rect x="120" y="66" width="220" height="3" fill="#c3c0b8" opacity=".7"/>
+  <rect x="120" y="94" width="220" height="3" fill="#c3c0b8" opacity=".7"/>
+  <rect x="36" y="108" width="68" height="10" rx="3" fill="#4a4f5a"/><circle cx="50" cy="120" r="12" fill="#2a2d36"/><circle cx="50" cy="120" r="5" fill="#8a909c"/><circle cx="90" cy="120" r="12" fill="#2a2d36"/><circle cx="90" cy="120" r="5" fill="#8a909c"/><rect x="356" y="108" width="68" height="10" rx="3" fill="#4a4f5a"/><circle cx="370" cy="120" r="12" fill="#2a2d36"/><circle cx="370" cy="120" r="5" fill="#8a909c"/><circle cx="410" cy="120" r="12" fill="#2a2d36"/><circle cx="410" cy="120" r="5" fill="#8a909c"/>
+</symbol>
+
+<!-- 동력차 (앞머리, 길이 600) : 오른쪽이 앞 -->
+<symbol id="head" viewBox="0 0 600 140" overflow="visible">
+  <!-- 지붕 위 장치 -->
+  <rect x="110" y="18" width="120" height="10" rx="3" fill="#2a2d3a"/>
+  <path d="M150 18 L168 4 L190 4 L206 18" fill="none" stroke="#2a2d3a" stroke-width="3"/>
+  <rect x="160" y="2" width="38" height="4" rx="2" fill="#2a2d3a"/>
+  <!-- 몸통 -->
+  <path d="M6 30 Q6 26 12 26 L418 26 C468 28 500 40 530 56 C560 70 590 80 598 92 L598 100 C590 108 560 112 520 112 L14 112 Q6 112 6 104 Z" fill="url(#cream)"/>
+  <path d="M6 26 L418 26 L418 32 L6 32 Z" fill="#303544"/>
+  <!-- 아랫부분 치마 -->
+  <path d="M6 100 L520 100 C556 100 588 98 598 94 L598 100 C590 108 560 114 520 114 L14 114 Q6 114 6 106 Z" fill="url(#skirt)"/>
+  <!-- 창 띠 -->
+  <rect x="14" y="40" width="330" height="20" rx="5" fill="#161925"/>
+  <rect x="56" y="40" width="4" height="20" fill="#d9d6ce"/><rect x="103" y="40" width="4" height="20" fill="#d9d6ce"/><rect x="150" y="40" width="4" height="20" fill="#d9d6ce"/><rect x="197" y="40" width="4" height="20" fill="#d9d6ce"/><rect x="244" y="40" width="4" height="20" fill="#d9d6ce"/><rect x="291" y="40" width="4" height="20" fill="#d9d6ce"/>
+  <!-- 세로 환기 줄무늬 -->
+  <g stroke="#a9aebd" stroke-width="2"><line x1="60" y1="66" x2="60" y2="96"/><line x1="70" y1="66" x2="70" y2="96"/><line x1="80" y1="66" x2="80" y2="96"/><line x1="90" y1="66" x2="90" y2="96"/><line x1="100" y1="66" x2="100" y2="96"/><line x1="110" y1="66" x2="110" y2="96"/><line x1="120" y1="66" x2="120" y2="96"/><line x1="130" y1="66" x2="130" y2="96"/><line x1="140" y1="66" x2="140" y2="96"/><line x1="150" y1="66" x2="150" y2="96"/><line x1="160" y1="66" x2="160" y2="96"/><line x1="170" y1="66" x2="170" y2="96"/><line x1="180" y1="66" x2="180" y2="96"/><line x1="190" y1="66" x2="190" y2="96"/><line x1="200" y1="66" x2="200" y2="96"/><line x1="210" y1="66" x2="210" y2="96"/><line x1="220" y1="66" x2="220" y2="96"/><line x1="230" y1="66" x2="230" y2="96"/><line x1="240" y1="66" x2="240" y2="96"/><line x1="250" y1="66" x2="250" y2="96"/><line x1="260" y1="66" x2="260" y2="96"/><line x1="270" y1="66" x2="270" y2="96"/><line x1="280" y1="66" x2="280" y2="96"/><line x1="290" y1="66" x2="290" y2="96"/></g>
+  <!-- 파란 앞머리 지붕 -->
+  <path d="M352 26 L418 26 C468 28 500 40 530 56 C556 68 580 76 592 84 L560 86 C520 80 480 76 440 72 L396 66 L352 62 Z" fill="url(#blue)"/>
+  <!-- 앞유리 -->
+  <path d="M462 38 C492 44 520 56 546 70 L548 74 C520 72 486 68 456 62 Z" fill="url(#glass)"/>
+  <path d="M470 42 C490 48 508 56 526 64" stroke="#8d97b3" stroke-width="2" fill="none" opacity=".7"/>
+  <!-- 옆 창 -->
+  <path d="M352 40 L420 40 L440 56 L352 56 Z" fill="#161925"/>
+  <!-- 문 -->
+  <rect x="356" y="64" width="40" height="40" rx="4" fill="#dedbd2" stroke="#a9aebd" stroke-width="1.5"/>
+  <!-- 앞 범퍼와 전조등 -->
+  <path d="M436 74 C500 78 566 82 594 90 C600 96 598 104 590 108 L436 112 Z" fill="url(#cream)"/><path d="M500 98 C540 98 574 100 594 104" stroke="#b9bdca" stroke-width="3" fill="none"/>
+  <ellipse cx="548" cy="90" rx="10" ry="5" fill="#fff6c9" stroke="#aeb3c4"/><ellipse cx="548" cy="90" rx="5" ry="2.5" fill="#fff"/>
+  
+  <!-- 파란 옆 무늬 -->
+  <path d="M396 66 L440 72 L430 100 L396 100 Z" fill="url(#blue)" opacity=".9"/>
+  <rect x="56" y="108" width="68" height="10" rx="3" fill="#4a4f5a"/><circle cx="70" cy="120" r="12" fill="#2a2d36"/><circle cx="70" cy="120" r="5" fill="#8a909c"/><circle cx="110" cy="120" r="12" fill="#2a2d36"/><circle cx="110" cy="120" r="5" fill="#8a909c"/><rect x="386" y="108" width="68" height="10" rx="3" fill="#4a4f5a"/><circle cx="400" cy="120" r="12" fill="#2a2d36"/><circle cx="400" cy="120" r="5" fill="#8a909c"/><circle cx="440" cy="120" r="12" fill="#2a2d36"/><circle cx="440" cy="120" r="5" fill="#8a909c"/>
+</symbol>
+</defs><use href="#head" x="600" y="0" width="600" height="140" transform="translate(1200 0) scale(-1 1)"/><use href="#mid" x="600" y="0" width="460" height="140"/><use href="#mid" x="1060" y="0" width="460" height="140"/><use href="#head" x="1520" y="0" width="600" height="140"/><rect x="597" y="40" width="8" height="64" fill="#23262f"/><rect x="1057" y="40" width="8" height="64" fill="#23262f"/><rect x="1517" y="40" width="8" height="64" fill="#23262f"/><rect x="0" y="133" width="2120" height="3" fill="#8b8f99"/></svg>

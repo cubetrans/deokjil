@@ -6,10 +6,9 @@
   const LOGO = 'images/logo.png';
   const st = document.createElement('style');
   st.textContent = `
-    @keyframes eg-run { from { transform: translateX(-120px); } to { transform: translateX(calc(100vw + 120px)); } }
-    .eg-train { position: fixed; left: 0; bottom: 18%; z-index: 9999; display: flex; gap: 2px; align-items: flex-end; animation: eg-run 4.5s linear forwards; pointer-events: none; filter: drop-shadow(0 4px 4px rgba(0,0,0,.3)); }
-    .eg-train img { height: 56px; width: 56px; border-radius: 10px; }
-    .eg-train span { font-size: 15px; background: #fff; color: #191f28; padding: 3px 8px; border-radius: 8px; align-self: center; margin-left: 8px; white-space: nowrap; }
+    @keyframes eg-run { from { transform: translateX(-1400px); } to { transform: translateX(100vw); } }
+    .eg-train { position: fixed; left: 0; bottom: 12%; z-index: 9999; animation: eg-run 7s linear forwards; pointer-events: none; filter: drop-shadow(0 6px 5px rgba(0,0,0,.3)); }
+    .eg-train img { display: block; height: 90px; width: auto; max-width: none; }
     @keyframes eg-fall { from { transform: translateY(-80px) rotate(0); opacity: 1; } to { transform: translateY(110vh) rotate(540deg); opacity: .9; } }
     .eg-drop { position: fixed; top: 0; z-index: 9999; pointer-events: none; animation: eg-fall linear forwards; border-radius: 6px; }
     @media (prefers-reduced-motion: reduce) { .eg-train, .eg-drop { display: none; } }`;
@@ -20,8 +19,8 @@
   let kpos = 0, typed = '';
   function train() {
     const t = document.createElement('div'); t.className = 'eg-train';
-    t.innerHTML = Array.from({ length: 4 }, () => `<img src="${LOGO}" alt="">`).join('') + '<span>🚆 덕질 급행, 출발합니다~</span>';
-    document.body.appendChild(t); setTimeout(() => t.remove(), 4700);
+    t.innerHTML = '<img src="images/ktx-train.svg" alt="">';
+    document.body.appendChild(t); setTimeout(() => t.remove(), 7300);
   }
   /* 2) deokjil 이라고 치면 로고 비가 내려요 */
   function rain() {
