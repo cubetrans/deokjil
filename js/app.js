@@ -96,7 +96,7 @@
     const day = Math.floor(Date.now() / 864e5);
     const digits = String(visit.total).padStart(6, '0').split('').map(d => `<i>${d}</i>`).join('');
     content.innerHTML = `
-      <h2 class="page-title"><img class="emo" src="images/logo.png" alt=""> ${esc(C.name)} — ${esc(C.subtitle)}</h2>
+      <h2 class="page-title"><img class="emo" src="images/logo.png" alt=""> ${esc(C.name)} — <span class="nb">${esc(C.subtitle)}</span></h2>
       <div id="phStrip"></div>
       <div class="led" aria-label="안내 전광판"><span>${esc(settings.marquee)}${posts[0] ? ' ▶ 새 글: ' + esc(posts[0].title) : ''}</span></div>
       ${departureBoard(posts.slice(0, 6))}

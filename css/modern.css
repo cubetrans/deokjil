@@ -87,3 +87,15 @@ html[data-theme=dark] .ti.on { color: #7db4ff; }
 
 /* 모바일: 전광판 숨김 */
 @media (max-width: 760px) { .site-head { position: static; } #sform { display: flex; gap: 6px; width: 100%; padding: 6px 0 10px; } #sform .input { flex: 1; min-width: 0; width: auto; } .dep { display: none; } body { font-size: 14px; } main#content { padding: 20px 16px; } .logo { height: 30px; width: 30px; } }
+
+/* 한글이 단어 중간에서 잘리지 않게: 단어 단위로 줄바꿈, 너무 긴 건 알아서 꺾기 */
+body { word-break: keep-all; overflow-wrap: break-word; }
+.page-title, .post-title, .sub-title { text-wrap: balance; }
+pre, code, .led, .dep-row > span { word-break: normal; }
+@media (max-width: 760px) {
+  .page-title { font-size: 20px; line-height: 1.4; }
+  .page-title .emo { height: 1.2em; }
+  .post-title { font-size: 20px; }
+  .sub-title { font-size: 16px; }
+}
+.nb { display: inline-block; }
