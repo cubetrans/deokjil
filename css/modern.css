@@ -22,7 +22,7 @@ a { color: var(--blue); } a:visited { color: var(--blue); }
 .site-head { background: var(--face); border-bottom: 1px solid var(--line); box-shadow: none; position: sticky; top: 0; z-index: 20; }
 .site-title { font-size: 24px; font-weight: 400; color: var(--ink); letter-spacing: -.5px; text-shadow: none; }
 html[data-theme=dark] .site-title { color: var(--ink); text-shadow: none; }
-.site-sub { color: var(--ink2); font-size: 13px; border-left: 1px solid var(--line); }
+.site-sub { cursor: default; user-select: none; -webkit-user-select: none; color: var(--ink2); font-size: 13px; border-left: 1px solid var(--line); }
 .me-btn, .theme-btn { background: var(--bg); color: var(--ink); border: 0; border-radius: 999px; box-shadow: none; }
 .me-btn { padding: 8px 14px; } .me-btn:hover, .theme-btn:hover { background: var(--line); }
 .site-bar { background: var(--face); border: 0; border-top: 1px solid var(--line2); }
@@ -86,7 +86,7 @@ html[data-theme=dark] .ti.on { color: #7db4ff; }
 .chip.on { background: var(--blue); color: #fff; }
 
 /* 모바일: 전광판 숨김 */
-@media (max-width: 760px) { .site-head { position: static; } #sform { display: flex; gap: 6px; width: 100%; padding: 6px 0 10px; } #sform .input { flex: 1; min-width: 0; width: auto; } .dep { display: none; } body { font-size: 14px; } main#content { padding: 20px 16px; } .logo { height: 30px; width: 30px; } }
+@media (max-width: 760px) { .site-sub { display: block; flex-basis: 100%; border-left: 0; padding-left: 0; font-size: 12px; } .site-head { position: static; } #sform { display: flex; gap: 6px; width: 100%; padding: 6px 0 10px; } #sform .input { flex: 1; min-width: 0; width: auto; } .dep { display: none; } body { font-size: 14px; } main#content { padding: 20px 16px; } .logo { height: 30px; width: 30px; } }
 
 /* 한글이 단어 중간에서 잘리지 않게: 단어 단위로 줄바꿈, 너무 긴 건 알아서 꺾기 */
 body { word-break: keep-all; overflow-wrap: break-word; }
