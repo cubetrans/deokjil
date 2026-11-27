@@ -6,9 +6,9 @@
   const LOGO = 'images/logo.png';
   const st = document.createElement('style');
   st.textContent = `
-    @keyframes eg-run { from { transform: translateX(-1400px); } to { transform: translateX(100vw); } }
-    .eg-train { position: fixed; left: 0; bottom: 12%; z-index: 9999; animation: eg-run 7s linear forwards; pointer-events: none; filter: drop-shadow(0 6px 5px rgba(0,0,0,.3)); }
-    .eg-train img { display: block; height: 90px; width: auto; max-width: none; }
+    @keyframes eg-run { from { transform: translateX(-1700px); } to { transform: translateX(100vw); } }
+    .eg-train { position: fixed; left: 0; bottom: 12%; z-index: 9999; animation: eg-run 8s linear forwards; pointer-events: none; filter: drop-shadow(0 6px 5px rgba(0,0,0,.3)); }
+    .eg-train img { display: block; height: 84px; width: auto; max-width: none; }
     @keyframes eg-fall { from { transform: translateY(-80px) rotate(0); opacity: 1; } to { transform: translateY(110vh) rotate(540deg); opacity: .9; } }
     .eg-drop { position: fixed; top: 0; z-index: 9999; pointer-events: none; animation: eg-fall linear forwards; border-radius: 6px; }
     @media (prefers-reduced-motion: reduce) { .eg-train, .eg-drop { display: none; } }`;
@@ -20,7 +20,7 @@
   function train() {
     const t = document.createElement('div'); t.className = 'eg-train';
     t.innerHTML = '<img src="images/ktx-train.svg" alt="">';
-    document.body.appendChild(t); setTimeout(() => t.remove(), 7300);
+    document.body.appendChild(t); setTimeout(() => t.remove(), 8300);
   }
   /* 2) deokjil 이라고 치면 로고 비가 내려요 */
   function rain() {
