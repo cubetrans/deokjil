@@ -392,3 +392,17 @@ a.dep-row:hover { background: rgba(255,201,51,.08); }
   .dep-row { grid-template-columns: 52px 1fr 48px; font-size: 16.5px; }
   .dep-row.dep-h > span { font-size: 11px; background-size: 1px 1px; }
 }
+
+/* ---- 전광판: 실제 코레일 출발안내판 사진처럼 다듬기 ---- */
+.dep { --led: #ffd21f; --led-d: #b27d00; padding: 8px 14px 4px; border-radius: 6px; }
+.dep-row.new { --led: #ff2a1a; --led-d: #8f0f08; }
+.dep-top { align-items: flex-end; margin-bottom: 2px; }
+.dep-clock { font-size: 16.5px; background-size: 1.5px 1.5px; }
+.dep-title { font-size: 33px; letter-spacing: 6px; }
+.dep-logo { background: transparent; color: #3f8cff; font-style: italic; font-weight: 900; letter-spacing: 1px; text-shadow: 0 0 6px rgba(63,140,255,.7); box-shadow: none; padding: 0 2px; font-size: 16px; border-bottom: 2px solid #e60012; border-radius: 0; }
+.dep-row { padding: 3px 2px 2px; border-top: 2px solid #19d44a; box-shadow: 0 0 6px -1px rgba(25,212,74,.9); }
+.dep-row.dep-h { border-top: 2px solid #19d44a; padding: 3px 2px 1px; box-shadow: 0 0 6px -1px rgba(25,212,74,.9); }
+.dep-row.dep-h > span { font-size: 11px; background-size: 1px 1px; }
+.dep-row.dep-h { align-items: end; }
+.dep-row:last-child { border-bottom: 2px solid #19d44a; }
+@media (max-width: 760px) { .dep-title { font-size: 22px; letter-spacing: 2px; } .dep-clock { font-size: 11px; background-size: 1px 1px; } }
