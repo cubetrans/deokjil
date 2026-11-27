@@ -99,3 +99,4 @@ pre, code, .led, .dep-row > span { word-break: normal; }
   .sub-title { font-size: 16px; }
 }
 .nb { display: inline-block; }
+.site-foot b { color: var(--ink); }
