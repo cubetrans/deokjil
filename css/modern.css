@@ -16,7 +16,7 @@ body { font: 15px/1.7 var(--font); letter-spacing: 0; background: var(--bg); col
 a { color: var(--blue); } a:visited { color: var(--blue); }
 .emo { height: 1.35em; width: auto; vertical-align: -.3em; border-radius: 4px; }
 .logo { height: 36px; width: 36px; margin-right: 10px; vertical-align: -10px; border-radius: 9px; }
-.post-body img.emo, .cmt-b img.emo { display: inline; margin: 0 1px; height: 1.6em; width: auto; max-height: none; border: 0; border-radius: 4px; vertical-align: -.4em; cursor: default; }
+.post-body img.emo, .cmt-b img.emo { display: inline; margin: 0 1px; height: 1.35em; width: auto; max-height: none; border: 0; border-radius: 4px; vertical-align: -.4em; cursor: default; }
 
 /* 머리말: 흰 바탕, 메뉴는 글자 탭 */
 .site-head { background: var(--face); border-bottom: 1px solid var(--line); box-shadow: none; position: sticky; top: 0; z-index: 20; }
