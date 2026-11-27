@@ -346,7 +346,7 @@ html[data-theme=dark] .code-files { background: var(--face); }
 .code-chg a { cursor: pointer; color: #c0392b; margin-left: 4px; }
 html[data-theme=dark] .code-chg { background: var(--face); }
 /* ---- 출발 안내 전광판 ---- */
-.dep { background: #050505; border: 2px solid #3a3d42; border-radius: 8px; padding: 10px 14px 6px; margin-bottom: 18px; box-shadow: 0 0 0 4px #25272b; font-family: var(--pixel, inherit); color: #ffd34a; text-shadow: 0 0 5px rgba(255,160,0,.55); }
+.dep { background: #050505; border: 2px solid #3a3d42; border-radius: 8px; padding: 10px 14px 6px; margin-bottom: 18px; box-shadow: 0 0 0 4px #25272b; font-family: 'Korail M', var(--pixel, inherit); color: #ffd34a; text-shadow: 0 0 5px rgba(255,160,0,.55); }
 .dep-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
 .dep-clock { font-size: 13px; font-weight: bold; white-space: nowrap; }
 .dep-title { font-size: 20px; letter-spacing: 3px; text-align: center; flex: 1; }
