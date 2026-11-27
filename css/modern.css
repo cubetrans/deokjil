@@ -1,0 +1,89 @@
+/* ==========================================================
+   modern.css — 토스 · 서울교통공사 같은 깔끔한 카드형 디자인 (갈무리 글꼴)
+   index.html에서만 불러와요. 지우면 theme.css 모양으로 돌아가요.
+   ========================================================== */
+:root {
+  --font: 'Galmuri11', 'Galmuri9', 'Pretendard', 'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --pixel: 'Galmuri11', 'Galmuri9', 'Malgun Gothic', monospace;
+  --blue: #3182f6; --blue-dk: #1b64da; --blue-lt: #e8f3ff;
+  --bg: #f2f4f6; --face: #fff; --ink: #191f28; --ink2: #6b7684; --line: #e5e8eb; --line2: #f2f4f6;
+  --brand: #3182f6; --brand-dk: #191f28; --brand-lt: #e8f3ff; --sky: #3182f6;
+  --r: 16px; --r-sm: 12px;
+  --shadow: 0 2px 14px rgba(25, 31, 40, .05);
+}
+html[data-theme=dark] { --bg: #101215; --face: #1b1e23; --ink: #f2f4f6; --ink2: #9aa4b2; --line: #2b3038; --line2: #23272d; --blue-lt: #19283d; --brand-dk: #f2f4f6; --shadow: none; }
+body { font: 15px/1.7 var(--font); letter-spacing: 0; background: var(--bg); color: var(--ink); }
+a { color: var(--blue); } a:visited { color: var(--blue); }
+.emo { height: 1.35em; width: auto; vertical-align: -.3em; border-radius: 4px; }
+.logo { height: 36px; width: 36px; margin-right: 10px; vertical-align: -10px; border-radius: 9px; }
+.post-body img.emo, .cmt-b img.emo { display: inline; margin: 0 1px; height: 1.6em; width: auto; max-height: none; border: 0; border-radius: 4px; vertical-align: -.4em; cursor: default; }
+
+/* 머리말: 흰 바탕, 메뉴는 글자 탭 */
+.site-head { background: var(--face); border-bottom: 1px solid var(--line); box-shadow: none; position: sticky; top: 0; z-index: 20; }
+.site-title { font-size: 24px; font-weight: 400; color: var(--ink); letter-spacing: -.5px; text-shadow: none; }
+html[data-theme=dark] .site-title { color: var(--ink); text-shadow: none; }
+.site-sub { color: var(--ink2); font-size: 13px; border-left: 1px solid var(--line); }
+.me-btn, .theme-btn { background: var(--bg); color: var(--ink); border: 0; border-radius: 999px; box-shadow: none; }
+.me-btn { padding: 8px 14px; } .me-btn:hover, .theme-btn:hover { background: var(--line); }
+.site-bar { background: var(--face); border: 0; border-top: 1px solid var(--line2); }
+.menubar a, .menubar a:visited { color: var(--ink); font-size: 15px; font-weight: 400; padding: 12px 16px; border-bottom: 3px solid transparent; }
+.menubar a:hover { background: transparent; color: var(--blue); border-bottom-color: var(--blue); text-decoration: none; }
+#sform .input { background: var(--bg); border: 0; border-radius: 999px; color: var(--ink); box-shadow: none; padding: 4px 16px; }
+#sform .btn.sm { background: var(--blue); color: #fff; border: 0; border-radius: 999px; }
+#sform .btn.sm:hover { background: var(--blue-dk); }
+
+/* 카드 = 흰 바탕, 큰 둥근 모서리, 부드러운 그림자 */
+main#content, .panel, .raised, .cmt, .memo, fieldset, .msg, .site-foot, .cmt-form, .bcard {
+  background: var(--face); border: 0; border-radius: var(--r); box-shadow: var(--shadow); }
+main#content { padding: 28px 30px; }
+.site-foot { color: var(--ink2); box-shadow: none; background: transparent; }
+.panel.raised, .panel { padding: 18px 20px; }
+.sunken { background: var(--bg); border: 0; border-radius: var(--r-sm); box-shadow: none; }
+.msg.info { background: var(--blue-lt); color: var(--ink); }
+.bcard { background: var(--bg); box-shadow: none; transition: background .15s, transform .15s; }
+.bcard:hover { background: var(--blue-lt); transform: translateY(-2px); text-decoration: none; }
+.cmt { box-shadow: none; background: var(--bg); }
+
+/* 제목: 크고 굵게, 장식 없이 */
+.page-title { font-size: 26px; font-weight: 400; color: var(--ink); border: 0; padding: 0; margin: 0 0 20px; letter-spacing: -.5px; }
+.page-title::after { display: none; }
+html[data-theme=dark] .page-title { color: var(--ink); }
+.sub-title { background: none; color: var(--ink); padding: 0; margin: 34px 0 14px; font-size: 18px; font-weight: 400; border: 0; }
+.sub-title::before { display: none; }
+.sub-title a, .sub-title a:visited { color: var(--ink2); font-size: 13px; }
+.cat-h { font-size: 13px; color: var(--ink2); margin: 14px 0 8px; }
+.post-title { letter-spacing: -.5px; }
+
+/* 버튼: 토스처럼 알약/둥근 */
+.btn { background: var(--bg); color: var(--ink); border: 0; border-radius: var(--r-sm); box-shadow: none; font-family: var(--font); padding: 8px 18px; min-height: 38px; }
+.btn:hover { background: var(--line); border: 0; }
+.btn:active, .btn.on { background: var(--line); box-shadow: none; padding: 8px 18px; }
+.btn.primary { background: var(--blue); color: #fff; font-weight: 400; }
+.btn.primary:hover { background: var(--blue-dk); }
+.btn.danger { background: #fdecec; color: #d93025; } html[data-theme=dark] .btn.danger { background: #3a1f1f; }
+.btn.sm { min-height: 30px; padding: 3px 12px; border-radius: 10px; }
+.input, input, textarea, select { background: var(--bg); color: var(--ink); border: 2px solid transparent; border-radius: var(--r-sm); box-shadow: none; font-family: var(--font); }
+.input:focus, input:focus, textarea:focus, select:focus { outline: 0; border-color: var(--blue); background: var(--face); }
+html[data-theme=dark] .input, html[data-theme=dark] input, html[data-theme=dark] textarea, html[data-theme=dark] select { background: #12151a; color: var(--ink); }
+
+/* 표: 선 없이 깔끔하게 */
+.tbl { border: 0; background: transparent; border-collapse: collapse; }
+.tbl th { background: transparent; border: 0; border-bottom: 1px solid var(--line); color: var(--ink2); font-weight: 400; font-size: 13px; }
+.tbl td { border: 0; border-bottom: 1px solid var(--line2); padding-top: 10px; padding-bottom: 10px; }
+.tbl tbody tr:hover td { background: var(--bg); }
+html[data-theme=dark] .tbl th { background: transparent; color: var(--ink2); }
+
+/* 왼쪽 메뉴 */
+#tree, .tree, aside { border-radius: var(--r); }
+.ti { border-radius: var(--r-sm); color: var(--ink); }
+.ti:hover { background: var(--bg); color: var(--ink); }
+.ti.on { background: var(--blue-lt); color: var(--blue); }
+html[data-theme=dark] .ti.on { color: #7db4ff; }
+.ti-cat { background: transparent; color: var(--ink2); font-size: 12px; }
+
+/* 칩·태그 */
+.chip, .tag { border-radius: 999px; background: var(--bg); border: 0; color: var(--ink); padding: 4px 13px; }
+.chip.on { background: var(--blue); color: #fff; }
+
+/* 모바일: 전광판 숨김 */
+@media (max-width: 760px) { .site-head { position: static; } #sform { display: flex; gap: 6px; width: 100%; padding: 6px 0 10px; } #sform .input { flex: 1; min-width: 0; width: auto; } .dep { display: none; } body { font-size: 14px; } main#content { padding: 20px 16px; } .logo { height: 30px; width: 30px; } }

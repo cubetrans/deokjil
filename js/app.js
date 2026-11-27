@@ -5,7 +5,7 @@
   'use strict';
   const C = window.SITE_CONFIG, A = window.API;
   const $ = (s, r = document) => r.querySelector(s);
-  const { esc, fmtDate, fmtShort, renderBody, openWin, alertBox, confirmBox } = window.Common;
+  const { emoji, esc, fmtDate, fmtShort, renderBody, openWin, alertBox, confirmBox } = window.Common;
 
   let me = null, settings = {}, visit = { today: 0, total: 0 };
   const content = $('#content');
@@ -39,7 +39,7 @@
   function buildTree(active) {
     const link = x => `<a class="ti${x.k === active ? ' on' : ''}" href="${x.h}"><span>${x.i}</span> ${esc(x.t)}</a>`;
     const bl = b => link({ h: '#/board/' + b.id, i: b.icon, t: b.name, k: 'board:' + b.id });
-    $('#tree').innerHTML = link({ h: '#/', i: '🚉', t: C.name, k: 'home' })
+    $('#tree').innerHTML = link({ h: '#/', i: '<img class="emo" src="images/logo.png" alt="">', t: C.name, k: 'home' })
       + groupedBoards().map(g => (g.cat ? `<div class="ti-cat">${esc(g.cat.name)}</div>` : '') + g.boards.map(bl).join('')).join('')
       + '<div class="ti-sep" role="separator"></div>'
       + [{ h: '#/photos', i: '📷', t: '촬영 사진', k: 'photos' }, { h: '#/backup', i: '📦', t: '지난 글 보관함', k: 'backup' },
@@ -48,7 +48,7 @@
 
   /* ---------- 글 목록 표 ---------- */
   function postsTable(list, startNo, showBoard) {
-    if (!list.length) return '<div class="empty">아직 글이 없어요. 곧 열차가 들어옵니다 🚉</div>';
+    if (!list.length) return '<div class="empty">아직 글이 없어요. 곧 열차가 들어옵니다 <img class="emo" src="images/logo.png" alt=""></div>';
     return `<table class="tbl"><thead><tr><th class="hide-m" style="width:46px">번호</th><th>제목</th><th class="hide-m" style="width:84px">글쓴이</th><th style="width:90px">날짜</th><th class="hide-m" style="width:50px">조회</th><th style="width:44px">공감</th></tr></thead><tbody>${
       list.map((p, i) => `<tr><td class="c hide-m">${p.pinned ? '<span class="pin">📌</span>' : startNo - i}</td>
         <td class="t"><a href="#/post/${esc(p.id)}">${showBoard ? `<small>[${esc((boardOf(p.board) || {}).name || p.board)}]</small> ` : ''}${esc(p.title)}</a>${p.comments ? ` <span class="cnt">[${p.comments}]</span>` : ''}</td>
@@ -72,7 +72,7 @@
     if (!list.length) return '';
     const fresh = Date.now() - new Date(list[0].created) < 864e5;
     return `<div class="dep" aria-label="최근 글 출발 안내">
-      <div class="dep-top"><span class="dep-clock">현재시간 <span id="depClock"></span></span><b class="dep-title">덕질 출발 안내</b><span class="dep-logo">🚉 덕질역</span></div>
+      <div class="dep-top"><span class="dep-clock">현재시간 <span id="depClock"></span></span><b class="dep-title">덕질 출발 안내</b><span class="dep-logo"><img class="emo" src="images/logo.png" alt=""> 덕질역</span></div>
       <div class="dep-row dep-h"><span>날짜</span><span>제목</span><span class="dep-b">게시판</span><span class="dep-n">공감수</span><span class="dep-n">댓글</span></div>
       ${list.map((p, i) => `<a class="dep-row${i === 0 && fresh ? ' new' : ''}" href="#/post/${esc(p.id)}"><span>${depDate(p.created)}</span><span class="dep-t">${i === 0 && fresh ? '[NEW] ' : ''}${esc(p.title)}</span><span class="dep-b">${esc(boardLabel(p))}</span><span class="dep-n">${p.likes || 0}</span><span class="dep-n">${p.comments || 0}건</span></a>`).join('')}
     </div>`;
@@ -96,7 +96,7 @@
     const day = Math.floor(Date.now() / 864e5);
     const digits = String(visit.total).padStart(6, '0').split('').map(d => `<i>${d}</i>`).join('');
     content.innerHTML = `
-      <h2 class="page-title">🚉 ${esc(C.name)} — ${esc(C.subtitle)}</h2>
+      <h2 class="page-title"><img class="emo" src="images/logo.png" alt=""> ${esc(C.name)} — ${esc(C.subtitle)}</h2>
       <div id="phStrip"></div>
       <div class="led" aria-label="안내 전광판"><span>${esc(settings.marquee)}${posts[0] ? ' ▶ 새 글: ' + esc(posts[0].title) : ''}</span></div>
       ${departureBoard(posts.slice(0, 6))}
@@ -207,7 +207,7 @@
         <div class="cmt-h"><b class="nick${c.role && c.role !== 'user' ? ' admin' : ''}">${roleMark(c.role)}${esc(c.nick)}</b><span class="date">${fmtDate(c.created)}</span>
           ${c.status === 'pending' ? '<span class="pending-tag">🕓 검토 대기 중 (관리자에게만 보여요)</span>' : ''}
           <span class="acts"><a data-act="reply" role="button" tabindex="0">답글</a>${isAdmin() ? '<a data-act="del" role="button" tabindex="0">삭제</a>' : ''}</span></div>
-        <div class="cmt-b">${esc(c.body)}</div></div>`;
+        <div class="cmt-b">${emoji(esc(c.body))}</div></div>`;
       box.innerHTML = `<div class="cmt-head">💬 ${word} ${visible}</div>
         ${roots.length ? roots.map(r => item(r, false) + kids(r.id).map(k => item(k, true)).join('')).join('') : `<div class="empty">첫 ${word}을 남겨 보세요!</div>`}
         <div data-form-slot>${formHtml(null)}</div>`;
@@ -394,10 +394,10 @@
 
   /* ---------- 사진 확대 보기 ---------- */
   document.addEventListener('click', e => {
-    const im = e.target.closest && e.target.closest('.post-body img, img.zoomable');
+    const im = e.target.closest && e.target.closest('.post-body img:not(.emo), img.zoomable');
     if (!im || im.closest('a')) return;
     const src = im.currentSrc || im.src; if (!src) return;
-    const imgs = [...document.querySelectorAll('.post-body img')].map(x => x.currentSrc || x.src);
+    const imgs = [...document.querySelectorAll('.post-body img:not(.emo)')].map(x => x.currentSrc || x.src);
     let i = Math.max(0, imgs.indexOf(src));
     const box = document.createElement('div');
     box.className = 'lightbox'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-label', '사진 크게 보기');

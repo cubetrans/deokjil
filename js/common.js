@@ -67,9 +67,11 @@
     const reLink = new RegExp('\\[([^\\]]+)\\]\\(\\s*' + URLP + '(?:\\s+&quot;(.*?)&quot;)?\\s*\\)', 'g');
     const reImgI = new RegExp('!\\[([^\\]]*)\\]\\(\\s*' + URLP + '(?:\\s+&quot;(.*?)&quot;)?\\s*\\)', 'g');
 
+    const EMO = '<img class="emo" src="images/logo.png" alt=":deokjil:" title=":deokjil:">';
     const inl = t => {                                      // t: 이미 esc() 한 문자열
       t = t.replace(/\\([\\`*_{}\[\]()#+\-.!|~=^])/g, (_, c) => keep(c));                       // \* 같은 이스케이프
       t = t.replace(/(?<!`)(`+)(?!`)([\s\S]*?[^`])\1(?!`)/g, (_, b, c) => keep('<code>' + c.trim() + '</code>'));
+      t = t.replace(/:deokjil:/g, () => keep(EMO));                                    // :deokjil: → 덕질역 로고 이모티콘
       t = t.replace(reImgI, (all, alt, u, ti) => okImg(u) ? keep(imgTag(u, alt, ti)) : all);
       t = t.replace(/!\[([^\]]*)\]\[([^\]]*)\]/g, (all, alt, id) => { const r = refs[(id || alt).toLowerCase()]; return r && okImg(r.url) ? keep(imgTag(esc(r.url), alt, esc(r.title))) : all; });
       t = t.replace(reLink, (all, txt, u, ti) => { const a = linkTag(u, inl(txt), ti); return a ? keep(a) : all; });
@@ -336,5 +338,5 @@
     return blob;
   }
 
-  window.Common = { esc, fmtDate, fmtShort, renderBody, openWin, alertBox, confirmBox, askText, loginDialog, prepareImage };
+  window.Common = { emoji: s => String(s).replace(/:deokjil:/g, '<img class="emo" src="images/logo.png" alt=":deokjil:" title=":deokjil:">'), esc, fmtDate, fmtShort, renderBody, openWin, alertBox, confirmBox, askText, loginDialog, prepareImage };
 })();

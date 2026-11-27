@@ -234,7 +234,7 @@
         <div class="field ed-area"><label for="ec">내용</label>
           <div class="ed-tools">
             <button class="btn sm" type="button" data-t="bold"><b>B</b> 굵게</button><button class="btn sm" type="button" data-t="h1">큰 제목</button><button class="btn sm" type="button" data-t="h2">작은 제목</button><button class="btn sm" type="button" data-t="italic"><i>I</i> 기울임</button><button class="btn sm" type="button" data-t="strike"><s>S</s> 취소선</button><button class="btn sm" type="button" data-t="quote">❝ 인용</button><button class="btn sm" type="button" data-t="ul">• 목록</button><button class="btn sm" type="button" data-t="ol">1. 번호</button><button class="btn sm" type="button" data-t="chk">☑ 체크</button><button class="btn sm" type="button" data-t="code">&lt;/&gt; 코드</button><button class="btn sm" type="button" data-t="codeblock">코드 블록</button><button class="btn sm" type="button" data-t="link">🔗 링크</button><button class="btn sm" type="button" data-t="table">▦ 표</button>
-            <button class="btn sm" type="button" data-t="hr">구분선</button><button class="btn sm" type="button" data-t="upload">📤 사진 올리기</button><button class="btn sm" type="button" data-t="img">🖼 사진 주소</button><button class="btn sm" type="button" data-t="yt">▶ 유튜브</button><button class="btn sm" type="button" data-t="gyo"><span class="f-gyo">교덕체</span></button>
+            <button class="btn sm" type="button" data-t="hr">구분선</button><button class="btn sm" type="button" data-t="upload">📤 사진 올리기</button><button class="btn sm" type="button" data-t="img">🖼 사진 주소</button><button class="btn sm" type="button" data-t="yt">▶ 유튜브</button><button class="btn sm" type="button" data-t="gyo"><span class="f-gyo">교덕체</span></button><button class="btn sm" type="button" data-t="emo" title="덕질역 로고 이모티콘 (:deokjil:)"><img class="emo" src="images/logo.png" alt=""> :deokjil:</button>
             <button class="btn sm" type="button" id="pvBtn">👁 미리보기</button>
             <label for="szSel" style="margin-left:6px">사진 크기</label> <select class="input" id="szSel" style="width:auto;padding:1px 2px"><option value="30">30%</option><option value="50">50%</option><option value="70" selected>70%</option><option value="100">100%</option></select>
             <input type="file" id="fileIn" accept="image/*" multiple hidden> <small id="upMsg" style="color:#000080"></small></div>
@@ -301,6 +301,7 @@
       else if (t === 'hr') lineIns('\n---\n');
       else if (t === 'img') { const u = await askText('사진 넣기', '사진 주소 (https://… 또는 images/파일명.jpg)'); if (u) lineIns('\n[img]' + u + '\n'); }
       else if (t === 'gyo') ins('[교덕체]', '[/교덕체]', '글자');
+      else if (t === 'emo') ins(':deokjil:', '', '');
       else if (t === 'yt') { const u = await askText('유튜브 넣기', '유튜브 영상 주소'); if (u) lineIns('\n' + u + '\n'); }
     });
     const pv = $('#pv'), pvBtn = $('#pvBtn');
