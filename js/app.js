@@ -58,6 +58,32 @@
   const pager = (base, pg, pages) => pages <= 1 ? '' :
     `<div class="pager">${Array.from({ length: pages }, (_, i) => i + 1).map(n => n === pg ? `<b>${n}</b>` : `<a href="${base}/${n}">${n}</a>`).join('')}</div>`;
 
+  /* ---------- 출발 안내 전광판 (최근 글) ---------- */
+  const pad2 = n => String(n).padStart(2, '0');
+  function depDate(iso) {
+    const d = new Date(iso), n = new Date();
+    return d.toDateString() === n.toDateString() ? `${pad2(d.getHours())}:${pad2(d.getMinutes())}` : `${pad2(d.getMonth() + 1)}/${pad2(d.getDate())}`;
+  }
+  function boardLabel(p) {
+    const b = boardOf(p.board), cat = b && b.cat ? (C.categories || []).find(c => c.id === b.cat) : null;
+    return (b ? b.name : p.board) + (cat ? ' · ' + cat.name : '');
+  }
+  function departureBoard(list) {
+    if (!list.length) return '';
+    const fresh = Date.now() - new Date(list[0].created) < 864e5;
+    return `<div class="dep" aria-label="최근 글 출발 안내">
+      <div class="dep-top"><span class="dep-clock">현재시간 <span id="depClock"></span></span><b class="dep-title">덕질 출발 안내</b><span class="dep-logo">🚉 덕질역</span></div>
+      <div class="dep-row dep-h"><span>날짜</span><span>제목</span><span class="dep-b">게시판</span><span class="dep-n">공감수</span><span class="dep-n">댓글</span></div>
+      ${list.map((p, i) => `<a class="dep-row${i === 0 && fresh ? ' new' : ''}" href="#/post/${esc(p.id)}"><span>${depDate(p.created)}</span><span class="dep-t">${i === 0 && fresh ? '[NEW] ' : ''}${esc(p.title)}</span><span class="dep-b">${esc(boardLabel(p))}</span><span class="dep-n">${p.likes || 0}</span><span class="dep-n">${p.comments || 0}건</span></a>`).join('')}
+    </div>`;
+  }
+  let depTimer = null;
+  function startDepClock() {
+    clearInterval(depTimer);
+    const tick = () => { const el = document.getElementById('depClock'); if (!el) { clearInterval(depTimer); return; } const d = new Date(); el.textContent = `${pad2(d.getHours())}:${pad2(d.getMinutes())}`; };
+    tick(); depTimer = setInterval(tick, 20000);
+  }
+
   /* ---------- 홈 ---------- */
   async function viewHome() {
     setAddr('', '');
@@ -73,6 +99,7 @@
       <h2 class="page-title">🚉 ${esc(C.name)} — ${esc(C.subtitle)}</h2>
       <div id="phStrip"></div>
       <div class="led" aria-label="안내 전광판"><span>${esc(settings.marquee)}${posts[0] ? ' ▶ 새 글: ' + esc(posts[0].title) : ''}</span></div>
+      ${departureBoard(posts.slice(0, 6))}
       <div class="panel raised">
         <b>Since. ${esc(C.since)} · 교통 덕후 서울교덕과 지철덕의 블로그</b>
         <div style="margin-top:6px">${esc(settings.intro).replace(/\n/g, '<br>')}</div>
@@ -98,6 +125,7 @@
       <div class="sub-title"><span>🚏 승강장 안내 (게시판)</span></div>
       ${groupedBoards().map(g => (g.cat ? `<div class="cat-h">📁 ${esc(g.cat.name)}</div>` : '') + `<div class="board-grid">${g.boards.map(b => `<a class="bcard raised" href="#/board/${b.id}"><b>${b.icon} ${esc(b.name)}</b><small>${esc(b.desc)} · ${counts[b.id] || 0}개</small></a>`).join('')}</div>`).join('')}
       ${Object.keys(tags).length ? `<div class="sub-title"><span>🏷️ 태그</span></div><div>${Object.keys(tags).sort((a, b) => tags[b] - tags[a]).slice(0, 24).map(t => `<a class="tag" href="#/tag/${encodeURIComponent(t)}">#${esc(t)} (${tags[t]})</a>`).join('')}</div>` : ''}`;
+    startDepClock();
     setStatus(`글 ${posts.length}개`, `오늘 ${visit.today} / 전체 ${visit.total}`);
   }
 
