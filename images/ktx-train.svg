@@ -7,55 +7,57 @@
 
 <!-- 객차 (길이 900) -->
 <symbol id="mid" viewBox="0 0 900 200" overflow="visible">
-  <path d="M0 58 Q0 40 18 40 L882 40 Q900 40 900 58 L900 150 L0 150 Z" fill="url(#cr)"/>
+  <path d="M0 58 Q0 40 18 40 L882 40 Q900 40 900 58 L900 150 L0 150 Z" fill="url(#cr)" stroke="#b4b2ad" stroke-width="2"/>
   <path d="M0 58 Q0 40 18 40 L882 40 Q900 40 900 58 L900 52 L0 52 Z" fill="url(#rf)"/>
   <rect x="0" y="146" width="900" height="18" fill="url(#sk)"/>
   <rect x="150" y="124" width="600" height="22" fill="#d5d3cf" opacity=".55"/>
   <!-- 긴 창 띠 -->
-  <rect x="150" y="66" width="600" height="38" rx="6" fill="#141722"/>
-  <rect x="194" y="66" width="6" height="38" fill="#e4e2dc"/><rect x="244" y="66" width="6" height="38" fill="#e4e2dc"/><rect x="294" y="66" width="6" height="38" fill="#e4e2dc"/><rect x="344" y="66" width="6" height="38" fill="#e4e2dc"/><rect x="394" y="66" width="6" height="38" fill="#e4e2dc"/><rect x="444" y="66" width="6" height="38" fill="#e4e2dc"/><rect x="494" y="66" width="6" height="38" fill="#e4e2dc"/><rect x="544" y="66" width="6" height="38" fill="#e4e2dc"/><rect x="594" y="66" width="6" height="38" fill="#e4e2dc"/><rect x="644" y="66" width="6" height="38" fill="#e4e2dc"/><rect x="694" y="66" width="6" height="38" fill="#e4e2dc"/>
+  <rect x="160" y="66" width="580" height="36" rx="6" fill="#1b2038"/>
+  <rect x="202" y="66" width="6" height="38" fill="#e4e2dc"/><rect x="250" y="66" width="6" height="38" fill="#e4e2dc"/><rect x="298" y="66" width="6" height="38" fill="#e4e2dc"/><rect x="346" y="66" width="6" height="38" fill="#e4e2dc"/><rect x="394" y="66" width="6" height="38" fill="#e4e2dc"/><rect x="442" y="66" width="6" height="38" fill="#e4e2dc"/><rect x="490" y="66" width="6" height="38" fill="#e4e2dc"/><rect x="538" y="66" width="6" height="38" fill="#e4e2dc"/><rect x="586" y="66" width="6" height="38" fill="#e4e2dc"/><rect x="634" y="66" width="6" height="38" fill="#e4e2dc"/><rect x="682" y="66" width="6" height="38" fill="#e4e2dc"/>
   <rect x="156" y="70" width="588" height="5" rx="2.5" fill="#fff" opacity=".1"/>
   <!-- 양끝 파란 문 구간 -->
-  <path d="M14 56 L140 56 L140 148 L14 148 Z" fill="url(#bl)"/>
-  <path d="M760 56 L886 56 L886 148 L760 148 Z" fill="url(#bl)"/>
-  <rect x="34" y="68" width="86" height="72" rx="10" fill="#3a4cb8" stroke="#a6b4f6" stroke-width="2"/>
-  <rect x="780" y="68" width="86" height="72" rx="10" fill="#3a4cb8" stroke="#a6b4f6" stroke-width="2"/>
-  <ellipse cx="77" cy="96" rx="14" ry="20" fill="url(#gl)" stroke="#8d9be6" stroke-width="2"/>
-  <ellipse cx="823" cy="96" rx="14" ry="20" fill="url(#gl)" stroke="#8d9be6" stroke-width="2"/>
+  <path d="M14 56 L150 56 L124 148 L14 148 Z" fill="url(#bl)"/>
+  <path d="M750 56 L886 56 L886 148 L776 148 Z" fill="url(#bl)"/>
+  <rect x="34" y="72" width="76" height="68" rx="10" fill="#3a4cb8" stroke="#a6b4f6" stroke-width="2"/>
+  <rect x="790" y="72" width="76" height="68" rx="10" fill="#3a4cb8" stroke="#a6b4f6" stroke-width="2"/>
+  <ellipse cx="72" cy="98" rx="13" ry="19" fill="url(#gl)" stroke="#8d9be6" stroke-width="2"/>
+  <ellipse cx="828" cy="98" rx="13" ry="19" fill="url(#gl)" stroke="#8d9be6" stroke-width="2"/>
   <rect x="62" y="122" width="30" height="8" rx="3" fill="#2a389a"/>
   <rect x="808" y="122" width="30" height="8" rx="3" fill="#2a389a"/>
   <rect x="74" y="148" width="92" height="14" rx="4" fill="#3b3f4a"/><circle cx="92" cy="172" r="15" fill="#23262e"/><circle cx="92" cy="172" r="6" fill="#8d93a0"/><circle cx="148" cy="172" r="15" fill="#23262e"/><circle cx="148" cy="172" r="6" fill="#8d93a0"/><rect x="734" y="148" width="92" height="14" rx="4" fill="#3b3f4a"/><circle cx="752" cy="172" r="15" fill="#23262e"/><circle cx="752" cy="172" r="6" fill="#8d93a0"/><circle cx="808" cy="172" r="15" fill="#23262e"/><circle cx="808" cy="172" r="6" fill="#8d93a0"/>
 </symbol>
 
-<!-- 동력차 앞머리 (길이 1000, 오른쪽이 앞) -->
+<!-- 동력차 앞머리 (길이 1000, 오른쪽이 앞) : 짧고 둥근 앞코 -->
 <symbol id="head" viewBox="0 0 1000 200" overflow="visible">
-  <!-- 지붕 장치 -->
-  <rect x="160" y="28" width="220" height="14" rx="4" fill="#2b2f3b"/>
-  <path d="M230 28 L262 8 L300 8 L328 28" fill="none" stroke="#2b2f3b" stroke-width="5" stroke-linejoin="round"/>
-  <rect x="250" y="4" width="70" height="6" rx="3" fill="#2b2f3b"/>
-  <!-- 몸통: 평평한 지붕에서 길게 내려가는 앞코 -->
-  <path d="M0 58 Q0 42 16 42 L540 42 C660 44 780 62 870 96 C930 118 975 132 990 146 C996 152 992 160 984 162 L0 164 Z" fill="url(#cr)"/>
-  <rect x="0" y="146" width="520" height="18" fill="url(#sk)"/>
-  <path d="M520 146 L960 146 C975 148 985 152 988 156 L984 164 L520 164 Z" fill="url(#sk)"/>
-  <!-- 검은 지붕선 -->
-  <path d="M0 58 Q0 42 16 42 L540 42 L540 54 L0 54 Z" fill="url(#rf)"/>
-  <!-- 세로 환기 줄무늬 -->
-  <g stroke="#a7acc0" stroke-width="3"><line x1="70" y1="74" x2="70" y2="140"/><line x1="85" y1="74" x2="85" y2="140"/><line x1="100" y1="74" x2="100" y2="140"/><line x1="115" y1="74" x2="115" y2="140"/><line x1="130" y1="74" x2="130" y2="140"/><line x1="145" y1="74" x2="145" y2="140"/><line x1="160" y1="74" x2="160" y2="140"/><line x1="175" y1="74" x2="175" y2="140"/><line x1="190" y1="74" x2="190" y2="140"/><line x1="205" y1="74" x2="205" y2="140"/><line x1="220" y1="74" x2="220" y2="140"/><line x1="235" y1="74" x2="235" y2="140"/><line x1="250" y1="74" x2="250" y2="140"/><line x1="265" y1="74" x2="265" y2="140"/><line x1="280" y1="74" x2="280" y2="140"/><line x1="295" y1="74" x2="295" y2="140"/><line x1="310" y1="74" x2="310" y2="140"/><line x1="325" y1="74" x2="325" y2="140"/><line x1="340" y1="74" x2="340" y2="140"/><line x1="355" y1="74" x2="355" y2="140"/><line x1="370" y1="74" x2="370" y2="140"/><line x1="385" y1="74" x2="385" y2="140"/><line x1="400" y1="74" x2="400" y2="140"/><line x1="415" y1="74" x2="415" y2="140"/><line x1="430" y1="74" x2="430" y2="140"/><line x1="445" y1="74" x2="445" y2="140"/><line x1="460" y1="74" x2="460" y2="140"/></g>
-  <rect x="62" y="68" width="360" height="4" fill="#d3d2ce"/><rect x="62" y="142" width="360" height="4" fill="#d3d2ce"/>
-  <!-- 운전실 문 -->
-  <rect x="470" y="70" width="64" height="74" rx="6" fill="#e6e4df" stroke="#a7acc0" stroke-width="2"/>
-  <rect x="482" y="82" width="22" height="30" rx="4" fill="#161a26"/>
-  <!-- 파란 앞머리 (지붕에서 앞코 위쪽까지) -->
-  <path d="M556 42 L540 42 C660 44 780 62 870 96 C930 118 972 130 988 144 L970 142 C920 128 860 124 790 120 C730 116 640 108 556 100 Z" fill="url(#bl)"/>
+  <!-- 지붕 위 집전장치 -->
+  <path d="M100 30 L128 12 L170 12 L196 30" fill="none" stroke="#2b2f3b" stroke-width="5" stroke-linejoin="round"/>
+  <rect x="118" y="8" width="62" height="6" rx="3" fill="#2b2f3b"/>
+  <!-- 몸통 -->
+  <path d="M0 58 Q0 42 16 42 L560 42 C700 44 820 60 900 90 C950 108 986 124 992 142 C994 154 988 162 976 164 L0 164 Z" fill="url(#cr)" stroke="#b4b2ad" stroke-width="2"/>
+  <path d="M0 58 Q0 42 16 42 L310 42 L310 54 L0 54 Z" fill="url(#rf)"/>
+  <rect x="0" y="146" width="900" height="18" fill="url(#sk)"/>
+  <path d="M900 146 L976 146 C988 150 992 156 988 162 L976 164 L900 164 Z" fill="url(#sk)"/>
+  <!-- 지붕 환기구(검은 격자) -->
+  <path d="M380 44 L380 32 Q380 28 386 28 L540 28 Q552 28 556 36 L566 44 Z" fill="#2b2f3b"/>
+  <g stroke="#6d7384" stroke-width="2"><line x1="392" y1="31" x2="392" y2="43"/><line x1="408" y1="31" x2="408" y2="43"/><line x1="424" y1="31" x2="424" y2="43"/><line x1="440" y1="31" x2="440" y2="43"/><line x1="456" y1="31" x2="456" y2="43"/><line x1="472" y1="31" x2="472" y2="43"/><line x1="488" y1="31" x2="488" y2="43"/><line x1="504" y1="31" x2="504" y2="43"/><line x1="520" y1="31" x2="520" y2="43"/><line x1="536" y1="31" x2="536" y2="43"/></g>
+  <!-- 파란 윗부분: 뒤쪽이 두껍고 앞으로 갈수록 가늘어져 앞코 위를 덮음 -->
+  <path d="M300 42 L560 42 C700 44 820 60 900 90 C944 106 970 118 982 128 L940 118 C860 104 780 94 700 90 L300 80 Z" fill="url(#bl)"/>
+  <!-- 환기 줄무늬 패널 -->
+  <rect x="50" y="84" width="400" height="60" fill="#dedcd7"/>
+  <g stroke="#aaaebf" stroke-width="3"><line x1="62" y1="90" x2="62" y2="138"/><line x1="77" y1="90" x2="77" y2="138"/><line x1="92" y1="90" x2="92" y2="138"/><line x1="107" y1="90" x2="107" y2="138"/><line x1="122" y1="90" x2="122" y2="138"/><line x1="137" y1="90" x2="137" y2="138"/><line x1="152" y1="90" x2="152" y2="138"/><line x1="167" y1="90" x2="167" y2="138"/><line x1="182" y1="90" x2="182" y2="138"/><line x1="197" y1="90" x2="197" y2="138"/><line x1="212" y1="90" x2="212" y2="138"/><line x1="227" y1="90" x2="227" y2="138"/><line x1="242" y1="90" x2="242" y2="138"/><line x1="257" y1="90" x2="257" y2="138"/><line x1="272" y1="90" x2="272" y2="138"/><line x1="287" y1="90" x2="287" y2="138"/><line x1="302" y1="90" x2="302" y2="138"/><line x1="317" y1="90" x2="317" y2="138"/><line x1="332" y1="90" x2="332" y2="138"/><line x1="347" y1="90" x2="347" y2="138"/><line x1="362" y1="90" x2="362" y2="138"/><line x1="377" y1="90" x2="377" y2="138"/><line x1="392" y1="90" x2="392" y2="138"/><line x1="407" y1="90" x2="407" y2="138"/><line x1="422" y1="90" x2="422" y2="138"/><line x1="437" y1="90" x2="437" y2="138"/></g>
+  <path d="M0 80 L300 80 L300 84 L0 84 Z" fill="#c9c7c2"/>
+  <!-- 비스듬한 파란 문 줄무늬 + 운전실 문 -->
+  <path d="M470 54 L520 54 L500 150 L452 150 Z" fill="url(#bl)"/>
+  <path d="M560 70 L600 70 L596 144 L556 144 Z" fill="#e6e4df" stroke="#a7acc0" stroke-width="2"/>
   <!-- 앞유리와 옆 운전석 창 -->
-  <path d="M744 64 C800 76 860 96 904 122 L860 120 C820 112 780 102 740 90 Z" fill="url(#gl)"/>
-  <path d="M752 70 C800 80 850 98 888 116" stroke="#98a3c8" stroke-width="3" fill="none" opacity=".6"/>
-  <path d="M590 62 L690 70 L716 92 L590 90 Z" fill="#141722"/>
-  <!-- 앞코 아래(범퍼)와 전조등 -->
-  <path d="M800 134 C870 136 940 140 984 150 C994 154 992 162 984 164 L800 164 Z" fill="#d6d8e2"/>
-  <path d="M860 152 C910 152 954 154 988 158" stroke="#a9aec4" stroke-width="4" fill="none"/>
-  <ellipse cx="900" cy="132" rx="22" ry="8" fill="#e9ebf4" stroke="#9aa0b8" stroke-width="2" transform="rotate(14 900 132)"/>
-  <ellipse cx="900" cy="132" rx="12" ry="4" fill="#fff9d4" transform="rotate(14 900 132)"/>
-  <rect x="104" y="148" width="92" height="14" rx="4" fill="#3b3f4a"/><circle cx="122" cy="172" r="15" fill="#23262e"/><circle cx="122" cy="172" r="6" fill="#8d93a0"/><circle cx="178" cy="172" r="15" fill="#23262e"/><circle cx="178" cy="172" r="6" fill="#8d93a0"/><rect x="574" y="148" width="92" height="14" rx="4" fill="#3b3f4a"/><circle cx="592" cy="172" r="15" fill="#23262e"/><circle cx="592" cy="172" r="6" fill="#8d93a0"/><circle cx="648" cy="172" r="15" fill="#23262e"/><circle cx="648" cy="172" r="6" fill="#8d93a0"/>
+  <path d="M770 66 C830 78 886 98 920 120 L872 118 C834 110 800 100 764 88 Z" fill="url(#gl)"/>
+  <path d="M780 72 C830 82 876 98 908 116" stroke="#98a3c8" stroke-width="3" fill="none" opacity=".6"/>
+  <path d="M630 66 L730 74 L752 96 L630 92 Z" fill="#141722"/>
+  <!-- 둥근 앞코 범퍼와 전조등 -->
+  <path d="M900 126 C950 128 988 136 992 150 C994 160 986 164 972 164 L890 164 Z" fill="#d6d8e2"/>
+  <ellipse cx="952" cy="150" rx="34" ry="14" fill="#c4c7d6"/>
+  <rect x="868" y="112" width="42" height="16" rx="8" fill="#e9ebf4" stroke="#9aa0b8" stroke-width="2" transform="rotate(18 889 120)"/>
+  <rect x="876" y="116" width="24" height="7" rx="3.5" fill="#fff9d4" transform="rotate(18 889 120)"/>
+  <rect x="104" y="148" width="92" height="14" rx="4" fill="#3b3f4a"/><circle cx="122" cy="172" r="15" fill="#23262e"/><circle cx="122" cy="172" r="6" fill="#8d93a0"/><circle cx="178" cy="172" r="15" fill="#23262e"/><circle cx="178" cy="172" r="6" fill="#8d93a0"/><rect x="594" y="148" width="92" height="14" rx="4" fill="#3b3f4a"/><circle cx="612" cy="172" r="15" fill="#23262e"/><circle cx="612" cy="172" r="6" fill="#8d93a0"/><circle cx="668" cy="172" r="15" fill="#23262e"/><circle cx="668" cy="172" r="6" fill="#8d93a0"/>
 </symbol>
 </defs><use href="#head" width="1000" height="200" transform="translate(1000 0) scale(-1 1)"/><use href="#mid" x="1000" width="900" height="200"/><use href="#mid" x="1900" width="900" height="200"/><use href="#head" x="2800" width="1000" height="200"/><rect x="995" y="54" width="10" height="100" fill="#20232c"/><rect x="1895" y="54" width="10" height="100" fill="#20232c"/><rect x="2795" y="54" width="10" height="100" fill="#20232c"/><rect x="0" y="186" width="3800" height="4" fill="#8b8f99"/></svg>
