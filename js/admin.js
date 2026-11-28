@@ -405,21 +405,21 @@
     const [s, posts] = await Promise.all([A.getSettings(), A.listPosts()]);
     const boards = s.boards.map(b => ({ ...b })), cats = (s.categories || []).map(c => ({ ...c }));
     const cnt = {}; posts.forEach(p => { cnt[p.board] = (cnt[p.board] || 0) + 1; });
-    const catName = id => (cats.find(c => c.id === id) || {}).name || '(없음)';
+    const idx = boards.map((b, i) => ({ b, i }));
+    const groups = [{ cat: null, items: idx.filter(x => !cats.some(c => c.id === x.b.cat)) }, ...cats.map(c => ({ cat: c, items: idx.filter(x => x.b.cat === c.id) }))].filter(g => g.cat || g.items.length);
     const persist = async () => { try { await saveBoardSettings(boards, cats); } catch (e) { await alertBox(e.message, '오류', '⚠️'); } route(); };
     main.innerHTML = `<h2 class="page-title">🗂️ 게시판 · 카테고리</h2>
       <p class="hint">게시판을 추가·수정·삭제하고 카테고리로 묶을 수 있어요. 사이트 왼쪽 목록과 홈 화면에 바로 반영돼요.</p>
-      <div class="sub-title"><span>📁 카테고리</span></div>
-      <div style="margin-bottom:6px">${cats.length ? cats.map(c => `<span class="tag">${esc(c.name)}
-        <button class="btn sm" type="button" data-cren="${esc(c.id)}">이름 변경</button> <button class="btn sm danger" type="button" data-cdel="${esc(c.id)}">삭제</button></span>`).join('') : '<span style="color:#777">아직 카테고리가 없어요.</span>'}</div>
-      <button class="btn sm primary" type="button" id="catAdd">+ 카테고리 추가</button>
-      <div class="hint" style="margin-top:4px">카테고리를 지워도 게시판과 글은 그대로 남고 "(없음)"으로 돌아가요.</div>
-      <div class="sub-title"><span>📋 게시판</span><button class="btn sm primary" type="button" id="bdAdd">+ 게시판 추가</button></div>
-      <div style="overflow:auto"><table class="tbl"><thead><tr><th style="width:70px">순서</th><th>게시판</th><th class="hide-m">설명</th><th>카테고리</th><th style="width:50px">글</th><th style="width:130px">관리</th></tr></thead><tbody>
-        ${boards.map((b, i) => `<tr><td class="c"><button class="btn sm" type="button" data-up="${i}"${i === 0 ? ' disabled' : ''} aria-label="위로">▲</button><button class="btn sm" type="button" data-dn="${i}"${i === boards.length - 1 ? ' disabled' : ''} aria-label="아래로">▼</button></td>
-          <td><b>${esc(b.icon)} ${esc(b.name)}</b></td><td class="hide-m">${esc(b.desc)}</td><td class="c">${esc(catName(b.cat))}</td><td class="c">${cnt[b.id] || 0}</td>
-          <td class="c"><button class="btn sm" type="button" data-bed="${i}">수정</button> <button class="btn sm danger" type="button" data-bdel="${i}">삭제</button></td></tr>`).join('')}
-      </tbody></table></div>`;
+      <div class="sub-title"><span>🌳 카테고리 · 게시판</span><span><button class="btn sm" type="button" id="catAdd">+ 카테고리 추가</button> <button class="btn sm primary" type="button" id="bdAdd">+ 게시판 추가</button></span></div>
+      <div class="hint">카테고리 아래에 게시판이 묶여 보여요. 사이트 왼쪽 목록과 같은 모양이에요. 카테고리를 지워도 게시판과 글은 "카테고리 없음"으로 남아요.</div>
+      <div class="btree">${groups.map(g => `<div class="bt-cat">
+          <div class="bt-ch"><b>${g.cat ? '📁 ' + esc(g.cat.name) : '📂 카테고리 없음'}</b>${g.cat ? `<span class="bt-btn">
+            <button class="btn sm" type="button" data-cup="${esc(g.cat.id)}" aria-label="위로">▲</button><button class="btn sm" type="button" data-cdn="${esc(g.cat.id)}" aria-label="아래로">▼</button>
+            <button class="btn sm" type="button" data-cren="${esc(g.cat.id)}">이름 변경</button> <button class="btn sm danger" type="button" data-cdel="${esc(g.cat.id)}">삭제</button></span>` : ''}</div>
+          ${g.items.length ? g.items.map(({ b, i }, k) => `<div class="bt-row"><span class="bt-ord"><button class="btn sm" type="button" data-up="${i}"${k === 0 ? ' disabled' : ''} aria-label="위로">▲</button><button class="btn sm" type="button" data-dn="${i}"${k === g.items.length - 1 ? ' disabled' : ''} aria-label="아래로">▼</button></span>
+            <span class="bt-name"><b>${esc(b.icon)} ${esc(b.name)}</b><small>${esc(b.desc)}</small></span><span class="bt-n">글 ${cnt[b.id] || 0}</span>
+            <span class="bt-btn"><button class="btn sm" type="button" data-bed="${i}">수정</button> <button class="btn sm danger" type="button" data-bdel="${i}">삭제</button></span></div>`).join('') : '<div class="bt-row bt-empty">게시판이 없어요</div>'}
+        </div>`).join('')}</div>`;
     $('#catAdd').onclick = async () => {
       const name = await askText('카테고리 추가', '카테고리 이름 (12자 이내)', '예: 탑승 기록');
       if (!name) return;
@@ -448,9 +448,12 @@
       const bd = boards[+b.dataset.bed]; const r = await boardDialog(bd, cats); if (!r) return;
       Object.assign(bd, r); persist();
     });
-    const swap = (i, j) => { [boards[i], boards[j]] = [boards[j], boards[i]]; persist(); };
-    main.querySelectorAll('[data-up]').forEach(b => b.onclick = () => swap(+b.dataset.up, +b.dataset.up - 1));
-    main.querySelectorAll('[data-dn]').forEach(b => b.onclick = () => swap(+b.dataset.dn, +b.dataset.dn + 1));
+    const swap = (i, d) => { const g = groups.find(g => g.items.some(x => x.i === i)), k = g.items.findIndex(x => x.i === i), o = g.items[k + d]; if (!o) return; [boards[i], boards[o.i]] = [boards[o.i], boards[i]]; persist(); };
+    main.querySelectorAll('[data-up]').forEach(b => b.onclick = () => swap(+b.dataset.up, -1));
+    main.querySelectorAll('[data-dn]').forEach(b => b.onclick = () => swap(+b.dataset.dn, 1));
+    const cswap = (id, d) => { const i = cats.findIndex(c => c.id === id), j = i + d; if (j < 0 || j >= cats.length) return; [cats[i], cats[j]] = [cats[j], cats[i]]; persist(); };
+    main.querySelectorAll('[data-cup]').forEach(b => b.onclick = () => cswap(b.dataset.cup, -1));
+    main.querySelectorAll('[data-cdn]').forEach(b => b.onclick = () => cswap(b.dataset.cdn, 1));
     main.querySelectorAll('[data-bdel]').forEach(b => b.onclick = async () => {
       const i = +b.dataset.bdel, bd = boards[i], n = cnt[bd.id] || 0;
       if (boards.length <= 1) return alertBox('게시판은 최소 1개는 있어야 해요.', '알림', '⚠️');
