@@ -281,6 +281,19 @@
         throw new Error('데모 모드에서는 작은 사진(350KB 이하)만 쓸 수 있어요. Supabase를 연결하면 제한이 없어요.');
       },
       async backupPosts() { return []; },
+      async listShowcase() { return (db.showcase || []).slice().sort((a, b) => new Date(b.created) - new Date(a.created)); },
+      async addShowcase(d) {
+        if (!me || (me.role !== 'admin' && me.role !== 'author')) throw new Error('글쓴이만 올릴 수 있어요.');
+        const images = (d.images || []).filter(Boolean); if (!images.length) throw new Error('사진을 한 장 이상 골라 주세요.');
+        db.showcase = db.showcase || [];
+        const r = { id: uid(), author: me.nick, authorId: me.id, caption: (d.caption || '').slice(0, 500), images, likes: 0, created: new Date().toISOString() };
+        db.showcase.push(r); save(); return r;
+      },
+      async deleteShowcase(id) {
+        if (!me || (me.role !== 'admin' && me.role !== 'author')) throw new Error('글쓴이만 지울 수 있어요.');
+        db.showcase = (db.showcase || []).filter(x => x.id !== id); save();
+      },
+      async likeShowcase(id, on) { const r = (db.showcase || []).find(x => x.id === id); if (r) { r.likes = Math.max(0, (r.likes || 0) + (on ? 1 : -1)); save(); } },
       async setUserRole(id, role) {
         needAdmin();
         if (!['user', 'author'].includes(role)) throw new Error('지정할 수 없는 권한이에요.');
@@ -494,6 +507,19 @@
         return must(await sb.from('profiles').select('id,nick,role,created_at').order('created_at', { ascending: true }))
           .map(u => ({ id: u.id, nick: u.nick, role: u.role, created: u.created_at }));
       },
+      async listShowcase() {
+        const r = await sb.from('showcase_posts').select('*').order('created_at', { ascending: false });
+        if (r.error) throw new Error('사진자랑을 불러오지 못했어요. v15_showcase.sql을 실행했는지 확인해 주세요.');
+        return r.data.map(x => ({ id: x.id, author: x.author_nick, authorId: x.author_id, caption: x.caption, images: x.images || [], likes: x.likes || 0, created: x.created_at }));
+      },
+      async addShowcase(d) {
+        const images = (d.images || []).filter(Boolean); if (!images.length) throw new Error('사진을 한 장 이상 골라 주세요.');
+        const r = await sb.from('showcase_posts').insert({ caption: (d.caption || '').slice(0, 500), images }).select().single();
+        if (r.error) throw new Error(r.error.message || '올리지 못했어요.');
+        return r.data;
+      },
+      async deleteShowcase(id) { must(await sb.from('showcase_posts').delete().eq('id', id)); },
+      async likeShowcase(id, on) { await sb.rpc('showcase_like', { pid: id, up: !!on }); },
       async backupPosts() {
         const r = await sb.rpc('backup_posts');
         if (r.error) throw new Error('백업 글을 불러오지 못했어요. SQL(백업 글 보기 부분)을 실행했는지 확인해 주세요.');
