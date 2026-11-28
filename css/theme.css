@@ -425,11 +425,13 @@ img.emo, .post-body img.emo, .cmt-b img.emo, .preview img.emo { display: inline 
 @media(max-width:600px){.bt-row{flex-wrap:wrap}.bt-name{flex-basis:60%}}
 
 /* 출사 사진 갤러리: 사진 비율 그대로 배열 + 상세 보기 */
-.sc-grid{column-count:5;column-gap:14px;margin-top:14px}
-@media(max-width:1100px){.sc-grid{column-count:4}}@media(max-width:820px){.sc-grid{column-count:3}}@media(max-width:560px){.sc-grid{column-count:2;column-gap:8px}}
-.sc-tile{display:block;width:100%;break-inside:avoid;margin:0 0 16px;padding:0;border:0;background:none;text-align:left;cursor:pointer;font:inherit;color:inherit}
+.sc-grid{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px}
+.sc-grid::after{content:"";flex-grow:1e6}
+.sc-grid .empty{flex:1 0 100%}
+.sc-tile{--ar:1.33;--arc:1.33;flex:calc(var(--ar) * 100) 1 calc(var(--ar) * 170px);min-width:0;max-width:calc(var(--ar) * 420px);display:block;margin:0;padding:0;border:0;background:none;text-align:left;cursor:pointer;font:inherit;color:inherit}
+@media(max-width:560px){.sc-grid{gap:8px}.sc-tile{flex-basis:calc(var(--ar) * 110px);max-width:calc(var(--ar) * 300px)}}
 .sc-ph{position:relative;display:block;border-radius:10px;overflow:hidden;background:#f1f2f4}
-.sc-ph img{display:block;width:100%;height:auto;transition:transform .25s}
+.sc-ph img{display:block;width:100%;height:auto;aspect-ratio:var(--arc);object-fit:cover;transition:transform .25s}
 .sc-tile:hover .sc-ph img{transform:scale(1.03)}
 .sc-hrt{position:absolute;right:8px;bottom:6px;font-style:normal;font-size:20px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.45)}.sc-hrt.on{color:#ff5a6a}
 .sc-multi{position:absolute;left:8px;top:8px;font-style:normal;font-size:11px;background:rgba(0,0,0,.55);color:#fff;border-radius:999px;padding:1px 8px}

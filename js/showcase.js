@@ -25,7 +25,7 @@
 
   /* 격자 카드: 사진 비율 그대로(검은 여백 없음), 누르면 상세 */
   const tile = (p, liked) => `<button type="button" class="sc-tile" data-open="${esc(p.id)}" aria-label="${esc(p.caption || '사진')} 자세히 보기">
-    <span class="sc-ph"><img loading="lazy" referrerpolicy="no-referrer" src="${esc(p.images[0])}" alt="">${p.images.length > 1 ? `<i class="sc-multi">▣ ${p.images.length}</i>` : ''}<i class="sc-hrt${liked ? ' on' : ''}">${liked ? '♥' : '♡'}</i></span>
+    <span class="sc-ph"><img referrerpolicy="no-referrer" src="${esc(p.images[0])}" alt="">${p.images.length > 1 ? `<i class="sc-multi">▣ ${p.images.length}</i>` : ''}<i class="sc-hrt${liked ? ' on' : ''}">${liked ? '♥' : '♡'}</i></span>
     <span class="sc-t">${esc(p.caption ? p.caption.split('\n')[0] : (p.author || '덕질역'))}</span><span class="sc-s">${esc(p.author || '덕질역')} · ${fmtDate(p.created)}${p.likes ? ` · ♥ ${p.likes}` : ''}</span></button>`;
 
   async function view() {
@@ -89,6 +89,9 @@
       document.addEventListener('keydown', kd); document.body.appendChild(ov); document.body.style.overflow = 'hidden'; paint();
     };
     el.querySelectorAll('[data-open]').forEach(b => b.onclick = () => open(b.dataset.open));
+    /* 가로 사진은 넓게, 세로 사진은 좁고 길게 — 실제 사진 비율대로 한 줄에 맞춰 배열 */
+    el.querySelectorAll('.sc-tile').forEach(t => { const im = t.querySelector('img'), fit = () => { const r = im.naturalWidth / (im.naturalHeight || 1); if (r > 0) { t.style.setProperty('--ar', r.toFixed(4)); t.style.setProperty('--arc', Math.min(2.6, Math.max(.5, r)).toFixed(4)); t.classList.add(r >= 1 ? 'land' : 'port'); } };
+      if (im.complete && im.naturalWidth) fit(); else im.addEventListener('load', fit, { once: true }); });
   }
   window.Showcase = { route: view };
 })();
