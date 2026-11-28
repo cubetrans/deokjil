@@ -509,7 +509,7 @@
       },
       async listShowcase() {
         const r = await sb.from('showcase_posts').select('*').order('created_at', { ascending: false });
-        if (r.error) throw new Error('사진자랑을 불러오지 못했어요. v15_showcase.sql을 실행했는지 확인해 주세요.');
+        if (r.error) throw new Error('출사 사진 갤러리를 불러오지 못했어요. v15_showcase.sql을 실행했는지 확인해 주세요.');
         return r.data.map(x => ({ id: x.id, author: x.author_nick, authorId: x.author_id, caption: x.caption, images: x.images || [], likes: x.likes || 0, created: x.created_at }));
       },
       async addShowcase(d) {

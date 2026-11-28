@@ -34,10 +34,10 @@
   async function view() {
     const el = document.getElementById('content');
     let list;
-    try { list = await A.listShowcase(); } catch (e) { el.innerHTML = `<h2 class="page-title">📸 사진자랑</h2><div class="msg err">${esc(e.message)}</div>`; return; }
+    try { list = await A.listShowcase(); } catch (e) { el.innerHTML = `<h2 class="page-title">📸 출사 사진 갤러리</h2><div class="msg err">${esc(e.message)}</div>`; return; }
     const mine = new Set(getL());
-    el.innerHTML = `<h2 class="page-title">📸 사진자랑</h2>
-      <p class="hint">찍은 사진을 자랑하는 곳이에요. 사진을 두 번 누르면 공감! (사진 ${list.length}개)</p>
+    el.innerHTML = `<h2 class="page-title">📸 출사 사진 갤러리</h2>
+      <p class="hint">찍은 사진을 올리는 곳이에요. (사진 ${list.length}개)</p>
       ${canPost() ? `<form class="sc-up" id="scForm"><div class="sc-pick"><label class="btn primary" for="scFiles">📷 사진 고르기 (최대 10장)</label><input id="scFiles" type="file" accept="image/*" multiple hidden><span id="scInfo" class="hint"></span></div>
         <div class="sc-prev" id="scPrev"></div>
         <textarea class="input" id="scCap" rows="2" maxlength="500" placeholder="사진에 대한 한마디 (선택)"></textarea>
