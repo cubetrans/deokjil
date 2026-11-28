@@ -30,12 +30,21 @@
       <div id="swMenu" class="sw-menu"><p class="hint">3호선 열차의 운전대를 잡아 보세요. ATC 속도 신호를 지키고, 승강장 <b>정위치</b>에 부드럽게 세운 뒤 문을 열고 닫고 출발하는 전 과정을 연습해요.</p>
         <div class="gm-btns">${Object.keys(COURSES).map(k => `<button class="btn primary" data-course="${k}">${COURSES[k].name}</button>`).join('')}</div>
         <p class="hint">배속: <select id="swSpd" class="input" style="width:auto"><option value="1">×1 (실제 속도)</option><option value="2">×2</option><option value="4">×4 (연습용)</option></select></p>
-        <ul class="sw-how"><li><b>↑ / W</b> 노치 올리기 (P4 최대) · <b>↓ / S</b> 내리기 (B7 최대 제동)</li><li><b>스페이스</b> 비상제동(EB) — 정차할 때까지 풀리지 않고 큰 감점</li><li><b>O</b> 출입문 열기/닫기 (정차 후) · 문이 열려 있으면 출발할 수 없어요</li><li>제한속도를 넘으면 <b>ATC가 자동 제동</b>해요. 급제동·정차 충격은 승차감 감점!</li></ul></div>
+        <p class="hint">열차 종류: <label><input type="radio" name="swType" value="one" checked> 원핸들 (가속·제동 한 손잡이)</label> &nbsp; <label><input type="radio" name="swType" value="two"> 투핸들 (마스콘 + 제동핸들)</label></p>
+        <ul class="sw-how"><li><b>Space</b> DSD (일정 시간마다 눌러 줘야 해요. 안 누르면 경보 후 비상제동)</li><li><b>Q</b> 가속 (원핸들) · <b>A</b> 가속 (투핸들) / 중립까지만 감속 (원핸들) · <b>Z</b> 감속 (모든 열차)</li><li><b>,</b> 브레이크 한 단계 체결 · <b>.</b> 한 단계 완해</li><li><b>↑ / ↓</b> 전후진 제어기 (후진·중립·전진 — 출발하려면 <b>전진</b>)</li><li><b>O</b> 출입문 열기/닫기 · <b>Backspace</b> 비상제동(EB)</li><li>제한속도를 넘으면 <b>ATC가 자동 제동</b>해요. 급제동·정차 충격은 승차감 감점!</li></ul></div>
       <div id="swGame" hidden><canvas id="swC" width="${W}" height="${H}" class="gm-canvas"></canvas>
-        <div class="gm-btns"><button class="btn" id="swB">⬇ 제동 +</button><button class="btn" id="swN">● 중립</button><button class="btn" id="swP">⬆ 역행 +</button><button class="btn danger" id="swE">🛑 EB</button><button class="btn primary" id="swD">🚪 문 열기/닫기</button></div></div>`;
+        <div class="gm-btns"><button class="btn" id="swQ">Q 가속</button><button class="btn" id="swA">A 가속(투핸들)/중립까지 감속</button><button class="btn" id="swZ">Z 감속</button><button class="btn" id="swBk">, 제동 +</button><button class="btn" id="swRl">. 완해</button></div>
+        <div class="gm-btns"><button class="btn" id="swRu">↑ 전진</button><button class="btn" id="swRd">↓ 후진</button><button class="btn" id="swDsd">Space DSD</button><button class="btn primary" id="swD">🚪 문 열기/닫기</button><button class="btn danger" id="swE">🛑 EB</button></div></div>`;
     let s = null, raf = 0, last = performance.now();
     const spd = () => +($('#swSpd') || { value: 1 }).value;
     const say = (t, bad) => { s.msg = t; s.msgT = 5; s.bad = !!bad; };
+    let actx = null;
+    const beep = (f, d) => { try { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return; actx = actx || new AC(); const o = actx.createOscillator(), gn = actx.createGain(); o.frequency.value = f; gn.gain.value = .05; o.connect(gn); gn.connect(actx.destination); o.start(); o.stop(actx.currentTime + d); } catch (e) {} };
+    const sync = () => { s.notch = s.type === 'one' ? s.L : (s.bn > 0 ? -s.bn : s.pn); };
+    const neutral = () => { s.L = 0; s.pn = 0; s.bn = 0; sync(); };
+    const holdBrake = () => { s.L = -3; s.pn = 0; s.bn = 4; sync(); };
+    const cutPower = () => { if (s.type === 'one') s.L = Math.min(s.L, 0); else s.pn = 0; sync(); };
+    const triggerEB = why => { s.eb = true; neutral(); s.ebN++; s.score -= 20; s.log.push({ k: why + ' — 비상제동(EB)', p: -20 }); say('🛑 ' + why + ' — 비상제동! (−20점)', true); beep(300, .5); };
     const secOf = () => SECS[s.idx];
     const zoneLimit = x => { const c = secOf().curves.find(c => x >= c[0] && x < c[1]); let l = c ? c[2] : 80; if (x < 150 && s.idx >= 0) l = Math.min(l, 40); return l; };
     const atcLimit = x => { const rem = secOf().len - x; let l = zoneLimit(x); const pat = Math.floor(Math.sqrt(2 * .75 * Math.max(rem - 8, 0)) * 3.6 / 5) * 5; l = Math.min(l, Math.max(10, pat)); return l; };
@@ -43,10 +52,10 @@
 
     function start(k) {
       const c = COURSES[k];
-      s = { course: k, idx: c.from, end: c.to, x: 0, v: 0, a: 0, notch: 0, eb: false, atc: false, doors: 0, doorCmd: 0, phase: 'dwell', first: true, t: 0, dwellT: 99, openT: 0, onboard: 120,
+      s = { course: k, idx: c.from, end: c.to, x: 0, v: 0, a: 0, notch: 0, type: (main.querySelector('input[name=swType]:checked') || { value: 'one' }).value, L: -2, pn: 0, bn: 4, rev: 0, dsd: 0, eb: false, atc: false, doors: 0, doorCmd: 0, phase: 'dwell', first: true, t: 0, dwellT: 99, openT: 0, onboard: 120,
         score: 0, comfort: 100, log: [], msg: '', msgT: 0, bad: false, lastA: 0, over: false, ann: -1, pax: [], atcN: 0, ebN: 0, lastNotchT: 0 };
-      genPax(); $('#swMenu').hidden = true; $('#swGame').hidden = false;
-      say(`${LINE[s.idx].n}역 출발 준비 — 역행(↑)으로 출발하세요.`);
+      sync(); genPax(); $('#swMenu').hidden = true; $('#swGame').hidden = false;
+      say(`${LINE[s.idx].n}역 출발 준비 — 전후진 제어기를 전진(↑)으로, 브레이크를 풀고 가속하세요. 주행 중에는 DSD(Space)를 눌러 주세요.`);
     }
     function genPax() { s.pax = Array.from({ length: 46 }, (_, i) => ({ o: Math.random(), x: 1.9 + Math.random() * 1.2, c: ['#e5484d', '#3182f6', '#f5a623', '#2fb344', '#9b59b6', '#ddd'][i % 6], h: 1.55 + Math.random() * .3 })); }
 
@@ -58,10 +67,12 @@
       if (s.phase === 'dwell') {
         s.dwellT += dt;
         if (s.doors === 1) { s.openT += dt; if (Math.random() < dt * 2.2) s.onboard += Math.round((Math.random() - .45) * 8); s.onboard = Math.max(30, Math.min(400, s.onboard)); }
-        if (s.notch > 0) { if (s.doors > 0 || s.doorCmd > 0) { say('출입문이 열려 있어 출발할 수 없어요! (O로 닫기)', true); s.notch = 0; }
+        if (s.notch > 0 && s.rev !== 1) { say('전후진 제어기를 전진(↑)으로 놓아야 출발해요!', true); cutPower(); }
+        else if (s.notch > 0) { if (s.doors > 0 || s.doorCmd > 0) { say('출입문이 열려 있어 출발할 수 없어요! (O로 닫기)', true); cutPower(); }
           else { if (!s.first && s.dwellT < 18) { const p = Math.round(18 - s.dwellT); s.score -= p; s.log.push({ k: '조기출발', p: -p }); say(`조기 출발 ${p}초 (−${p}점)`, true); }
-            s.phase = 'run'; s.first = false; s.t = 0; s.x = 0; s.ann = -1; s.lastStop = false; say(`${LINE[s.idx].n} → ${LINE[s.idx + 1].n}  출발! 제시 ${Math.round(sec.len / 13)}초`); } }
-        else s.notch = Math.min(s.notch, 0);
+            s.phase = 'run'; s.dsd = 0; s.first = false; s.t = 0; s.x = 0; s.ann = -1; s.lastStop = false; say(`${LINE[s.idx].n} → ${LINE[s.idx + 1].n}  출발! 제시 ${Math.round(sec.len / 13)}초`); } }
+        else cutPower();
+        s.dsd = 0;
         s.v = 0; s.a = 0; return;
       }
       /* 열차 동력학 */
@@ -69,7 +80,7 @@
       if (!s.atc && kmh > lim + 1.5) { s.atc = true; s.atcN++; s.score -= 15; s.log.push({ k: 'ATC 자동제동', p: -15 }); say(`⚠ ATC 속도 초과 — 자동 제동! (제한 ${lim})`, true); }
       if (s.atc && kmh <= lim - 3) s.atc = false;
       let cmd;
-      if (s.eb) cmd = -EBA; else if (s.atc) cmd = -ATCA; else if (s.notch > 0) cmd = PW[s.notch] * Math.min(1, 10 / Math.max(s.v, 10)); else if (s.notch < 0) cmd = -brakeA(-s.notch); else cmd = 0;
+      if (s.eb) cmd = -EBA; else if (s.atc) cmd = -ATCA; else if (s.notch > 0 && s.rev === 1) cmd = PW[s.notch] * Math.min(1, 10 / Math.max(s.v, 10)); else if (s.notch < 0) cmd = -brakeA(-s.notch); else cmd = 0;
       const res = s.v > .05 ? (.012 + .00022 * s.v * s.v) : 0;
       let tgt = cmd - res - 9.81 * g / 100;
       if (s.v < .03 && cmd <= 0) tgt = Math.max(tgt, 0);
@@ -81,15 +92,17 @@
       s.v += s.a * dt; if (s.v < 0) { s.v = 0; s.a = 0; } if (s.v > 24) s.v = 24;
       s.x += s.v * dt;
       if (s.v < .03 && cmd <= 0) s.v = 0;
+      /* DSD (운전자 안전 장치) */
+      if (s.v > .5) { s.dsd += dt; if (s.dsd > 20 && Math.floor(s.dsd * 2) !== Math.floor((s.dsd - dt) * 2)) beep(880, .12); if (s.dsd > 26 && !s.eb) triggerEB('DSD 미조작'); } else if (s.v === 0) s.dsd = 0;
       /* 안내방송 */
       if (s.ann !== s.idx && rem < 420) { s.ann = s.idx; say(`📢 이번 역은 ${LINE[s.idx + 1].n}, ${LINE[s.idx + 1].n}역입니다. 내리실 문은 ${LINE[s.idx + 1].side > 0 ? '오른쪽' : '왼쪽'}입니다.`); }
       /* 정지 위치 초과 */
       if (s.x > sec.len + 4 && !s.eb) { s.atc = true; }
       if (s.v === 0 && s.t > 3) {
         if (rem < 45 || s.x > sec.len) arrive(rem);
-        else if (s.eb) { s.eb = false; }
+        else if (s.eb) { s.eb = false; holdBrake(); }
       }
-      if (s.eb && s.v === 0) s.eb = false;
+      if (s.eb && s.v === 0) { s.eb = false; holdBrake(); }
     }
     function arrive(rem) {
       const sec = secOf(), err = rem, ae = Math.abs(err), late = s.t - Math.round(sec.len / 13);
@@ -99,7 +112,7 @@
       s.score += p + shock + tp;
       s.log.push({ k: `${LINE[s.idx + 1].n} 정차 (${err >= 0 ? ae.toFixed(1) + 'm 앞' : ae.toFixed(1) + 'm 초과'})`, p: p + shock + tp, d: `위치 ${p}${shock ? ' · 정차충격 ' + shock : ''} · 시간 ${tp >= 0 ? '+' : ''}${tp} (${late >= 0 ? '+' : ''}${Math.round(late)}초)` });
       say(`🚉 ${LINE[s.idx + 1].n} 정차! 오차 ${ae.toFixed(1)}m — 위치 ${p}점${shock ? ' · 정차 충격 ' + shock : ''} · 시간 ${tp >= 0 ? '+' : ''}${tp}점. [O] 문 열기`);
-      s.idx++; s.phase = 'dwell'; s.dwellT = 0; s.openT = 0; s.x = 0; s.t = 0; s.notch = 0; s.atc = false; s.doorCmd = 0;
+      s.idx++; s.phase = 'dwell'; s.dwellT = 0; s.openT = 0; s.x = 0; s.t = 0; holdBrake(); s.dsd = 0; s.atc = false; s.doorCmd = 0;
       if (s.idx >= s.end) { s.over = true; finish(); return; }
       genPax();
     }
@@ -168,22 +181,23 @@
       const dg = g.createLinearGradient(0, SH, 0, H); dg.addColorStop(0, '#242a35'); dg.addColorStop(1, '#10131a'); g.fillStyle = dg; g.fillRect(0, SH, W, H - SH); g.fillStyle = '#3a4252'; g.fillRect(0, SH, W, 3);
       const kmh = s.v * 3.6, lim = s.phase === 'dwell' ? 0 : atcLimit(s.x);
       /* 속도계 */
-      const cx = 118, cy = SH + 76, R = 62; g.fillStyle = '#05070a'; g.beginPath(); g.arc(cx, cy, R + 8, 0, 7); g.fill();
+      const cx = 118, cy = SH + 70, R = 58; g.fillStyle = '#05070a'; g.beginPath(); g.arc(cx, cy, R + 6, 0, 7); g.fill();
       const ang = v => (135 + Math.min(100, v) * 2.7) * Math.PI / 180;
       g.strokeStyle = '#2d3646'; g.lineWidth = 6; g.beginPath(); g.arc(cx, cy, R - 4, ang(0), ang(100)); g.stroke();
       if (lim > 0) { g.strokeStyle = '#e5484d'; g.beginPath(); g.arc(cx, cy, R - 4, ang(lim), ang(lim + 1.5)); g.stroke(); g.strokeStyle = '#2fb344'; g.beginPath(); g.arc(cx, cy, R - 4, ang(0), ang(lim)); g.lineWidth = 2; g.stroke(); }
       g.fillStyle = '#cfd6e4'; g.font = '10px sans-serif'; g.textAlign = 'center'; g.lineWidth = 2;
       for (let v = 0; v <= 100; v += 10) { const a = ang(v); g.strokeStyle = '#cfd6e4'; g.beginPath(); g.moveTo(cx + Math.cos(a) * (R - 12), cy + Math.sin(a) * (R - 12)); g.lineTo(cx + Math.cos(a) * (R - 2), cy + Math.sin(a) * (R - 2)); g.stroke(); g.fillText(v, cx + Math.cos(a) * (R - 24), cy + Math.sin(a) * (R - 24) + 3); }
       g.strokeStyle = '#ffb020'; g.lineWidth = 3; g.beginPath(); g.moveTo(cx, cy); g.lineTo(cx + Math.cos(ang(kmh)) * (R - 8), cy + Math.sin(ang(kmh)) * (R - 8)); g.stroke();
-      g.fillStyle = '#fff'; g.font = "bold 18px 'Galmuri11',sans-serif"; g.fillText(kmh.toFixed(0), cx, cy + 40); g.font = '10px sans-serif'; g.fillStyle = '#9aa6bd'; g.fillText('km/h', cx, cy + 52);
+      g.fillStyle = '#fff'; g.font = "bold 18px 'Galmuri11',sans-serif"; g.fillText(kmh.toFixed(0), cx, cy + 34); g.font = '10px sans-serif'; g.fillStyle = '#9aa6bd'; g.fillText('km/h', cx, cy + 46);
       /* ATC 신호 */
       g.fillStyle = '#05070a'; g.fillRect(212, SH + 22, 96, 86); g.fillStyle = '#9aa6bd'; g.font = '11px sans-serif'; g.fillText('ATC 속도신호', 260, SH + 38);
       g.fillStyle = s.atc ? '#ff453a' : lim ? '#4cd964' : '#667'; g.font = "bold 40px 'Galmuri11',sans-serif"; g.fillText(lim || '정지', 260, SH + 82); g.font = '11px sans-serif'; g.fillStyle = s.atc ? '#ff453a' : '#9aa6bd'; g.fillText(s.atc ? 'ATC 제동 중' : 'km/h', 260, SH + 100);
       { const nc = sec.curves.find(c => c[0] > s.x); g.fillStyle = '#9aa6bd'; g.font = '10px sans-serif'; g.textAlign = 'center'; g.fillText(nc && s.phase !== 'dwell' ? `곡선 제한 ${nc[2]} · ${Math.round(nc[0] - s.x)}m 앞` : '', 260, SH + 124); }
-      /* 마스콘 노치 */
-      const mx = 345, my = SH + 16; g.fillStyle = '#05070a'; g.fillRect(mx, my, 70, 112);
-      const NS = [4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7]; NS.forEach((n, i) => { const y = my + 8 + i * 8.6; g.fillStyle = n === s.notch ? '#ffb020' : '#2d3646'; g.fillRect(mx + 8, y, 22, 6); g.fillStyle = '#9aa6bd'; g.font = '9px sans-serif'; g.textAlign = 'left'; g.fillText(n > 0 ? 'P' + n : n === 0 ? 'N' : 'B' + (-n), mx + 36, y + 6); });
-      const hy2 = my + 8 + NS.indexOf(s.notch) * 8.6; g.fillStyle = '#e5484d'; g.fillRect(mx + 2, hy2 - 3, 32, 12); g.textAlign = 'center';
+      /* 마스콘·제동핸들 */
+      const mx = 330, my = SH + 16; g.fillStyle = '#05070a'; g.fillRect(mx, my, 96, 112); g.textAlign = 'left';
+      const slot = (x, y, on, lab) => { g.fillStyle = on ? '#ffb020' : '#2d3646'; g.fillRect(x, y, 18, 6); g.fillStyle = '#9aa6bd'; g.font = '9px sans-serif'; g.fillText(lab, x + 22, y + 6); };
+      if (s.type === 'one') { const NS = [4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7]; NS.forEach((n, i) => slot(mx + 30, my + 8 + i * 8.6, n === s.L, n > 0 ? 'P' + n : n === 0 ? 'N' : 'B' + (-n))); const yy = my + 8 + NS.indexOf(s.L) * 8.6; g.fillStyle = '#e5484d'; g.fillRect(mx + 22, yy - 3, 8, 12); g.fillStyle = '#9aa6bd'; g.font = '9px sans-serif'; g.fillText('원핸들', mx + 2, my + 104); }
+      else { [4, 3, 2, 1, 0].forEach((n, i) => slot(mx + 4, my + 8 + i * 8.6, n === s.pn && s.bn === 0 || (n === 0 && s.bn > 0), n ? 'P' + n : 'N')); [0, 1, 2, 3, 4, 5, 6, 7].forEach((n, i) => slot(mx + 54, my + 8 + i * 8.6, n === s.bn, n ? 'B' + n : 'N')); g.fillStyle = '#9aa6bd'; g.font = '9px sans-serif'; g.fillText('마스콘', mx + 2, my + 66); g.fillText('제동', mx + 56, my + 104); }
       /* 오른쪽: 거리·시간·문 */
       const rx = 440; g.fillStyle = '#05070a'; g.fillRect(rx, SH + 14, 310, 118);
       g.textAlign = 'left'; g.fillStyle = '#9aa6bd'; g.font = '11px sans-serif'; g.fillText(`${LINE[s.idx].n} → ${LINE[Math.min(s.idx + 1, LINE.length - 1)].n}  ·  내리는 문 ${side > 0 ? '오른쪽 ▶' : '◀ 왼쪽'}`, rx + 10, SH + 32);
@@ -193,29 +207,43 @@
       g.fillStyle = s.doors > 0 ? '#ffb020' : '#4cd964'; g.fillRect(rx + 10, SH + 94, 12, 12); g.fillStyle = '#cfd6e4'; g.fillText(s.doors === 1 ? '출입문 열림' : s.doors === 0 ? '출입문 닫힘' : '출입문 동작 중…', rx + 28, SH + 104);
       g.fillStyle = '#9aa6bd'; g.fillText(`승차감 ${Math.round(s.comfort)}`, rx + 140, SH + 104); g.fillStyle = '#2d3646'; g.fillRect(rx + 190, SH + 96, 100, 8); g.fillStyle = s.comfort > 60 ? '#4cd964' : s.comfort > 30 ? '#ffb020' : '#e5484d'; g.fillRect(rx + 190, SH + 96, s.comfort, 8);
       g.fillStyle = '#ffd400'; g.font = "bold 16px 'Galmuri11',sans-serif"; g.fillText(`점수 ${Math.round(s.score)}`, rx + 10, SH + 124);
+      g.font = '12px sans-serif'; g.fillStyle = s.rev === 1 ? '#4cd964' : '#ffb020'; g.fillText(`전후진 ${s.rev === 1 ? '전진 ▶' : s.rev === -1 ? '◀ 후진' : '중립 ■'}`, rx + 130, SH + 124);
+      const warn = s.dsd > 20, blink = warn && Math.floor(performance.now() / 300) % 2; g.fillStyle = warn ? (blink ? '#ff453a' : '#7a2a26') : '#4cd964'; g.fillText(`DSD ${warn ? '⚠ 누르세요!' : '●'}`, rx + 225, SH + 124);
       /* 하단 메시지 */
       g.fillStyle = '#05070a'; g.fillRect(0, SH + 138, W, H - SH - 138);
       g.font = "13px 'Galmuri11',sans-serif"; g.textAlign = 'left'; g.fillStyle = s.msgT > 0 ? (s.bad ? '#ff6b61' : '#6fb1ff') : '#7d8aa3'; g.fillText(s.msg || '', 12, SH + 164);
-      g.fillStyle = '#556'; g.font = '11px sans-serif'; g.textAlign = 'right'; g.fillText(s.phase === 'dwell' ? (s.doors === 0 ? '정차 중 · O: 문 열기 / ↑: 출발' : s.doors === 1 ? '승객 승하차 중 · O: 문 닫기' : '') : '↑↓ 노치 · Space EB', W - 10, H - 8);
+      g.fillStyle = '#556'; g.font = '11px sans-serif'; g.textAlign = 'right'; g.fillText(s.phase === 'dwell' ? (s.doors === 0 ? '정차 중 · O: 문 열기 / ↑: 출발' : s.doors === 1 ? '승객 승하차 중 · O: 문 닫기' : '') : 'Q/A/Z 가감속 · , . 제동 · ↑↓ 전후진 · Space DSD · Backspace EB', W - 10, H - 8);
       if (s.eb) { g.fillStyle = 'rgba(229,72,77,.85)'; g.fillRect(W / 2 - 80, 22, 160, 30); g.fillStyle = '#fff'; g.font = 'bold 15px sans-serif'; g.textAlign = 'center'; g.fillText('🛑 비상제동 (EB)', W / 2, 43); }
       if (s.phase === 'dwell' && s.doors === 1) { g.fillStyle = 'rgba(30,110,230,.85)'; g.fillRect(W / 2 - 130, 22, 260, 26); g.fillStyle = '#fff'; g.font = 'bold 13px sans-serif'; g.textAlign = 'center'; g.fillText(`${LINE[s.idx].n}역 — 승객 승하차 중 (${Math.min(18, Math.round(s.openT))}/18초)`, W / 2, 40); }
     }
     function loop(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; if (s && !s.over) { const m = spd(); for (let i = 0; i < m; i++) sim(dt); } draw(); raf = requestAnimationFrame(loop); }
-    const nudge = d => { if (!s || s.over) return; if (s.eb) return; s.notch = Math.max(-7, Math.min(4, s.notch + d)); };
+    const ok = () => s && !s.over && !s.eb;
+    const act = {
+      q: () => { if (ok() && s.type === 'one') { s.L = Math.min(4, s.L + 1); sync(); } },
+      a: () => { if (!ok()) return; if (s.type === 'two') { s.pn = Math.min(4, s.pn + 1); } else if (s.L > 0) s.L -= 1; sync(); },
+      z: () => { if (!ok()) return; if (s.type === 'one') s.L = Math.max(-7, s.L - 1); else if (s.pn > 0) s.pn -= 1; else s.bn = Math.min(7, s.bn + 1); sync(); },
+      brk: () => { if (!ok()) return; if (s.type === 'one') s.L = s.L > 0 ? 0 : Math.max(-7, s.L - 1); else { s.bn = Math.min(7, s.bn + 1); } sync(); },
+      rel: () => { if (!ok()) return; if (s.type === 'one') { if (s.L < 0) s.L += 1; } else s.bn = Math.max(0, s.bn - 1); sync(); },
+      fwd: () => { if (s && !s.over) s.rev = Math.min(1, s.rev + 1); },
+      bwd: () => { if (s && !s.over) { s.rev = Math.max(-1, s.rev - 1); if (s.rev === -1) say('후진 운전은 지원하지 않아요. 전진(↑)으로 놓아 주세요.', true); } },
+      dsd: () => { if (s && !s.over) { s.dsd = 0; } },
+      eb: () => { if (s && s.phase === 'run' && !s.eb) triggerEB('수동') }
+    };
     const door = () => {
       if (!s || s.phase !== 'dwell' || s.v > 0) return;
-      if (s.doorCmd === 0 && s.doors === 0) { s.doorCmd = 1; s.openT = 0; say('출입문을 엽니다.'); }
-      else if (s.doorCmd === 1 && s.doors === 1) { if (s.openT < 8) return say('승객이 타고 내리는 중이에요. 조금만 기다려 주세요.', true); s.doorCmd = 0; say('출입문을 닫습니다. 문이 닫히면 출발하세요.'); }
+      if (s.doorCmd === 0 && s.doors === 0) { s.doorCmd = 1; s.openT = 0; say('출입문을 엽니다.'); beep(660, .15); }
+      else if (s.doorCmd === 1 && s.doors === 1) { if (s.openT < 8) return say('승객이 타고 내리는 중이에요. 조금만 기다려 주세요.', true); s.doorCmd = 0; say('출입문을 닫습니다. 문이 닫히면 출발하세요.'); beep(520, .2); }
     };
     const key = e => { if (!$('#swC') || /input|textarea|select/i.test((e.target || {}).tagName || '')) return;
-      if (['ArrowUp', 'ArrowDown', ' '].includes(e.key)) e.preventDefault();
-      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') nudge(1); else if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') nudge(-1);
-      else if (e.key === ' ') { if (s && s.phase === 'run' && !s.eb) { s.eb = true; s.notch = 0; s.ebN++; s.score -= 20; s.log.push({ k: '비상제동(EB) 사용', p: -20 }); say('🛑 비상제동! (−20점)', true); } }
-      else if (e.key === 'o' || e.key === 'O' || e.key === 'd' || e.key === 'D') door(); };
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+      if (['ArrowUp', 'ArrowDown', ' ', 'Backspace'].includes(k)) e.preventDefault();
+      if (k === 'q') act.q(); else if (k === 'a') act.a(); else if (k === 'z') act.z(); else if (k === ',') act.brk(); else if (k === '.') act.rel();
+      else if (k === 'ArrowUp') act.fwd(); else if (k === 'ArrowDown') act.bwd(); else if (k === ' ') act.dsd(); else if (k === 'Backspace') act.eb(); else if (k === 'o') door(); };
     window.addEventListener('keydown', key);
-    $('#swP').onclick = () => nudge(1); $('#swB').onclick = () => nudge(-1); $('#swN').onclick = () => { if (s && !s.eb) s.notch = 0; };
-    $('#swE').onclick = () => key({ key: ' ', preventDefault() {}, target: document.body }); $('#swD').onclick = door;
-    main.querySelectorAll('[data-course]').forEach(b => b.onclick = () => start(b.dataset.course));
+    [['swQ', 'q'], ['swA', 'a'], ['swZ', 'z'], ['swBk', 'brk'], ['swRl', 'rel'], ['swRu', 'fwd'], ['swRd', 'bwd'], ['swDsd', 'dsd'], ['swE', 'eb']].forEach(([id, f]) => { $('#' + id).onclick = act[f]; });
+    $('#swD').onclick = door;
+    main.querySelectorAll('[data-course]').forEach(b => b.onclick = () => { beep(1, .01); start(b.dataset.course); });
     dbg = () => s; cleanup.push(() => { cancelAnimationFrame(raf); window.removeEventListener('keydown', key); dbg = null; });
     raf = requestAnimationFrame(loop);
   }
