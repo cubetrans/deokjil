@@ -450,14 +450,4 @@ img.emo, .post-body img.emo, .cmt-b img.emo, .preview img.emo { display: inline 
 .gm-hud{margin:8px 0}.gm-st{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px}.gm-st span{display:flex;gap:5px;align-items:baseline;color:#667}.gm-st b{font-size:18px;color:#16294a;margin:0 2px}.gm-st b.bad{color:#f04452}
 .gm-btns{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.gm-msg{min-height:22px;font-weight:700;color:#3182f6}
 .gm-end{padding:14px;border:1px solid #d5dbe5;border-radius:12px;background:#fff;text-align:center}
-.bb-board{display:flex;gap:16px;flex-wrap:wrap;align-items:center;padding:12px;border-radius:12px;background:#0f2a1a;color:#fff;max-width:520px}
-.bb-sc{display:grid;grid-template-columns:auto auto;gap:2px 10px;font-size:15px}.bb-sc b{font-size:22px;text-align:right}
-.bb-inn{font-weight:800}.bb-cnt{display:flex;flex-direction:column;gap:3px;font-size:13px}
-.bb-d{display:inline-block;width:11px;height:11px;border-radius:50%;margin-left:4px;background:#2d4a37}.bb-d.bl.on{background:#4cd964}.bb-d.st.on{background:#ffd400}.bb-d.ou.on{background:#ff453a}
-.bb-dia{position:relative;width:70px;height:70px;margin-left:auto}.bb-dia i{position:absolute;width:16px;height:16px;background:#2d4a37;transform:rotate(45deg)}.bb-dia i.on{background:#ffd400}
-.bb-dia .b2{left:27px;top:2px}.bb-dia .b3{left:2px;top:27px}.bb-dia .b1{right:2px;top:27px}.bb-dia .hp{left:27px;bottom:2px;background:#fff}
-.bb-main{max-width:520px;margin-top:10px}.bb-tip{margin:0 0 8px;word-break:keep-all}
-.bb-zone{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;width:210px;margin:6px 0;padding:6px;border:2px solid #16294a;border-radius:8px;background:#f4f7fb}
-.bb-z{aspect-ratio:1;border:1px solid #b9c3d3;border-radius:6px;background:#fff;cursor:pointer}.bb-z:hover,.bb-z.on{background:#3182f6}
-.bb-types{display:flex;gap:6px;flex-wrap:wrap}.bb-res{margin:10px 0;padding:10px;border-radius:10px;background:#eef2f8;font-weight:800}
-.bb-log{margin:0;padding-left:18px;color:#667;font-size:13px}
+.sw-menu{max-width:620px}.sw-how{line-height:1.9;word-break:keep-all}
