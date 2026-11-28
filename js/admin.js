@@ -107,7 +107,7 @@
   /* ---------- 틀 ---------- */
   const NAV = [
     ['#/', '📊', '대시보드'], ['#/posts', '📝', '글 관리'], ['#/new', '✏️', '새 글 쓰기'], ['#/boards', '🗂️', '게시판'],
-    ['#/comments', '💬', '댓글 관리', 'pending'], ['#/memo', '📨', '쪽지'], ['#/design', '🎨', '디자인'], ['#/code', '🧩', '코드'], ['#/settings', '⚙️', '설정']
+    ['#/comments', '💬', '댓글 관리', 'pending'], ['#/memo', '📨', '쪽지'], ['#/design', '🎨', '디자인'], ['#/code', '🧩', '코드'], ['#/subway', '🚇', '지하철 운전'], ['#/baseball', '⚾', 'CPU 야구'], ['#/settings', '⚙️', '설정']
   ];
   const NAV_AUTHOR = [['#/posts', '📝', '내 글'], ['#/new', '✏️', '새 글 쓰기']];
   function buildShell() {
@@ -132,6 +132,7 @@
     const parts = location.hash.replace(/^#\/?/, '').split('/').map(s => { try { return decodeURIComponent(s); } catch (e) { return s; } });
     const [p, a] = parts;
     if (!isAdm() && !['posts', 'new', 'edit'].includes(p || '')) { location.hash = '#/posts'; return; }
+    if (window.AdminGames) window.AdminGames.stop();
     main.innerHTML = '<div class="loading">⏳ 불러오는 중…</div>';
     let pending = 0, memoNew = 0;
     if (isAdm()) { try { pending = (await A.stats()).pending; } catch (e) {} try { memoNew = await countNewMemos(); } catch (e) {} }
@@ -147,6 +148,8 @@
       else if (p === 'comments') await viewComments(a || (pending ? 'pending' : 'all'));
       else if (p === 'design') await window.AdminCode.viewDesign(main);
       else if (p === 'code') await window.AdminCode.viewCode(main);
+      else if (p === 'subway') window.AdminGames.subway(main);
+      else if (p === 'baseball') window.AdminGames.baseball(main);
       else if (p === 'settings') await viewSettings();
       else main.innerHTML = '<div class="msg err">없는 메뉴예요.</div>';
       main.scrollTop = 0;
