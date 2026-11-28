@@ -31,15 +31,55 @@
         <div class="gm-btns">${Object.keys(COURSES).map(k => `<button class="btn primary" data-course="${k}">${COURSES[k].name}</button>`).join('')}</div>
         <p class="hint">배속: <select id="swSpd" class="input" style="width:auto"><option value="1">×1 (실제 속도)</option><option value="2">×2</option><option value="4">×4 (연습용)</option></select></p>
         <p class="hint">열차 종류: <label><input type="radio" name="swType" value="one" checked> 원핸들 (가속·제동 한 손잡이)</label> &nbsp; <label><input type="radio" name="swType" value="two"> 투핸들 (마스콘 + 제동핸들)</label></p>
-        <ul class="sw-how"><li><b>Space</b> DSD (일정 시간마다 눌러 줘야 해요. 안 누르면 경보 후 비상제동)</li><li><b>Q</b> 가속 (원핸들) · <b>A</b> 가속 (투핸들) / 중립까지만 감속 (원핸들) · <b>Z</b> 감속 (모든 열차)</li><li><b>.</b> 브레이크 한 단계 체결 · <b>,</b> 한 단계 완해</li><li><b>← / →</b> 좌우 시점 돌리기 (누르고 있는 동안, 떼면 정면으로) — 승강장 쪽을 살펴보세요</li><li><b>↑ / ↓</b> 전후진 제어기 (후진·중립·전진 — 출발하려면 <b>전진</b>)</li><li><b>O</b> 출입문 열기/닫기 · <b>Backspace</b> 비상제동(EB)</li><li>제한속도를 넘으면 <b>ATC가 자동 제동</b>해요. 급제동·정차 충격은 승차감 감점!</li></ul></div>
+        <ul class="sw-how"><li><b>Space</b> DSD (일정 시간마다 눌러 줘야 해요. 안 누르면 경보 후 비상제동)</li><li><b>Q</b> 가속 (원핸들) · <b>A</b> 가속 (투핸들) / 중립까지 제동·역행 풀기 (원핸들) · <b>Z</b> 감속 (모든 열차)</li><li><b>.</b> 브레이크 한 단계 체결 · <b>,</b> 한 단계 완해</li><li><b>← / →</b> 좌우 시점 돌리기 (누르고 있는 동안, 떼면 정면으로) — 승강장 쪽을 살펴보세요</li><li><b>↑ / ↓</b> 전후진 제어기 (후진·중립·전진 — 출발하려면 <b>전진</b>)</li><li>🔊 모터음·제동음·바람·레일 소리·스크린도어 경고음이 나와요 (<b>M</b>으로 끄기)</li><li><b>O</b> 출입문 열기/닫기 · <b>Backspace</b> 비상제동(EB)</li><li>제한속도를 넘으면 <b>ATC가 자동 제동</b>해요. 급제동·정차 충격은 승차감 감점!</li></ul></div>
       <div id="swGame" hidden><canvas id="swC" width="${W}" height="${H}" class="gm-canvas"></canvas>
-        <div class="gm-btns"><button class="btn" id="swQ">Q 가속</button><button class="btn" id="swA">A 가속(투핸들)/중립까지 감속</button><button class="btn" id="swZ">Z 감속</button><button class="btn" id="swRl">, 완해</button><button class="btn" id="swBk">. 제동</button></div>
-        <div class="gm-btns"><button class="btn" id="swLl">◀ 좌측 시점</button><button class="btn" id="swLr">우측 시점 ▶</button><button class="btn" id="swRu">↑ 전진</button><button class="btn" id="swRd">↓ 후진</button><button class="btn" id="swDsd">Space DSD</button><button class="btn primary" id="swD">🚪 문 열기/닫기</button><button class="btn danger" id="swE">🛑 EB</button><button class="btn" id="swFs">⛶ 전체화면 (F)</button></div></div>`;
+        <div class="gm-btns"><button class="btn" id="swQ">Q 가속</button><button class="btn" id="swA">A 가속(투핸들) / 중립까지 풀기(원핸들)</button><button class="btn" id="swZ">Z 감속</button><button class="btn" id="swRl">, 완해</button><button class="btn" id="swBk">. 제동</button></div>
+        <div class="gm-btns"><button class="btn" id="swLl">◀ 좌측 시점</button><button class="btn" id="swLr">우측 시점 ▶</button><button class="btn" id="swRu">↑ 전진</button><button class="btn" id="swRd">↓ 후진</button><button class="btn" id="swDsd">Space DSD</button><button class="btn primary" id="swD">🚪 문 열기/닫기</button><button class="btn danger" id="swE">🛑 EB</button><button class="btn" id="swMute">🔊 소리 (M)</button><button class="btn" id="swFs">⛶ 전체화면 (F)</button></div></div>`;
     let s = null, raf = 0, last = performance.now();
     const spd = () => +($('#swSpd') || { value: 1 }).value;
     const say = (t, bad) => { s.msg = t; s.msgT = 5; s.bad = !!bad; };
-    let actx = null;
-    const beep = (f, d) => { try { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return; actx = actx || new AC(); const o = actx.createOscillator(), gn = actx.createGain(); o.frequency.value = f; gn.gain.value = .05; o.connect(gn); gn.connect(actx.destination); o.start(); o.stop(actx.currentTime + d); } catch (e) {} };
+    /* ---- 소리 엔진 (Web Audio로 직접 합성) ---- */
+    const audio = { ctx: null, mute: false, n: {}, clickAcc: 0, prevNotch: 0, atcT: 0, beepT: 0, prevDoors: 0 };
+    const AU = () => {
+      if (audio.ctx) { if (audio.ctx.state === 'suspended') audio.ctx.resume(); return audio.ctx; }
+      try {
+        const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null;
+        const c = audio.ctx = new AC(), m = c.createGain(); m.gain.value = audio.mute ? 0 : .8; m.connect(c.destination); audio.master = m;
+        const nb = c.createBuffer(1, c.sampleRate * 2, c.sampleRate), d = nb.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; audio.nb = nb;
+        const loopNoise = (type, f, q) => { const src = c.createBufferSource(); src.buffer = nb; src.loop = true; const fl = c.createBiquadFilter(); fl.type = type; fl.frequency.value = f; if (q) fl.Q.value = q; const g = c.createGain(); g.gain.value = 0; src.connect(fl); fl.connect(g); g.connect(m); src.start(); return { fl, g }; };
+        audio.n.rumble = loopNoise('lowpass', 200); audio.n.wind = loopNoise('bandpass', 700, .7); audio.n.squeal = loopNoise('bandpass', 3300, 9); audio.n.slide = loopNoise('bandpass', 900, 1.2);
+        const osc = (type, f) => { const o = c.createOscillator(); o.type = type; o.frequency.value = f; return o; };
+        const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2600; const mg = c.createGain(); mg.gain.value = 0; lp.connect(mg); mg.connect(m);
+        const o1 = osc('sawtooth', 200), o2 = osc('square', 203); o1.connect(lp); o2.connect(lp); o1.start(); o2.start(); audio.n.motor = { o1, o2, g: mg };
+        const hum = osc('sine', 58), hg = c.createGain(); hg.gain.value = 0; hum.connect(hg); hg.connect(m); hum.start(); audio.n.hum = { g: hg };
+      } catch (e) { audio.ctx = null; }
+      return audio.ctx;
+    };
+    const tone = (f, d, type, vol, delay) => { const c = AU(); if (!c || !audio.master) return; const o = c.createOscillator(), g = c.createGain(), t = c.currentTime + (delay || 0); o.type = type || 'sine'; o.frequency.value = f; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol || .12, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + d); o.connect(g); g.connect(audio.master); o.start(t); o.stop(t + d + .05); };
+    const burst = (type, f, d, vol) => { const c = AU(); if (!c || !audio.nb) return; const src = c.createBufferSource(); src.buffer = audio.nb; const fl = c.createBiquadFilter(); fl.type = type; fl.frequency.value = f; const g = c.createGain(), t = c.currentTime; g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t + d); src.connect(fl); fl.connect(g); g.connect(audio.master); src.start(t, Math.random()); src.stop(t + d + .05); };
+    const beep = (f, d) => tone(f, d, 'square', .06);
+    const chime3 = () => { tone(784, .45, 'sine', .12); tone(988, .45, 'sine', .12, .3); tone(1319, .8, 'sine', .12, .6); };
+    const audioUpdate = dt => {
+      const c = audio.ctx; if (!c || !audio.n.motor) return; const T = c.currentTime, set = (p, v, tc) => p.setTargetAtTime(v, T, tc || .08), r = audio.n;
+      const live = !!s && !s.over && !document.hidden, v = live ? s.v : 0, run = live && s.phase === 'run';
+      set(audio.master.gain, audio.mute ? 0 : .8, .05);
+      set(r.rumble.g.gain, live ? Math.min(.3, v / 22 * .3) : 0); set(r.rumble.fl.frequency, 120 + v * 20);
+      set(r.wind.g.gain, live ? Math.min(.22, Math.pow(v / 22, 1.4) * .26) : 0); set(r.wind.fl.frequency, 450 + v * 45);
+      const pf = run && s.notch > 0 && s.rev === 1 && !s.eb && !s.atc ? PW[s.notch] / .85 : 0, bf = run && s.notch < 0 && v > 2.5 ? -s.notch / 7 : 0, mf = 160 + v * 42;
+      set(r.motor.o1.frequency, mf, .06); set(r.motor.o2.frequency, mf * 1.012, .06); set(r.motor.g.gain, (pf * .05 + bf * .03) * Math.min(1, v / 1.5 + .25), .12);
+      set(r.hum.g.gain, live ? .018 : 0);
+      const braking = run && (s.notch < 0 || s.atc || s.eb), lvl = live ? (s.eb ? 1 : s.atc ? .8 : -s.notch / 7) : 0;
+      set(r.squeal.g.gain, braking && v > .3 && v < 5.5 ? Math.min(.11, lvl * .12 * (1 - v / 5.5)) : 0, .05);
+      set(r.slide.g.gain, live && s.doors !== s.doorCmd ? .05 : 0, .1);
+      if (live) {
+        audio.clickAcc += v * dt; if (audio.clickAcc >= 12.5) { audio.clickAcc -= 12.5; burst('bandpass', 700, .06, Math.min(.16, .04 + v / 22 * .12)); setTimeout(() => burst('bandpass', 650, .06, .08), 90); }
+        if (s.notch > audio.prevNotch && s.notch <= 0) burst('highpass', 2500, .5, .1); else if (s.notch < audio.prevNotch && s.notch < 0) burst('highpass', 3000, .22, .06); audio.prevNotch = s.notch;
+        if (s.atc) { audio.atcT -= dt; if (audio.atcT <= 0) { tone(1300, .15, 'square', .06); audio.atcT = .45; } } else audio.atcT = 0;
+        if (s.doorCmd === 0 && s.doors > .02) { audio.beepT -= dt; if (audio.beepT <= 0) { tone(2100, .14, 'square', .05); audio.beepT = .5; } } else audio.beepT = 0;   // 스크린도어 닫힘 경고음
+        if (audio.prevDoors > 0 && s.doors === 0 && s.doorCmd === 0) burst('lowpass', 260, .25, .2);
+        audio.prevDoors = s.doors;
+      }
+    };
     const sync = () => { s.notch = s.type === 'one' ? s.L : (s.bn > 0 ? -s.bn : s.pn); };
     const neutral = () => { s.L = 0; s.pn = 0; s.bn = 0; sync(); };
     const holdBrake = () => { s.L = -3; s.pn = 0; s.bn = 4; sync(); };
@@ -95,7 +135,7 @@
       /* DSD (운전자 안전 장치) */
       if (s.v > .5) { s.dsd += dt; if (s.dsd > 20 && Math.floor(s.dsd * 2) !== Math.floor((s.dsd - dt) * 2)) beep(880, .12); if (s.dsd > 26 && !s.eb) triggerEB('DSD 미조작'); } else if (s.v === 0) s.dsd = 0;
       /* 안내방송 */
-      if (s.ann !== s.idx && rem < 420) { s.ann = s.idx; say(`📢 이번 역은 ${LINE[s.idx + 1].n}, ${LINE[s.idx + 1].n}역입니다. 내리실 문은 ${LINE[s.idx + 1].side > 0 ? '오른쪽' : '왼쪽'}입니다.`); }
+      if (s.ann !== s.idx && rem < 420) { s.ann = s.idx; chime3(); say(`📢 이번 역은 ${LINE[s.idx + 1].n}, ${LINE[s.idx + 1].n}역입니다. 내리실 문은 ${LINE[s.idx + 1].side > 0 ? '오른쪽' : '왼쪽'}입니다.`); }
       /* 정지 위치 초과 */
       if (s.x > sec.len + 4 && !s.eb) { s.atc = true; }
       if (s.v === 0 && s.t > 3) {
@@ -243,13 +283,14 @@
       if (s.eb) { g.fillStyle = 'rgba(229,72,77,.85)'; g.fillRect(W / 2 - 80, 22, 160, 30); g.fillStyle = '#fff'; g.font = 'bold 15px sans-serif'; g.textAlign = 'center'; g.fillText('🛑 비상제동 (EB)', W / 2, 43); }
       if (s.phase === 'dwell' && s.doors === 1) { g.fillStyle = 'rgba(30,110,230,.85)'; g.fillRect(W / 2 - 130, 22, 260, 26); g.fillStyle = '#fff'; g.font = 'bold 13px sans-serif'; g.textAlign = 'center'; g.fillText(`${LINE[s.idx].n}역 — 승객 승하차 중 (${Math.min(18, Math.round(s.openT))}/18초)`, W / 2, 40); }
     }
-    function loop(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; if (s) s.look += ((held.r - held.l) - s.look) * Math.min(1, dt * 6);
+    function loop(now) { const dt = Math.min(.05, (now - last) / 1000); last = now; audioUpdate(dt);
+      if (s) s.look += ((held.r - held.l) - s.look) * Math.min(1, dt * 6);
       if (s && !s.over) { const m = spd(); for (let i = 0; i < m; i++) sim(dt); } draw(); raf = requestAnimationFrame(loop); }
     const held = { l: 0, r: 0 };
     const ok = () => s && !s.over && !s.eb;
     const act = {
       q: () => { if (ok() && s.type === 'one') { s.L = Math.min(4, s.L + 1); sync(); } },
-      a: () => { if (!ok()) return; if (s.type === 'two') { s.pn = Math.min(4, s.pn + 1); } else if (s.L > 0) s.L -= 1; sync(); },
+      a: () => { if (!ok()) return; if (s.type === 'two') { s.pn = Math.min(4, s.pn + 1); } else if (s.L > 0) s.L -= 1; else if (s.L < 0) s.L += 1; sync(); },
       z: () => { if (!ok()) return; if (s.type === 'one') s.L = Math.max(-7, s.L - 1); else if (s.pn > 0) s.pn -= 1; else s.bn = Math.min(7, s.bn + 1); sync(); },
       brk: () => { if (!ok()) return; if (s.type === 'one') s.L = s.L > 0 ? 0 : Math.max(-7, s.L - 1); else { s.bn = Math.min(7, s.bn + 1); } sync(); },
       rel: () => { if (!ok()) return; if (s.type === 'one') { if (s.L < 0) s.L += 1; } else s.bn = Math.max(0, s.bn - 1); sync(); },
@@ -260,8 +301,8 @@
     };
     const door = () => {
       if (!s || s.phase !== 'dwell' || s.v > 0) return;
-      if (s.doorCmd === 0 && s.doors === 0) { s.doorCmd = 1; s.openT = 0; say('출입문을 엽니다.'); beep(660, .15); }
-      else if (s.doorCmd === 1 && s.doors === 1) { if (s.openT < 8) return say('승객이 타고 내리는 중이에요. 조금만 기다려 주세요.', true); s.doorCmd = 0; say('출입문을 닫습니다. 문이 닫히면 출발하세요.'); beep(520, .2); }
+      if (s.doorCmd === 0 && s.doors === 0) { s.doorCmd = 1; s.openT = 0; say('출입문을 엽니다.'); tone(880, .5, 'sine', .15); tone(660, .6, 'sine', .15, .35); }
+      else if (s.doorCmd === 1 && s.doors === 1) { if (s.openT < 8) return say('승객이 타고 내리는 중이에요. 조금만 기다려 주세요.', true); s.doorCmd = 0; say('출입문을 닫습니다. 문이 닫히면 출발하세요.'); tone(660, .5, 'sine', .15); tone(880, .6, 'sine', .15, .35); }
     };
     const key = e => { if (!$('#swC') || /input|textarea|select/i.test((e.target || {}).tagName || '')) return;
       if (e.ctrlKey || e.metaKey || e.altKey) return;
@@ -269,7 +310,7 @@
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'Backspace'].includes(k)) e.preventDefault();
       if (k === 'ArrowLeft') { held.l = 1; return; } if (k === 'ArrowRight') { held.r = 1; return; }
       if (k === 'q') act.q(); else if (k === 'a') act.a(); else if (k === 'z') act.z(); else if (k === ',') act.rel(); else if (k === '.') act.brk();
-      else if (k === 'ArrowUp') act.fwd(); else if (k === 'ArrowDown') act.bwd(); else if (k === ' ') act.dsd(); else if (k === 'Backspace') act.eb(); else if (k === 'o') door(); else if (k === 'f') fs(); };
+      else if (k === 'ArrowUp') act.fwd(); else if (k === 'ArrowDown') act.bwd(); else if (k === ' ') act.dsd(); else if (k === 'Backspace') act.eb(); else if (k === 'o') door(); else if (k === 'f') fs(); else if (k === 'm') toggleMute(); };
     window.addEventListener('keydown', key);
     const keyUp = e => { if (e.key === 'ArrowLeft') held.l = 0; else if (e.key === 'ArrowRight') held.r = 0; };
     window.addEventListener('keyup', keyUp);
@@ -278,6 +319,8 @@
     $('#swD').onclick = door;
     const box = () => $('#swGame');
     const isFs = () => document.fullscreenElement === box() || box().classList.contains('sw-fs');
+    const toggleMute = () => { audio.mute = !audio.mute; $('#swMute').textContent = audio.mute ? '🔇 소리 꺼짐 (M)' : '🔊 소리 (M)'; };
+    $('#swMute').onclick = toggleMute;
     const fs = async () => {
       const el = box(); if (!el) return;
       if (isFs()) { if (document.fullscreenElement) { try { await document.exitFullscreen(); } catch (e) {} } el.classList.remove('sw-fs'); return; }
@@ -288,7 +331,7 @@
     window.addEventListener('keydown', esc);
     $('#swFs').onclick = fs;
     main.querySelectorAll('[data-course]').forEach(b => b.onclick = () => { beep(1, .01); start(b.dataset.course); });
-    dbg = () => s; cleanup.push(() => { cancelAnimationFrame(raf); window.removeEventListener('keydown', key); window.removeEventListener('keyup', keyUp); window.removeEventListener('keydown', esc); if (document.fullscreenElement) { try { document.exitFullscreen(); } catch (e) {} } dbg = null; });
+    dbg = () => s; cleanup.push(() => { cancelAnimationFrame(raf); window.removeEventListener('keydown', key); window.removeEventListener('keyup', keyUp); try { if (audio.ctx) audio.ctx.close(); } catch (e) {} window.removeEventListener('keydown', esc); if (document.fullscreenElement) { try { document.exitFullscreen(); } catch (e) {} } dbg = null; });
     raf = requestAnimationFrame(loop);
   }
 
