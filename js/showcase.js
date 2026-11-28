@@ -23,13 +23,10 @@
     });
   }
 
-  const card = (p, liked) => `<article class="sc-card" data-id="${esc(p.id)}">
-    <div class="sc-head"><img class="emo" src="images/logo.png" alt=""><div><b>${esc(p.author || '덕질역')}</b><small>${fmtDate(p.created)}</small></div>
-      ${canPost() ? `<button class="btn sm danger sc-del" type="button" data-del="${esc(p.id)}">삭제</button>` : ''}</div>
-    <div class="sc-slides" tabindex="0" aria-label="사진 ${p.images.length}장">${p.images.map(u => `<div class="sc-slide"><img loading="lazy" referrerpolicy="no-referrer" src="${esc(u)}" alt=""></div>`).join('')}</div>
-    ${p.images.length > 1 ? `<div class="sc-dots">${p.images.map((_, i) => `<i${i ? '' : ' class="on"'}></i>`).join('')}</div>` : ''}
-    <div class="sc-act"><button class="sc-like${liked ? ' on' : ''}" type="button" data-like="${esc(p.id)}" aria-pressed="${liked}">${liked ? '♥' : '♡'}</button><span class="sc-n">공감 <b>${p.likes}</b></span></div>
-    ${p.caption ? `<p class="sc-cap"><b>${esc(p.author || '덕질역')}</b> ${esc(p.caption).replace(/\n/g, '<br>')}</p>` : ''}</article>`;
+  /* 격자 카드: 사진 비율 그대로(검은 여백 없음), 누르면 상세 */
+  const tile = (p, liked) => `<button type="button" class="sc-tile" data-open="${esc(p.id)}" aria-label="${esc(p.caption || '사진')} 자세히 보기">
+    <span class="sc-ph"><img loading="lazy" referrerpolicy="no-referrer" src="${esc(p.images[0])}" alt="">${p.images.length > 1 ? `<i class="sc-multi">▣ ${p.images.length}</i>` : ''}<i class="sc-hrt${liked ? ' on' : ''}">${liked ? '♥' : '♡'}</i></span>
+    <span class="sc-t">${esc(p.caption ? p.caption.split('\n')[0] : (p.author || '덕질역'))}</span><span class="sc-s">${esc(p.author || '덕질역')} · ${fmtDate(p.created)}${p.likes ? ` · ♥ ${p.likes}` : ''}</span></button>`;
 
   async function view() {
     const el = document.getElementById('content');
@@ -43,7 +40,7 @@
         <textarea class="input" id="scCap" rows="2" maxlength="500" placeholder="사진에 대한 한마디 (선택)"></textarea>
         <button class="btn primary" type="submit" id="scGo" disabled>올리기</button> <span id="scMsg" class="hint"></span></form>`
         : ''}
-      <div class="sc-feed">${list.length ? list.map(p => card(p, mine.has(p.id))).join('') : '<div class="empty">아직 올라온 사진이 없어요 📸</div>'}</div>`;
+      <div class="sc-grid">${list.length ? list.map(p => tile(p, mine.has(p.id))).join('') : '<div class="empty">아직 올라온 사진이 없어요 📸</div>'}</div>`;
 
     /* 올리기 */
     const form = document.getElementById('scForm');
@@ -67,24 +64,31 @@
         } catch (err) { msg.textContent = '⚠️ ' + err.message; go.disabled = false; }
       };
     }
-    /* 공감 */
-    const like = async id => {
-      const arr = getL(), on = !arr.includes(id), c = el.querySelector(`.sc-card[data-id="${CSS.escape(id)}"]`); if (!c) return;
-      setL(on ? [...arr, id] : arr.filter(x => x !== id));
-      const b = c.querySelector('.sc-like'), n = c.querySelector('.sc-n b');
-      b.classList.toggle('on', on); b.textContent = on ? '♥' : '♡'; b.setAttribute('aria-pressed', on); n.textContent = Math.max(0, (+n.textContent || 0) + (on ? 1 : -1));
-      try { await A.likeShowcase(id, on); } catch (e) {}
+    /* 상세 보기 */
+    const open = id => {
+      const p = list.find(x => x.id === id); if (!p) return;
+      let liked = getL().includes(id), idx = 0;
+      const ov = document.createElement('div'); ov.className = 'sc-ov';
+      const paint = () => { ov.innerHTML = `<div class="sc-modal" role="dialog" aria-modal="true"><button class="sc-x" type="button" aria-label="닫기">✕</button>
+        <div class="sc-view"><img referrerpolicy="no-referrer" src="${esc(p.images[idx])}" alt="">${p.images.length > 1 ? `<button class="sc-nv l" type="button" aria-label="이전">‹</button><button class="sc-nv r" type="button" aria-label="다음">›</button><span class="sc-cnt">${idx + 1} / ${p.images.length}</span>` : ''}</div>
+        <div class="sc-info"><div class="sc-who"><img class="emo" src="images/logo.png" alt=""><div><b>${esc(p.author || '덕질역')}</b><small>${fmtDate(p.created)}</small></div></div>
+          ${p.caption ? `<p class="sc-cap">${esc(p.caption).replace(/\n/g, '<br>')}</p>` : '<p class="sc-cap" style="color:#999">한마디가 없어요</p>'}
+          <div class="sc-act"><button class="sc-like${liked ? ' on' : ''}" type="button" aria-pressed="${liked}">${liked ? '♥' : '♡'}</button><span class="sc-n">공감 <b>${p.likes}</b></span>${canPost() ? '<button class="btn sm danger sc-del" type="button">삭제</button>' : ''}</div></div></div>`;
+        ov.querySelector('.sc-x').onclick = close;
+        const L = ov.querySelector('.sc-nv.l'), R = ov.querySelector('.sc-nv.r');
+        if (L) { L.onclick = () => { idx = (idx + p.images.length - 1) % p.images.length; paint(); }; R.onclick = () => { idx = (idx + 1) % p.images.length; paint(); }; }
+        ov.querySelector('.sc-like').onclick = async () => {
+          const arr = getL(); liked = !arr.includes(id); setL(liked ? [...arr, id] : arr.filter(x => x !== id)); p.likes = Math.max(0, p.likes + (liked ? 1 : -1)); paint();
+          const t = el.querySelector(`[data-open="${CSS.escape(id)}"]`); if (t) { const h = t.querySelector('.sc-hrt'); h.classList.toggle('on', liked); h.textContent = liked ? '♥' : '♡'; }
+          try { await A.likeShowcase(id, liked); } catch (e) {} };
+        const d = ov.querySelector('.sc-del'); if (d) d.onclick = async () => { if (!confirm('이 사진 게시물을 삭제할까요?')) return; try { await A.deleteShowcase(id); close(); view(); } catch (e) { alert(e.message); } };
+      };
+      const kd = e => { if (e.key === 'Escape') close(); else if (p.images.length > 1 && e.key === 'ArrowLeft') { idx = (idx + p.images.length - 1) % p.images.length; paint(); } else if (p.images.length > 1 && e.key === 'ArrowRight') { idx = (idx + 1) % p.images.length; paint(); } };
+      function close() { document.removeEventListener('keydown', kd); ov.remove(); document.body.style.overflow = ''; }
+      ov.addEventListener('click', e => { if (e.target === ov) close(); });
+      document.addEventListener('keydown', kd); document.body.appendChild(ov); document.body.style.overflow = 'hidden'; paint();
     };
-    el.querySelectorAll('[data-like]').forEach(b => b.onclick = () => like(b.dataset.like));
-    el.querySelectorAll('.sc-slides').forEach(s => {
-      s.ondblclick = () => { const id = s.closest('.sc-card').dataset.id; if (!getL().includes(id)) like(id); };
-      const dots = s.parentElement.querySelectorAll('.sc-dots i');
-      if (dots.length) s.onscroll = () => { const i = Math.round(s.scrollLeft / s.clientWidth); dots.forEach((d, k) => d.classList.toggle('on', k === i)); };
-    });
-    el.querySelectorAll('[data-del]').forEach(b => b.onclick = async () => {
-      if (!confirm('이 사진 게시물을 삭제할까요?')) return;
-      try { await A.deleteShowcase(b.dataset.del); view(); } catch (e) { alert(e.message); }
-    });
+    el.querySelectorAll('[data-open]').forEach(b => b.onclick = () => open(b.dataset.open));
   }
   window.Showcase = { route: view };
 })();
