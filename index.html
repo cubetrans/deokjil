@@ -281,7 +281,7 @@ footer { padding: 34px 0 50px; text-align: center; color: var(--ink3); font-size
   st.innerHTML = parts.map(p => p.startsWith('{') ? p.slice(1, -1).split(' ').map(w => `<span class="w hl">${w}</span>`).join(' ') : p.split(/(\s+)/).map(t => !t || /^\s+$/.test(t) ? t : `<span class="w">${t}</span>`).join('')).join('');
   const ws = $$('.w', st);
   /* 흐르는 띠 */
-  const items = ['📓 일상글', '🚌 버스 탑사기', '🚆 철도 탑승기', '📷 출사기', '💬 교통 잡담', '📦 지난 글 보관함', '🌐 링크 모음'];
+  const items = ['📓 일상글', '🚌 버스 탑사기', '🚆 철도 탑승기', '📷 출사기', '💬 교통 잡담', '🌐 링크 모음'];
   const line = items.map(t => `<span>${t}</span><i>●</i>`).join('');
   $('#track').innerHTML = line + line;
   /* 스크롤 등장 */

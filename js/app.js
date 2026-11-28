@@ -42,7 +42,7 @@
     $('#tree').innerHTML = link({ h: '#/', i: '<img class="emo" src="images/logo.png" alt="">', t: C.name, k: 'home' })
       + groupedBoards().map(g => (g.cat ? `<div class="ti-cat">${esc(g.cat.name)}</div>` : '') + g.boards.map(bl).join('')).join('')
       + '<div class="ti-sep" role="separator"></div>'
-      + [{ h: '#/photos', i: '📷', t: '촬영 사진', k: 'photos' }, { h: '#/backup', i: '📦', t: '지난 글 보관함', k: 'backup' },
+      + [{ h: '#/photos', i: '📷', t: '촬영 사진', k: 'photos' }, 
         { h: '#/links', i: '🌐', t: '링크 모음', k: 'links' }, { h: '#/about', i: 'ℹ️', t: '덕질역 소개', k: 'about' }].map(link).join('');
   }
 
@@ -261,25 +261,6 @@
 
 
   /* ---------- 링크/소개 ---------- */
-  /* ---------- 지난 글 보관함 (개편 전 글, DB 백업에서 읽기 전용) ---------- */
-  async function viewBackup(id) {
-    setAddr('지난 글 보관함', '지난 글 보관함');
-    let rows;
-    try { rows = await A.backupPosts(); } catch (e) { content.innerHTML = `<h2 class="page-title">📦 지난 글 보관함</h2>${errBox(e)}`; return; }
-    const get = (r, ...k) => { for (const x of k) if (r[x] != null && r[x] !== '') return r[x]; return ''; };
-    rows = rows.map((r, i) => ({ id: String(get(r, 'id') || i), title: get(r, 'title') || '(제목 없음)', body: get(r, 'body', 'content'), author: get(r, 'author_nick', 'author', 'nick'), created: get(r, 'created_at', 'created') })).sort((a, b) => new Date(b.created) - new Date(a.created));
-    if (id) {
-      const r = rows.find(x => x.id === id);
-      if (!r) { content.innerHTML = '<div class="msg err">보관된 글을 찾을 수 없어요.</div><a class="btn" href="#/backup">← 보관함</a>'; return; }
-      content.innerHTML = `<p><a href="#/backup">← 지난 글 보관함</a></p><h1 class="post-title">${esc(r.title)}</h1>
-        <div class="post-meta">${esc(r.author)} · ${fmtDate(r.created)} · 개편 전 글 (읽기 전용)</div><div class="post-body">${renderBody(r.body)}</div>`;
-      return;
-    }
-    content.innerHTML = `<h2 class="page-title">📦 지난 글 보관함</h2>
-      <div class="panel raised">개편 전에 올라왔던 글이에요. 일정 기간 동안만 읽을 수 있고, 읽기 전용이에요.</div>
-      ${rows.length ? `<table class="tbl"><thead><tr><th>제목</th><th class="hide-m" style="width:90px">글쓴이</th><th style="width:100px">날짜</th></tr></thead><tbody>${rows.map(r => `<tr><td class="t"><a href="#/backup/${encodeURIComponent(r.id)}">${esc(r.title)}</a></td><td class="c hide-m">${esc(r.author)}</td><td class="c">${fmtShort(r.created)}</td></tr>`).join('')}</tbody></table>`
-        : '<div class="empty">보관된 글이 없어요.</div>'}`;
-  }
   function viewLinks() {
     setAddr('링크 모음', '링크 모음');
     const L = settings.links || {};
@@ -337,7 +318,6 @@
       else if (p === 'search') { buildTree(''); await viewSearch(a, 'q'); }
       else if (p === 'tag') { buildTree(''); await viewSearch(a, 'tag'); }
       else if (p === 'photos') { buildTree('photos'); setAddr('', '촬영 사진'); await window.Photos.route(a, C); }
-      else if (p === 'backup') { buildTree('backup'); await viewBackup(a); }
       else if (p === 'links') { buildTree('links'); viewLinks(); }
       else if (p === 'about') { buildTree('about'); viewAbout(); }
       else { buildTree(''); notFound(); }
