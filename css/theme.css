@@ -451,3 +451,10 @@ img.emo, .post-body img.emo, .cmt-b img.emo, .preview img.emo { display: inline 
 .gm-btns{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.gm-msg{min-height:22px;font-weight:700;color:#3182f6}
 .gm-end{padding:14px;border:1px solid #d5dbe5;border-radius:12px;background:#fff;text-align:center}
 .sw-menu{max-width:620px}.sw-how{line-height:1.9;word-break:keep-all}
+
+/* 운전 시뮬레이터 전체화면 */
+#swGame:fullscreen,#swGame.sw-fs{background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:6px;box-sizing:border-box;overflow:auto}
+#swGame.sw-fs{position:fixed;inset:0;z-index:9999}
+#swGame:fullscreen .gm-canvas,#swGame.sw-fs .gm-canvas{width:min(100vw - 12px,(100vh - 110px) * 760 / 470);height:auto;border:0}
+#swGame:fullscreen .gm-btns,#swGame.sw-fs .gm-btns{margin:0;justify-content:center}
+#swGame:fullscreen .btn,#swGame.sw-fs .btn{padding:4px 8px;font-size:12px}

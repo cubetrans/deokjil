@@ -34,7 +34,7 @@
         <ul class="sw-how"><li><b>Space</b> DSD (일정 시간마다 눌러 줘야 해요. 안 누르면 경보 후 비상제동)</li><li><b>Q</b> 가속 (원핸들) · <b>A</b> 가속 (투핸들) / 중립까지만 감속 (원핸들) · <b>Z</b> 감속 (모든 열차)</li><li><b>,</b> 브레이크 한 단계 체결 · <b>.</b> 한 단계 완해</li><li><b>↑ / ↓</b> 전후진 제어기 (후진·중립·전진 — 출발하려면 <b>전진</b>)</li><li><b>O</b> 출입문 열기/닫기 · <b>Backspace</b> 비상제동(EB)</li><li>제한속도를 넘으면 <b>ATC가 자동 제동</b>해요. 급제동·정차 충격은 승차감 감점!</li></ul></div>
       <div id="swGame" hidden><canvas id="swC" width="${W}" height="${H}" class="gm-canvas"></canvas>
         <div class="gm-btns"><button class="btn" id="swQ">Q 가속</button><button class="btn" id="swA">A 가속(투핸들)/중립까지 감속</button><button class="btn" id="swZ">Z 감속</button><button class="btn" id="swBk">, 제동 +</button><button class="btn" id="swRl">. 완해</button></div>
-        <div class="gm-btns"><button class="btn" id="swRu">↑ 전진</button><button class="btn" id="swRd">↓ 후진</button><button class="btn" id="swDsd">Space DSD</button><button class="btn primary" id="swD">🚪 문 열기/닫기</button><button class="btn danger" id="swE">🛑 EB</button></div></div>`;
+        <div class="gm-btns"><button class="btn" id="swRu">↑ 전진</button><button class="btn" id="swRd">↓ 후진</button><button class="btn" id="swDsd">Space DSD</button><button class="btn primary" id="swD">🚪 문 열기/닫기</button><button class="btn danger" id="swE">🛑 EB</button><button class="btn" id="swFs">⛶ 전체화면 (F)</button></div></div>`;
     let s = null, raf = 0, last = performance.now();
     const spd = () => +($('#swSpd') || { value: 1 }).value;
     const say = (t, bad) => { s.msg = t; s.msgT = 5; s.bad = !!bad; };
@@ -239,12 +239,23 @@
       const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
       if (['ArrowUp', 'ArrowDown', ' ', 'Backspace'].includes(k)) e.preventDefault();
       if (k === 'q') act.q(); else if (k === 'a') act.a(); else if (k === 'z') act.z(); else if (k === ',') act.brk(); else if (k === '.') act.rel();
-      else if (k === 'ArrowUp') act.fwd(); else if (k === 'ArrowDown') act.bwd(); else if (k === ' ') act.dsd(); else if (k === 'Backspace') act.eb(); else if (k === 'o') door(); };
+      else if (k === 'ArrowUp') act.fwd(); else if (k === 'ArrowDown') act.bwd(); else if (k === ' ') act.dsd(); else if (k === 'Backspace') act.eb(); else if (k === 'o') door(); else if (k === 'f') fs(); };
     window.addEventListener('keydown', key);
     [['swQ', 'q'], ['swA', 'a'], ['swZ', 'z'], ['swBk', 'brk'], ['swRl', 'rel'], ['swRu', 'fwd'], ['swRd', 'bwd'], ['swDsd', 'dsd'], ['swE', 'eb']].forEach(([id, f]) => { $('#' + id).onclick = act[f]; });
     $('#swD').onclick = door;
+    const box = () => $('#swGame');
+    const isFs = () => document.fullscreenElement === box() || box().classList.contains('sw-fs');
+    const fs = async () => {
+      const el = box(); if (!el) return;
+      if (isFs()) { if (document.fullscreenElement) { try { await document.exitFullscreen(); } catch (e) {} } el.classList.remove('sw-fs'); return; }
+      try { if (el.requestFullscreen) { await el.requestFullscreen(); return; } } catch (e) {}
+      el.classList.add('sw-fs');   // 전체화면 API가 없는 브라우저(아이폰 등)는 화면 가득 채우기
+    };
+    const esc = e => { if (e.key === 'Escape' && box() && box().classList.contains('sw-fs')) box().classList.remove('sw-fs'); };
+    window.addEventListener('keydown', esc);
+    $('#swFs').onclick = fs;
     main.querySelectorAll('[data-course]').forEach(b => b.onclick = () => { beep(1, .01); start(b.dataset.course); });
-    dbg = () => s; cleanup.push(() => { cancelAnimationFrame(raf); window.removeEventListener('keydown', key); dbg = null; });
+    dbg = () => s; cleanup.push(() => { cancelAnimationFrame(raf); window.removeEventListener('keydown', key); window.removeEventListener('keydown', esc); if (document.fullscreenElement) { try { document.exitFullscreen(); } catch (e) {} } dbg = null; });
     raf = requestAnimationFrame(loop);
   }
 
