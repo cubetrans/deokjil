@@ -189,8 +189,10 @@
       <h2 class="page-title">📝 ${isAdm() ? '글 관리' : '내 글'}</h2>
       <div class="row" style="margin-bottom:10px"><select class="input" id="bf" style="width:auto" aria-label="게시판 필터">
         <option value="all">전체 게시판 (${total})</option>${C.boards.map(b => `<option value="${b.id}"${board === b.id ? ' selected' : ''}>${b.icon} ${esc(b.name)}</option>`).join('')}</select>
-        <a class="btn primary" href="#/new${board && board !== 'all' ? '/' + board : ''}">✏️ 새 글 쓰기</a></div>
-      ${list.length ? `<div style="overflow:auto"><table class="tbl"><thead><tr><th>제목</th><th class="hide-m">게시판</th>${isAdm() ? '<th class="hide-m">글쓴이</th>' : ''}<th class="hide-m">작성일</th><th>👁</th><th>💙</th><th>💬</th><th>관리</th></tr></thead><tbody>${list.map(p => `<tr>
+        <a class="btn primary" href="#/new${board && board !== 'all' ? '/' + board : ''}">✏️ 새 글 쓰기</a>
+        <button class="btn danger" type="button" id="delSel" disabled>🗑 선택 삭제</button></div>
+      ${list.length ? `<div style="overflow:auto"><table class="tbl"><thead><tr><th style="width:30px"><input type="checkbox" id="ckAll" aria-label="전체 선택"></th><th>제목</th><th class="hide-m">게시판</th>${isAdm() ? '<th class="hide-m">글쓴이</th>' : ''}<th class="hide-m">작성일</th><th>👁</th><th>💙</th><th>💬</th><th>관리</th></tr></thead><tbody>${list.map(p => `<tr>
+        <td class="c"><input type="checkbox" class="ck" value="${esc(p.id)}" aria-label="선택"></td>
         <td class="t">${p.pinned ? '📌 ' : ''}${p.scheduled ? `<span class="sched" title="공개 예정">⏰ ${fmtShort(p.publishAt)} 공개</span> ` : ''}<a href="#/edit/${esc(p.id)}">${esc(p.title)}</a></td>
         <td class="c hide-m">${esc((boardOf(p.board) || {}).name || p.board)}</td>${isAdm() ? `<td class="c hide-m">${esc(p.author || '-')}</td>` : ''}<td class="c hide-m">${fmtShort(p.created)}</td>
         <td class="c">${p.views}</td><td class="c">${p.likes}</td><td class="c">${p.comments}</td>
@@ -198,6 +200,18 @@
           ${isAdm() ? `<button class="btn sm" type="button" data-pin="${esc(p.id)}">${p.pinned ? '고정 해제' : '📌 고정'}</button>` : ''}
           <button class="btn sm danger" type="button" data-del="${esc(p.id)}">삭제</button></td></tr>`).join('')}</tbody></table></div>` : '<div class="empty">글이 없어요. 새 글을 써 보세요!</div>'}`;
     $('#bf').onchange = e => { location.hash = '#/posts/' + e.target.value; };
+    const cks = () => [...main.querySelectorAll('.ck')], sel = () => cks().filter(c => c.checked).map(c => c.value);
+    const upd = () => { const n = sel().length, d = $('#delSel'); d.disabled = !n; d.textContent = n ? `🗑 선택 삭제 (${n})` : '🗑 선택 삭제'; const a = $('#ckAll'); if (a) a.checked = n > 0 && n === cks().length; };
+    main.querySelectorAll('.ck').forEach(c => c.onchange = upd);
+    if ($('#ckAll')) $('#ckAll').onchange = e => { cks().forEach(c => c.checked = e.target.checked); upd(); };
+    $('#delSel').onclick = async () => {
+      const ids = sel(); if (!ids.length) return;
+      if (!(await confirmBox(`선택한 글 ${ids.length}개를 삭제할까요?\n댓글도 함께 지워지고, 되돌릴 수 없어요.`, '글 여러 개 삭제', '삭제', '취소'))) return;
+      let ok = 0, fail = '';
+      for (const id of ids) { try { await A.deletePost(id); ok++; } catch (e) { fail = e.message; break; } }
+      if (fail) await alertBox(`${ok}개를 지우고 멈췄어요: ${fail}`, '오류', '⚠️');
+      route();
+    };
     main.querySelectorAll('[data-pin]').forEach(b => b.onclick = async () => {
       const p = list.find(x => x.id === b.dataset.pin);
       try { await A.savePost({ id: p.id, board: p.board, title: p.title, body: p.body, tags: p.tags, pinned: !p.pinned }); route(); } catch (e) { alertBox(e.message, '오류', '⚠️'); }
