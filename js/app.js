@@ -42,7 +42,7 @@
     $('#tree').innerHTML = link({ h: '#/', i: '<img class="emo" src="images/logo.png" alt="">', t: C.name, k: 'home' })
       + groupedBoards().map(g => (g.cat ? `<div class="ti-cat">${esc(g.cat.name)}</div>` : '') + g.boards.map(bl).join('')).join('')
       + '<div class="ti-sep" role="separator"></div>'
-      + [{ h: '#/photos', i: '📷', t: '촬영 사진', k: 'photos' }, 
+      + [{ h: '#/photos', i: '📷', t: '사진 모아보기', k: 'photos' }, 
         { h: '#/links', i: '🌐', t: '링크 모음', k: 'links' }, { h: '#/about', i: 'ℹ️', t: '덕질역 소개', k: 'about' }].map(link).join('');
   }
 
@@ -317,7 +317,7 @@
       else if (p === 'author') { buildTree(''); await viewAuthor(a); }
       else if (p === 'search') { buildTree(''); await viewSearch(a, 'q'); }
       else if (p === 'tag') { buildTree(''); await viewSearch(a, 'tag'); }
-      else if (p === 'photos') { buildTree('photos'); setAddr('', '촬영 사진'); await window.Photos.route(a, C); }
+      else if (p === 'photos') { buildTree('photos'); setAddr('', '사진 모아보기'); await window.Photos.route(a, C); }
       else if (p === 'links') { buildTree('links'); viewLinks(); }
       else if (p === 'about') { buildTree('about'); viewAbout(); }
       else { buildTree(''); notFound(); }

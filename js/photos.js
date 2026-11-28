@@ -1,4 +1,4 @@
-/* 사진 갤러리 — 글에 첨부된 사진을 한곳에 모아 보여 줘요 */
+/* 사진 모아보기 — 글에 첨부된 사진을 한곳에 모아 보여 줘요 */
 (function () {
   'use strict';
   const A = window.API, { esc, fmtShort } = window.Common;
@@ -27,7 +27,7 @@
     const list = boardId ? all.filter(x => x.board === boardId) : all;
     const nameOf = id => ((C && C.boards) || []).find(b => b.id === id)?.name || id;
     const el = document.getElementById('content');
-    el.innerHTML = `<h2 class="page-title">📷 사진 갤러리</h2>
+    el.innerHTML = `<h2 class="page-title">📷 사진 모아보기</h2>
       <p class="hint">글에 올린 사진을 한곳에 모아 놨어요. 사진을 누르면 그 글로 가요. (사진 ${all.length}장)</p>
       <div class="ride-chips ph-chips"><a class="chip${boardId ? '' : ' on'}" href="#/photos">전체</a>${boards.map(b => `<a class="chip${boardId === b ? ' on' : ''}" href="#/photos/${encodeURIComponent(b)}">${esc(nameOf(b))}</a>`).join('')}</div>
       ${list.length ? `<div class="ph-grid">${list.map(card).join('')}</div>` : '<div class="empty">아직 글에 올린 사진이 없어요 📷</div>'}`;
