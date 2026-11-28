@@ -42,7 +42,7 @@
         <div class="sc-prev" id="scPrev"></div>
         <textarea class="input" id="scCap" rows="2" maxlength="500" placeholder="사진에 대한 한마디 (선택)"></textarea>
         <button class="btn primary" type="submit" id="scGo" disabled>올리기</button> <span id="scMsg" class="hint"></span></form>`
-        : '<div class="msg info">사진은 글쓴이(서울교덕·지철덕)만 올릴 수 있어요. 구경하고 공감은 누구나 할 수 있어요 💙</div>'}
+        : ''}
       <div class="sc-feed">${list.length ? list.map(p => card(p, mine.has(p.id))).join('') : '<div class="empty">아직 올라온 사진이 없어요 📸</div>'}</div>`;
 
     /* 올리기 */
