@@ -1,64 +1,357 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>덕질역 - 버스·철도 덕질 기록소</title>
+<script>(function(){var h=location.hash;if(h&&h!=="#"&&h!=="#/"){location.replace("main.html"+h);}})();</script>
 <meta name="description" content="서울교덕과 지철덕이 함께 쓰는 버스·철도 덕후 블로그. 버스 탑사기, 철도 탑승기, 출사 사진, 교통 이야기를 가입 없이 읽고 댓글로 나눠요.">
 <link rel="canonical" href="https://deokjil.xyz/">
 <meta name="robots" content="index,follow,max-snippet:160">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="덕질역">
-<meta property="og:title" content="덕질역 - 버스·철도 덕질 기록소">
-<meta property="og:description" content="서울교덕과 지철덕이 함께 쓰는 버스·철도 덕후 블로그. 버스 탑사기, 철도 탑승기, 출사 사진, 교통 이야기를 가입 없이 읽고 댓글로 나눠요.">
-<meta property="og:url" content="https://deokjil.xyz/">
-<meta property="og:image" content="https://deokjil.xyz/images/logo-180.png">
-<meta property="og:locale" content="ko_KR">
-<meta name="twitter:card" content="summary">
-<meta name="theme-color" content="#3182f6">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"덕질역","alternateName":"덕질역 - 버스·철도 덕질 기록소","url":"https://deokjil.xyz/","description":"서울교덕과 지철덕이 함께 쓰는 버스·철도 덕후 블로그. 버스 탑사기, 철도 탑승기, 출사 사진, 교통 이야기를 가입 없이 읽고 댓글로 나눠요.","inLanguage":"ko-KR"}</script>
-<link rel="icon" type="image/png" href="images/logo.png">
+<meta property="og:type" content="website"><meta property="og:site_name" content="덕질역"><meta property="og:title" content="덕질역 - 버스·철도 덕질 기록소"><meta property="og:description" content="서울교덕과 지철덕이 함께 쓰는 버스·철도 덕후 블로그. 버스 탑사기, 철도 탑승기, 출사 사진, 교통 이야기를 가입 없이 읽고 댓글로 나눠요."><meta property="og:url" content="https://deokjil.xyz/"><meta property="og:image" content="https://deokjil.xyz/images/logo-180.png"><meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary"><meta name="theme-color" content="#3182f6"><meta name="color-scheme" content="light">
 <link rel="apple-touch-icon" href="images/logo-180.png">
-<script>(function(){var t=null;try{t=localStorage.getItem("deokjil_theme");}catch(e){}if(!t&&window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)t="dark";document.documentElement.setAttribute("data-theme",t==="dark"?"dark":"light");})();</script>
-<script>(function(){var p=location.pathname,n=p.replace(/\/index\.html$/,"/").replace(/\.html$/,"");if(n!==p)history.replaceState(null,"",n+location.search+location.hash);})();</script>
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/theme.css">
-<link rel="stylesheet" href="css/modern.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"덕질역","alternateName":"덕질역 - 버스·철도 덕질 기록소","url":"https://deokjil.xyz/","description":"서울교덕과 지철덕이 함께 쓰는 버스·철도 덕후 블로그. 버스 탑사기, 철도 탑승기, 출사 사진, 교통 이야기를 가입 없이 읽고 댓글로 나눠요.","inLanguage":"ko-KR"}</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@latest/dist/galmuri.css">
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>덕질역 - 버스·철도 덕질 기록소</title>
+<link rel="icon" href="images/logo.png">
+<style>
+:root { --blue: #3182f6; --blue-dk: #1b64da; --blue-lt: #e8f3ff; --ink: #191f28; --ink2: #6b7684; --ink3: #8b95a1; --bg: #fff; --gray: #f2f4f6; --line: #e5e8eb; --led: #ffd21f; --red: #ff3b30; --green: #19d44a; --r: 24px; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-snap-type: y proximity; }
+.hero, .statement, .numbers, .marquee, .features, .crew, .final { scroll-snap-align: start; }
+.scene .snap { position: absolute; left: 0; width: 1px; height: 1px; scroll-snap-align: start; scroll-snap-stop: always; pointer-events: none; }
+body { font-family: 'Galmuri11', 'Pretendard', 'Malgun Gothic', sans-serif; color: var(--ink); background: var(--bg); line-height: 1.6; word-break: keep-all; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+img { display: block; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+b, h1, h2, h3 { font-weight: 700; }
+
+/* ---------- 헤더 ---------- */
+.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; height: 64px; display: flex; align-items: center; transition: background .3s, box-shadow .3s; }
+.nav.solid { background: rgba(255,255,255,.88); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 1px 0 var(--line); }
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+.brand { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 700; }
+.brand img { width: 32px; height: 32px; border-radius: 8px; }
+.nav-links { display: flex; align-items: center; gap: 26px; font-size: 15px; color: var(--ink2); }
+.nav-links a:hover { color: var(--ink); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; cursor: pointer; font-family: inherit; font-weight: 700; border-radius: 16px; padding: 14px 26px; font-size: 16px; transition: transform .15s, background .2s, box-shadow .2s; }
+.btn:active { transform: scale(.96); }
+.btn.primary { background: var(--blue); color: #fff; box-shadow: 0 8px 24px rgba(49,130,246,.32); }
+.btn.primary:hover { background: var(--blue-dk); transform: translateY(-2px); }
+.btn.ghost { background: var(--blue-lt); color: var(--blue); }
+.btn.ghost:hover { background: #d3e8ff; }
+.btn.sm { padding: 9px 18px; font-size: 14px; border-radius: 12px; }
+.btn.xl { padding: 22px 44px; font-size: 22px; border-radius: 22px; }
+
+/* ---------- 공통 ---------- */
+section { position: relative; }
+.eyebrow { color: var(--blue); font-weight: 700; font-size: 16px; margin-bottom: 14px; }
+.h1 { font-size: clamp(38px, 7.2vw, 84px); line-height: 1.22; letter-spacing: -2px; }
+.h2 { font-size: clamp(30px, 5vw, 52px); line-height: 1.3; letter-spacing: -1.2px; }
+.lead { font-size: clamp(16px, 2.2vw, 20px); color: var(--ink2); margin-top: 22px; }
+.blue { color: var(--blue); }
+.rv { opacity: 0; transform: translateY(40px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1); transition-delay: var(--d, 0ms); }
+.rv.in { opacity: 1; transform: none; }
+.rv.zoom { transform: scale(.9); } .rv.zoom.in { transform: none; }
+.rv.left { transform: translateX(-50px); } .rv.left.in { transform: none; }
+.rv.right { transform: translateX(50px); } .rv.right.in { transform: none; }
+.split span { display: inline-block; opacity: 0; transform: translateY(60%); transition: opacity .6s, transform .7s cubic-bezier(.2,.7,.2,1); transition-delay: calc(var(--i) * 45ms); }
+.split.in span { opacity: 1; transform: none; }
+.progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; background: var(--blue); z-index: 60; }
+
+/* ---------- 1. 히어로 ---------- */
+.hero { min-height: 100vh; display: flex; align-items: center; padding: 120px 0 80px; overflow: hidden; background: radial-gradient(1200px 600px at 80% -10%, #dcebff 0, transparent 60%), #fff; }
+.hero .wrap { position: relative; width: 100%; }
+.hero-logo { width: 84px; height: 84px; border-radius: 22px; box-shadow: 0 14px 34px rgba(49,130,246,.35); margin-bottom: 30px; animation: float 4s ease-in-out infinite; }
+@keyframes float { 50% { transform: translateY(-10px); } }
+.hero .h1 { max-width: 640px; font-size: clamp(36px, 6vw, 72px); }
+.hero .cta { margin-top: 38px; display: flex; gap: 12px; flex-wrap: wrap; }
+.scroll-hint { position: absolute; bottom: -30px; left: 24px; color: var(--ink3); font-size: 14px; animation: bob 1.8s ease-in-out infinite; }
+@keyframes bob { 50% { transform: translateY(8px); } }
+.float-card { position: absolute; background: #fff; border-radius: 22px; box-shadow: 0 18px 50px rgba(25,31,40,.12); padding: 18px 20px; font-size: 14px; will-change: transform; }
+.fc1 { right: 4%; top: 6%; width: 250px; } .fc2 { right: 15%; top: 38%; width: 230px; } .fc3 { right: 2%; top: 64%; width: 220px; }
+.float-card small { color: var(--ink3); display: block; margin-bottom: 4px; }
+.float-card b { font-size: 16px; display: block; line-height: 1.4; }
+.tagp { display: inline-block; background: var(--blue-lt); color: var(--blue); padding: 2px 10px; border-radius: 999px; font-size: 12px; margin-top: 8px; }
+@media (max-width: 900px) { .float-card { display: none; } .scroll-hint { bottom: -50px; } }
+
+/* ---------- 2. 한 줄 소개 (글자가 스크롤에 맞춰 짙어짐) ---------- */
+.statement { padding: 160px 0; background: #fff; }
+.statement p { font-size: clamp(26px, 4.6vw, 48px); line-height: 1.5; letter-spacing: -1px; max-width: 900px; }
+.statement .w { color: #d1d6db; transition: color .4s; }
+.statement .w.on { color: var(--ink); }
+.statement .w.on.hl { color: var(--blue); }
+
+/* ---------- 3. 고정 장면 (스크롤로 단계 전환) ---------- */
+.scene { height: 360vh; background: var(--gray); }
+.scene-stick { position: sticky; top: 0; height: 100vh; display: flex; align-items: center; }
+.scene .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; width: 100%; }
+.steps { position: relative; height: 260px; }
+.step { position: absolute; inset: 0; opacity: 0; transform: translateY(30px); transition: opacity .5s, transform .6s; display: flex; flex-direction: column; justify-content: center; }
+.step.on { opacity: 1; transform: none; }
+.step .num { color: var(--blue); font-weight: 700; margin-bottom: 12px; }
+.dots { display: flex; gap: 8px; margin-top: 30px; }
+.dots i { width: 8px; height: 8px; border-radius: 99px; background: #cfd5dc; transition: width .3s, background .3s; }
+.dots i.on { width: 28px; background: var(--blue); }
+.device { width: min(100%, 400px); margin: 0 auto; aspect-ratio: 9/15; background: #fff; border-radius: 40px; box-shadow: 0 30px 80px rgba(25,31,40,.18); border: 10px solid #191f28; overflow: hidden; position: relative; }
+.screen { position: absolute; inset: 0; padding: 22px 18px; opacity: 0; transition: opacity .5s; background: #fff; }
+.screen.on { opacity: 1; }
+.scr-h { font-weight: 700; font-size: 17px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.scr-h img { width: 22px; height: 22px; border-radius: 6px; }
+.field { background: var(--gray); border-radius: 14px; padding: 12px 14px; font-size: 14px; margin-bottom: 10px; min-height: 44px; }
+.field.big { min-height: 150px; line-height: 1.7; }
+.caret::after { content: ''; display: inline-block; width: 2px; height: 1em; background: var(--blue); vertical-align: -2px; margin-left: 2px; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.mini-btn { background: var(--blue); color: #fff; border-radius: 12px; text-align: center; padding: 12px; font-weight: 700; font-size: 14px; margin-top: 8px; }
+.board { background: #050505; border-radius: 10px; padding: 8px 10px; box-shadow: inset 0 0 14px #000; color: var(--led); font-size: 12px; }
+.board .row { display: grid; grid-template-columns: 44px 1fr 38px; gap: 6px; padding: 6px 0; border-top: 2px solid var(--green); opacity: 0; transform: translateY(8px); transition: .4s; transition-delay: var(--d); }
+.screen.on .board .row { opacity: 1; transform: none; }
+.board .row.new { color: var(--red); }
+.board .head { color: var(--led); font-size: 11px; text-align: center; padding-bottom: 6px; }
+.cmt { background: var(--gray); border-radius: 14px; padding: 12px 14px; font-size: 13px; margin-bottom: 10px; opacity: 0; transform: translateY(10px); transition: .5s; transition-delay: var(--d); }
+.screen.on .cmt { opacity: 1; transform: none; }
+.cmt b { font-size: 12px; color: var(--blue); display: block; margin-bottom: 2px; }
+.like { display: inline-flex; align-items: center; gap: 6px; background: #ffe9ec; color: #f04452; border-radius: 99px; padding: 8px 16px; font-weight: 700; font-size: 14px; }
+.screen.on .like { animation: pop .7s .5s both; }
+@keyframes pop { 0% { transform: scale(.6); } 60% { transform: scale(1.25); } 100% { transform: scale(1); } }
+@media (max-width: 860px) { .scene .wrap { grid-template-columns: 1fr; gap: 10px; } .steps { height: 190px; } .device { width: min(52vw, 215px); } .step .h2 { font-size: 26px; } .step .lead { font-size: 14px; margin-top: 12px; } .scene-stick { align-items: flex-start; padding-top: 80px; } }
+
+/* ---------- 4. 숫자 ---------- */
+.numbers { padding: 160px 0; background: #fff; text-align: center; }
+.num-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 64px; }
+.num-card { background: var(--gray); border-radius: var(--r); padding: 34px 12px; }
+.num-card .v { font-size: clamp(34px, 5.4vw, 60px); font-weight: 700; color: var(--blue); letter-spacing: -1px; }
+.num-card .l { color: var(--ink2); margin-top: 6px; font-size: 15px; }
+@media (max-width: 760px) { .num-grid { grid-template-columns: repeat(2, 1fr); } }
+
+/* ---------- 5. 가로 흐르는 띠 ---------- */
+.marquee { padding: 40px 0; background: var(--ink); color: #fff; overflow: hidden; white-space: nowrap; }
+.marquee .track { display: inline-flex; gap: 48px; animation: slide 28s linear infinite; font-size: clamp(22px, 3.4vw, 38px); font-weight: 700; }
+.marquee .track span { opacity: .9; } .marquee .track i { color: var(--blue); font-style: normal; }
+@keyframes slide { to { transform: translateX(-50%); } }
+
+/* ---------- 6. 기능 카드 ---------- */
+.features { padding: 160px 0; background: #fff; }
+.feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 60px; }
+.feat { background: var(--gray); border-radius: var(--r); padding: 34px 28px 30px; min-height: 280px; display: flex; flex-direction: column; transition: transform .3s, box-shadow .3s, background .3s; }
+.feat:hover { transform: translateY(-8px); background: var(--blue-lt); box-shadow: 0 20px 44px rgba(49,130,246,.16); }
+.feat .ic { font-size: 44px; margin-bottom: auto; padding-bottom: 36px; transition: transform .4s; }
+.feat:hover .ic { transform: scale(1.18) rotate(-6deg); }
+.feat h3 { font-size: 22px; margin-bottom: 8px; letter-spacing: -.5px; }
+.feat p { color: var(--ink2); font-size: 15px; }
+.feat.wide { grid-column: span 2; background: var(--ink); color: #fff; }
+.feat.wide p { color: #aab2bd; } .feat.wide:hover { background: #0f1319; }
+@media (max-width: 860px) { .feat-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .feat-grid { grid-template-columns: 1fr; } .feat.wide { grid-column: auto; } }
+
+/* ---------- 7. 운영진 ---------- */
+.crew { padding: 140px 0; background: var(--gray); text-align: center; }
+.crew-row { display: flex; gap: 20px; justify-content: center; margin-top: 56px; flex-wrap: wrap; }
+.person { background: #fff; border-radius: var(--r); padding: 36px 30px; width: min(100%, 320px); box-shadow: 0 10px 30px rgba(25,31,40,.06); transition: transform .3s; }
+.person:hover { transform: translateY(-8px) rotate(-1deg); }
+.person .av { width: 84px; height: 84px; border-radius: 50%; margin: 0 auto 16px; display: grid; place-items: center; font-size: 38px; background: var(--blue-lt); }
+.person h3 { font-size: 22px; } .person p { color: var(--ink2); font-size: 14px; margin-top: 6px; }
+
+/* ---------- 8. 마지막 CTA ---------- */
+.final { padding: 200px 0 180px; background: linear-gradient(180deg, #fff 0, #e8f3ff 100%); text-align: center; overflow: hidden; }
+.final img { width: 96px; height: 96px; border-radius: 26px; margin: 0 auto 30px; box-shadow: 0 18px 44px rgba(49,130,246,.4); }
+.final .btn { margin-top: 44px; }
+.final .train-line { position: absolute; left: 0; right: 0; bottom: 56px; height: 3px; background: #b7c9e6; }
+.final .train-line::before { content: '🚆'; position: absolute; top: -34px; left: -80px; font-size: 38px; animation: run 9s linear infinite; }
+@keyframes run { to { left: calc(100% + 80px); } }
+footer { padding: 34px 0 50px; text-align: center; color: var(--ink3); font-size: 13px; background: #e8f3ff; }
+@media (max-width: 760px) { .nav-links .hide-m { display: none; } .statement, .numbers, .features { padding: 100px 0; } .final { padding: 140px 0 140px; } }
+@media (prefers-reduced-motion: reduce) { .rv, .split span { opacity: 1 !important; transform: none !important; transition: none !important; } .marquee .track, .hero-logo, .scroll-hint, .final .train-line::before { animation: none !important; } }
+</style>
 </head>
 <body>
+<div class="progress" id="bar"></div>
 
-<header class="site-head" data-nosnippet>
-  <div class="site-top">
-    <a class="site-title" href="#/"><img class="logo" src="images/logo.png" alt="" width="34" height="34">덕질역</a>
-    <span class="site-sub">버스·철도 덕질 기록소</span>
-    <span id="trayVisit" class="visit"></span>
-    <button class="me-btn" id="meBtn" type="button" hidden></button>
-    <button class="theme-btn" id="themeBtn" type="button" aria-label="어두운 모드" aria-pressed="false">🌙</button>
-  </div>
-  <div class="site-bar">
-    <nav class="menubar" aria-label="메뉴">
-      <a href="#/">홈</a><a href="#/links">링크 모음</a><a href="#/about">덕질역 소개</a><a id="mRandom" role="button">랜덤 글</a>
-    </nav>
-    <form id="sform" role="search"><input class="input" id="q" placeholder="글 검색" aria-label="글 검색" maxlength="40"><button class="btn sm" type="submit">검색</button></form>
-  </div>
-</header>
-<div class="sign-wrap" data-nosnippet><span class="sign-pole l" aria-hidden="true"></span><span class="sign-pole r" aria-hidden="true"></span><button class="sign-strip" id="signBtn" type="button" aria-pressed="true" aria-label="표지판 조명 켜기·끄기" title="클릭하면 조명을 껐다 켤 수 있어요"><svg class="arr l" viewBox="0 0 128 152" aria-hidden="true" focusable="false" shape-rendering="crispEdges"><path d="M64 152 L128 88 L128 45 L80 93 L80 0 L48 0 L48 93 L0 45 L0 88 Z"/></svg><span class="sign-txt"><span class="t-pc">교통 · 덕질 방면 열차 타는곳</span><span class="t-mo">덕질 방면 열차 타는곳</span></span><svg class="arr r" viewBox="0 0 128 152" aria-hidden="true" focusable="false" shape-rendering="crispEdges"><path d="M64 152 L128 88 L128 45 L80 93 L80 0 L48 0 L48 93 L0 45 L0 88 Z"/></svg></button></div>
-<script>(function(){var b=document.getElementById("signBtn");if(!b)return;function set(on){b.setAttribute("aria-pressed",on?"true":"false");b.classList.toggle("off",!on);}var on=true;try{on=localStorage.getItem("sign-light")!=="off";}catch(e){}set(on);b.addEventListener("click",function(){on=!on;set(on);try{localStorage.setItem("sign-light",on?"on":"off");}catch(e){}});})();</script>
-<div class="wbody">
-  <nav id="tree" aria-label="게시판" data-nosnippet></nav>
-  <main id="content" tabindex="-1"><div class="loading" data-nosnippet>⏳ 불러오는 중…</div><div id="seoIntro" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden"><h1>덕질역 - 버스·철도 덕질 기록소</h1><p>서울교덕과 지철덕이 함께 쓰는 버스·철도 덕후 블로그. 버스 탑사기, 철도 탑승기, 출사 사진, 교통 이야기를 가입 없이 읽고 댓글로 나눠요.</p></div></main>
-</div>
-<footer class="site-foot" data-nosnippet><div><b>덕질역</b> · 버스·철도 덕질 기록소</div><div><a href="#" id="rssLink" hidden>📡 RSS 구독</a> &nbsp;|&nbsp; 운영진 서울교덕 · 지철덕 &nbsp;|&nbsp; Since. 2026.10</div></footer>
+<header class="nav" id="nav" data-nosnippet><div class="wrap">
+  <a class="brand" href="#top"><img src="images/logo.png" alt="">덕질역</a>
+  <nav class="nav-links"><a class="hide-m" href="#scene">이렇게 써요</a><a class="hide-m" href="#features">기능</a><a class="hide-m" href="#crew">운영진</a><a class="btn primary sm" href="main.html#/">시작하기</a></nav>
+</div></header>
 
-<noscript><div style="position:fixed;inset:0;background:#fff;padding:20px;z-index:999">덕질역은 자바스크립트가 켜져 있어야 열려요.</div></noscript>
+<!-- 1 히어로 -->
+<section class="hero" id="top"><div class="wrap">
+  <img class="hero-logo rv zoom" src="images/logo.png" alt="">
+  <h1 class="h1 split" id="heroTitle" data-text="버스와 철도를 좋아하는 사람들의 기록소"></h1>
+  <p class="lead rv" style="--d:900ms">서울교덕과 지철덕이 만드는 교통 덕후 블로그, <b>덕질역</b>.<br>탑승기도, 출사 사진도, 노선 이야기도 여기에 모아요.</p>
+  <div class="cta rv" style="--d:1100ms"><a class="btn primary xl" href="main.html#/">덕질역 시작하기</a><a class="btn ghost xl" href="#scene">어떻게 쓰는데요?</a></div>
+  <a class="float-card fc1" id="fc1" data-speed=".12" href="main.html#/"><small>🚌 버스 탑사기</small><b>강남 N31번 막차 탑승기</b><span class="tagp">공감 12 · 댓글 3건</span></a>
+  <a class="float-card fc2" id="fc2" data-speed=".22" href="main.html#/"><small>📷 출사기</small><b>대모산입구역의 저녁 노을</b><span class="tagp">사진 8장</span></a>
+  <a class="float-card fc3" id="fc3" data-speed=".07" href="main.html#/"><small>🚆 철도 탑승기</small><b>3호선 3000호대 편성 정리</b><span class="tagp">새 글</span></a>
+  <div class="scroll-hint">↓ 스크롤</div>
+</div></section>
+
+<!-- 2 한 줄 소개 -->
+<section class="statement"><div class="wrap"><p id="statement" data-text="덕질역은 {교통을 좋아하는 사람들}이 모여 {탑승기와 사진, 이야기}를 남기는 곳이에요. 가입 없이 누구나 읽고, 댓글을 남기고, 공감할 수 있어요."></p></div></section>
+
+<!-- 3 고정 장면 -->
+<section class="scene" id="scene"><i class="snap" style="top:0"></i><i class="snap" style="top:112vh"></i><i class="snap" style="top:199vh"></i><div class="scene-stick"><div class="wrap">
+  <div>
+    <div class="steps">
+      <div class="step on"><div class="num">STEP 1</div><h2 class="h2">운영진이 글을 쓰면</h2><p class="lead">서울교덕과 지철덕이 탑승기, 출사 사진, 노선 이야기를 올려요.</p></div>
+      <div class="step"><div class="num">STEP 2</div><h2 class="h2">전광판에 열차처럼<br>출발해요</h2><p class="lead">새 글은 출발 안내판 맨 위에 빨간 불로 켜져요.</p></div>
+      <div class="step"><div class="num">STEP 3</div><h2 class="h2">누구나 가입 없이<br>댓글과 공감을</h2><p class="lead">닉네임은 '익명 a1b2'처럼 자동으로 정해져요. 로그인도 필요 없어요.</p></div>
+    </div>
+    <div class="dots" id="dots"><i class="on"></i><i></i><i></i></div>
+  </div>
+  <div class="device">
+    <div class="screen on" data-s="0"><div class="scr-h"><img src="images/logo.png" alt="">새 글 쓰기</div>
+      <div class="field" id="typeTitle"></div><div class="field big" id="typeBody"></div><div class="mini-btn">발행하기</div></div>
+    <div class="screen" data-s="1"><div class="scr-h"><img src="images/logo.png" alt="">덕질 출발 안내</div>
+      <div class="board"><div class="head">날짜 · 제목 · 댓글</div><div id="boardRows">
+        <div class="row new" style="--d:.1s"><span>09:11</span><span>[NEW] 대모산입구역 막차</span><span>0건</span></div>
+        <div class="row" style="--d:.35s"><span>11/27</span><span>3호선 3000호대 정리</span><span>2건</span></div>
+        <div class="row" style="--d:.6s"><span>11/26</span><span>강남 N31번 변경 후기</span><span>0건</span></div>
+        <div class="row" style="--d:.85s"><span>11/25</span><span>서울 버스 도색 변천사</span><span>4건</span></div>
+        <div class="row" style="--d:1.1s"><span>11/22</span><span>덕질역 업데이트 안내</span><span>1건</span></div></div></div></div>
+    <div class="screen" data-s="2"><div class="scr-h" id="cmtTitle"><img src="images/logo.png" alt="">대모산입구역 막차</div><div id="cmtBox">
+      <div class="cmt" style="--d:.1s"><b>익명 a1b2</b>저도 이 시간 열차 자주 타요!</div>
+      <div class="cmt" style="--d:.4s"><b>익명 9f3c</b>사진 너무 좋아요 📷</div>
+      <div class="cmt" style="--d:.7s"><b>👑 서울교덕</b>감사합니다! 다음엔 첫차도 가볼게요 :)</div>
+      </div><span class="like" id="likeN">♥ 공감 13</span></div>
+  </div>
+</div></div></section>
+
+<!-- 4 숫자 -->
+<section class="numbers"><div class="wrap">
+  <div class="eyebrow rv">덕질역은 지금</div>
+  <h2 class="h2 rv" style="--d:100ms">작지만 꾸준히,<br>열차는 계속 달려요</h2>
+  <div class="num-grid">
+    <div class="num-card rv zoom" style="--d:0ms"><div class="v"><span data-count="6" id="nBoards">0</span>개</div><div class="l">게시판</div></div>
+    <div class="num-card rv zoom" style="--d:120ms"><div class="v"><span data-count="128" id="nPosts">0</span>편</div><div class="l">쌓인 글</div></div>
+    <div class="num-card rv zoom" style="--d:240ms"><div class="v"><span data-count="2026" data-plain="1">0</span></div><div class="l">Since. 10월</div></div>
+    <div class="num-card rv zoom" style="--d:360ms"><div class="v"><span data-count="2">0</span>명</div><div class="l">운영진</div></div>
+  </div>
+</div></section>
+
+<!-- 5 흐르는 띠 -->
+<section class="marquee"><div class="track" id="track"></div></section>
+
+<!-- 6 기능 -->
+<section class="features" id="features"><div class="wrap">
+  <div class="eyebrow rv">덕질역에는</div>
+  <h2 class="h2 rv" style="--d:100ms">덕질하기 좋은 것들만<br>담았어요</h2>
+  <div class="feat-grid">
+    <div class="feat rv" style="--d:0ms"><div class="ic">📓</div><h3>여러 게시판</h3><p>일상글, 버스 탑사기, 철도 탑승기, 출사기, 교통 잡담까지 주제별로 나눠 담아요.</p></div>
+    <div class="feat rv" style="--d:100ms"><div class="ic">📷</div><h3>사진 갤러리</h3><p>글에 올린 사진이 자동으로 모여서 한눈에 보여요.</p></div>
+    <div class="feat rv" style="--d:200ms"><div class="ic">💬</div><h3>가입 없이 댓글</h3><p>누구나 편하게 댓글과 공감을 남길 수 있어요.</p></div>
+    <div class="feat wide rv" style="--d:0ms"><div class="ic">🚉</div><h3>출발 안내 전광판</h3><p>진짜 역에서 보던 전광판처럼, 새 글이 올라오면 맨 위 빨간 줄로 출발해요. 날짜, 제목, 게시판, 공감, 댓글이 한눈에.</p></div>
+    <div class="feat rv" style="--d:100ms"><div class="ic">🌙</div><h3>다크 모드</h3><p>밤에도 눈이 편해요.</p></div>
+    <div class="feat rv" style="--d:0ms"><div class="ic">📡</div><h3>RSS 구독</h3><p>새 글을 놓치지 마세요.</p></div>
+    <div class="feat rv" style="--d:100ms"><div class="ic">🔤</div><h3>서울교덕체</h3><p>손글씨로 만든 우리만의 글꼴이 있어요.</p></div>
+    <div class="feat rv" style="--d:200ms"><div class="ic">🥚</div><h3>숨은 기능</h3><p>어딘가에 비밀이 숨어 있어요. 찾아보세요!</p></div>
+  </div>
+</div></section>
+
+<!-- 7 운영진 -->
+<section class="crew" id="crew"><div class="wrap">
+  <div class="eyebrow rv">만든 사람들</div>
+  <h2 class="h2 rv" style="--d:100ms">덕질역 운영진</h2>
+  <div class="crew-row">
+    <div class="person rv left"><div class="av">🚌</div><h3>서울교덕</h3><p>버스와 철도를 좋아하는 교통 덕후.<br>유튜브 채널을 운영해요.</p></div>
+    <div class="person rv right" style="--d:150ms"><div class="av">🚆</div><h3>지철덕</h3><p>서울교덕의 친구이자 유튜브 동료.<br>덕질역 공동 운영진이에요.</p></div>
+  </div>
+</div></section>
+
+<!-- 8 마지막 CTA -->
+<section class="final"><div class="wrap">
+  <img class="rv zoom" src="images/logo.png" alt="">
+  <h2 class="h2 rv" style="--d:100ms">이번 열차는<br><span class="blue">덕질역</span> 방면입니다</h2>
+  <p class="lead rv" style="--d:200ms">지금 바로 글을 읽어 보세요. 가입은 필요 없어요.</p>
+  <a class="btn primary xl rv" style="--d:300ms" href="main.html#/">덕질역 시작하기 →</a>
+</div></section>
+<footer>덕질역 · 버스·철도 덕질 기록소 | 운영진 서울교덕 · 지철덕 | Since. 2026.10</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="void 0"></script>
 <script src="js/config.js"></script>
 <script src="js/api.js"></script>
-<script src="js/common.js"></script>
-<script src="js/photos.js"></script>
-<script src="js/app.js"></script>
-<script src="js/eggs.js"></script>
-<script src="js/scroll.js"></script>
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  /* 히어로 제목: 글자가 하나씩 떠오름 */
+  const ht = $('#heroTitle'); const words = ht.dataset.text.split(' ');
+  let idx = 0; ht.innerHTML = words.map(w => `<span style="--i:${idx++}">${w}</span>`).join(' ');
+  setTimeout(() => ht.classList.add('in'), 150);
+  /* 한 줄 소개: 스크롤하면 글자가 하나씩 짙어짐 */
+  const st = $('#statement'), parts = st.dataset.text.split(/(\{[^}]+\})/);
+  st.innerHTML = parts.map(p => p.startsWith('{') ? p.slice(1, -1).split(' ').map(w => `<span class="w hl">${w}</span>`).join(' ') : p.split(/(\s+)/).map(t => !t || /^\s+$/.test(t) ? t : `<span class="w">${t}</span>`).join('')).join('');
+  const ws = $$('.w', st);
+  /* 흐르는 띠 */
+  const items = ['📓 일상글', '🚌 버스 탑사기', '🚆 철도 탑승기', '📷 출사기', '💬 교통 잡담', '📦 지난 글 보관함', '🌐 링크 모음'];
+  const line = items.map(t => `<span>${t}</span><i>●</i>`).join('');
+  $('#track').innerHTML = line + line;
+  /* 스크롤 등장 */
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); if (e.target.querySelector('[data-count]')) countUp(e.target); } }), { threshold: .15 });
+  $$('.rv').forEach(el => io.observe(el));
+  /* 숫자 올라가기 */
+  function countUp(card) {
+    $$('[data-count]', card).forEach(el => {
+      const to = +el.dataset.count, t0 = performance.now(), dur = 1400, plain = el.dataset.plain;
+      const f = t => { const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 4); el.textContent = plain ? Math.round(to * e) : Math.round(to * e).toLocaleString(); if (p < 1) requestAnimationFrame(f); }; requestAnimationFrame(f);
+    });
+  }
+  /* 고정 장면 */
+  const scene = $('#scene'), steps = $$('.step'), screens = $$('.screen'), dots = $$('#dots i');
+  let cur = -1;
+  const typeTitle = $('#typeTitle'), typeBody = $('#typeBody');
+  let T1 = '대모산입구역 막차 탑승기', T2 = '오늘 막차를 타고 퇴근했어요. 열차 안은 한적했고, 창밖으로 야경이 정말 예뻤습니다.';
+  let typed = 0;
+  function typing(p) { const n = Math.floor(p * (T1.length + T2.length)); if (n === typed) return; typed = n; typeTitle.textContent = T1.slice(0, n); typeBody.textContent = n > T1.length ? T2.slice(0, n - T1.length) : ''; (n > T1.length ? typeBody : typeTitle).classList.add('caret'); (n > T1.length ? typeTitle : typeBody).classList.remove('caret'); }
+  function setStep(i) { if (i === cur) return; cur = i; steps.forEach((s, k) => s.classList.toggle('on', k === i)); screens.forEach((s, k) => s.classList.toggle('on', k === i)); dots.forEach((d, k) => d.classList.toggle('on', k === i)); }
+
+  /* ---- 진짜 덕질역 글·정보 불러오기 (실패하면 위의 예시 그대로 보여요) ---- */
+  const esc = t => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const p2 = n => String(n).padStart(2, '0');
+  const dfmt = iso => { const d = new Date(iso), n = new Date(); return d.toDateString() === n.toDateString() ? p2(d.getHours()) + ':' + p2(d.getMinutes()) : p2(d.getMonth() + 1) + '/' + p2(d.getDate()); };
+  const plain = b => String(b || '').replace(/\[img[^\]]*\][^\[]*(\[\/img\])?/g, ' ').replace(/!?\[[^\]]*\]\([^)]*\)/g, ' ').replace(/\[\/?[^\]]{1,12}\]/g, ' ').replace(/https?:\/\/\S+/g, ' ').replace(/[#*`>_~-]+/g, ' ').replace(/\s+/g, ' ').trim();
+  (async () => {
+    try {
+      if (!window.API) return;
+      await API.init();
+      const [list, set] = await Promise.all([API.listPosts(), API.getSettings()]);
+      const posts = (list || []).slice().sort((a, b) => new Date(b.created) - new Date(a.created));
+      const boards = (set && set.boards) || [], bo = id => boards.find(b => b.id === id) || { icon: '📄', name: id };
+      if (!posts.length) return;
+      const fresh = Date.now() - new Date(posts[0].created) < 864e5;
+      /* 첫 화면 카드 */
+      posts.slice(0, 3).forEach((p, i) => { const c = $('#fc' + (i + 1)), b = bo(p.board); if (!c) return;
+        c.href = 'main.html#/post/' + encodeURIComponent(p.id);
+        c.innerHTML = `<small>${esc(b.icon)} ${esc(b.name)}</small><b>${esc(p.title)}</b><span class="tagp">${i === 0 && fresh ? '새 글 · ' : ''}공감 ${p.likes || 0} · 댓글 ${p.comments || 0}건</span>`; });
+      $$('.float-card').forEach((c, i) => { if (i >= posts.length) c.style.display = 'none'; });
+      /* 전광판 */
+      $('#boardRows').innerHTML = posts.slice(0, 5).map((p, i) => `<div class="row${i === 0 && fresh ? ' new' : ''}" style="--d:${.1 + i * .25}s"><span>${dfmt(p.created)}</span><span>${i === 0 && fresh ? '[NEW] ' : ''}${esc(p.title)}</span><span>${p.comments || 0}건</span></div>`).join('');
+      /* 글쓰기 타이핑 = 가장 최근 글 */
+      T1 = posts[0].title.slice(0, 30); const ex = plain(posts[0].body).slice(0, 80); if (ex) T2 = ex; typed = -1;
+      /* 숫자 */
+      $('#nBoards').dataset.count = boards.length || 6; $('#nPosts').dataset.count = posts.length;
+      /* 흐르는 띠 */
+      if (boards.length) { const ln = boards.map(b => `<span>${esc(b.icon)} ${esc(b.name)}</span><i>●</i>`).join(''); $('#track').innerHTML = ln + ln + ln; }
+      /* 댓글 장면 = 댓글이 달린 가장 최근 글 */
+      const cp = posts.find(p => p.comments > 0);
+      if (cp) { const cs = (await API.listComments(cp.id)).filter(c => c.status === 'ok' && !c.parentId).slice(0, 3);
+        if (cs.length) { $('#cmtTitle').innerHTML = `<img src="images/logo.png" alt="">${esc(cp.title.slice(0, 22))}`;
+          $('#cmtBox').innerHTML = cs.map((c, i) => `<div class="cmt" style="--d:${.1 + i * .3}s"><b>${c.role && c.role !== 'user' ? '👑 ' : ''}${esc(c.nick)}</b>${esc(String(c.body).slice(0, 60))}</div>`).join('');
+          $('#likeN').textContent = '♥ 공감 ' + (cp.likes || 0); } }
+    } catch (e) { /* 예시 그대로 */ }
+  })();
+
+  /* 스크롤 연동 */
+  const bar = $('#bar'), nav = $('#nav'), cards = $$('.float-card');
+  function onScroll() {
+    const y = scrollY, h = document.documentElement.scrollHeight - innerHeight;
+    bar.style.width = (y / h * 100) + '%'; nav.classList.toggle('solid', y > 30);
+    cards.forEach(c => c.style.transform = `translateY(${-y * c.dataset.speed}px)`);
+    const r = st.getBoundingClientRect(), p = Math.min(1, Math.max(0, (innerHeight * .85 - r.top) / (r.height + innerHeight * .3)));
+    const on = Math.floor(p * ws.length * 1.15); ws.forEach((w, i) => w.classList.toggle('on', i < on));
+    const sr = scene.getBoundingClientRect(), sp = Math.min(.999, Math.max(0, -sr.top / (sr.height - innerHeight)));
+    setStep(Math.floor(sp * 3)); if (cur === 0) typing(Math.min(1, sp * 3 * 1.1));
+  }
+  addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll); onScroll();
+})();
+</script>
 </body>
 </html>

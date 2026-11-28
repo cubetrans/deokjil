@@ -95,7 +95,7 @@
         ? `<p><b>${esc(me.nick)}</b> 계정은 글쓴이가 아니에요.<br><small>이 센터는 서울교덕·지철덕 계정만 들어올 수 있어요.</small></p>`
         : `<p>서울교덕·지철덕만 들어올 수 있어요.<br><small>비밀번호 6자리를 입력해 주세요.</small></p>`}
       <p><button class="btn primary" id="gLogin" type="button">${kind === 'denied' ? '다시 로그인' : '🔑 운영진 로그인'}</button>
-      <a class="btn" href="index.html">사이트로 돌아가기</a></p></div>`;
+      <a class="btn" href="main.html">사이트로 돌아가기</a></p></div>`;
     $('#gLogin').onclick = async () => {
       if (kind === 'denied') { await A.logout(); }
       const u = await pwDialog();
@@ -194,7 +194,7 @@
         <td class="t">${p.pinned ? '📌 ' : ''}${p.scheduled ? `<span class="sched" title="공개 예정">⏰ ${fmtShort(p.publishAt)} 공개</span> ` : ''}<a href="#/edit/${esc(p.id)}">${esc(p.title)}</a></td>
         <td class="c hide-m">${esc((boardOf(p.board) || {}).name || p.board)}</td>${isAdm() ? `<td class="c hide-m">${esc(p.author || '-')}</td>` : ''}<td class="c hide-m">${fmtShort(p.created)}</td>
         <td class="c">${p.views}</td><td class="c">${p.likes}</td><td class="c">${p.comments}</td>
-        <td class="c"><a class="btn sm" href="index.html#/post/${esc(p.id)}" target="_blank" rel="noopener">보기</a>
+        <td class="c"><a class="btn sm" href="main.html#/post/${esc(p.id)}" target="_blank" rel="noopener">보기</a>
           ${isAdm() ? `<button class="btn sm" type="button" data-pin="${esc(p.id)}">${p.pinned ? '고정 해제' : '📌 고정'}</button>` : ''}
           <button class="btn sm danger" type="button" data-del="${esc(p.id)}">삭제</button></td></tr>`).join('')}</tbody></table></div>` : '<div class="empty">글이 없어요. 새 글을 써 보세요!</div>'}`;
     $('#bf').onchange = e => { location.hash = '#/posts/' + e.target.value; };
@@ -243,7 +243,7 @@
           <div class="hint"><b>📤 사진 올리기</b> 버튼, 내용칸에 <b>사진 붙여넣기(Ctrl+V)</b>, 또는 <b>끌어다 놓기</b>로 올릴 수 있어요. 올린 사진 줄에 커서를 두고 <b>사진 크기</b>를 고르면 그 사진 크기가 바뀌어요 (직접 쓰려면 <code>[img 50%]주소</code>) (Supabase 연결 시, 한 장 5MB 이하·자동으로 줄여 줘요). 사진·유튜브 주소를 <b>한 줄에 붙여 넣기</b>만 해도 돼요.</div></div>
         <div class="err-line" role="alert"></div>
         <div class="row"><button class="btn primary" type="submit">💾 ${id ? '수정 저장' : '발행'}</button><a class="btn" href="#/posts">취소</a>
-          ${id ? `<a class="btn" href="index.html#/post/${esc(id)}" target="_blank" rel="noopener">사이트에서 보기</a>` : '<small style="color:#555">제목·내용은 이 브라우저에 자동 임시저장돼요.</small>'}</div>
+          ${id ? `<a class="btn" href="main.html#/post/${esc(id)}" target="_blank" rel="noopener">사이트에서 보기</a>` : '<small style="color:#555">제목·내용은 이 브라우저에 자동 임시저장돼요.</small>'}</div>
       </form>`;
     const f = $('#ef'), ta = f.body;
     const ins = (before, after = '', ph = '') => {
@@ -341,7 +341,7 @@
       ${list.length ? `<div style="overflow:auto"><table class="tbl"><thead><tr><th>작성자</th><th>내용</th><th class="hide-m">위치</th><th class="hide-m">시각</th><th>관리</th></tr></thead><tbody>${list.map(c => `<tr>
         <td class="c"><b>${c.isAdmin ? '👑 ' : ''}${esc(c.nick)}</b>${c.status === 'pending' ? '<br><span class="pending-tag">대기</span>' : ''}${c.parentId ? '<br><small>↪ 답글</small>' : ''}</td>
         <td style="white-space:pre-wrap;min-width:150px">${esc(c.body)}</td>
-        <td class="hide-m">${c.target === 'guestbook' ? '📒 방명록' : `<a href="index.html#/post/${esc(c.target)}" target="_blank" rel="noopener">${esc(titleOf[c.target] || '(삭제된 글)')}</a>`}</td>
+        <td class="hide-m">${c.target === 'guestbook' ? '📒 방명록' : `<a href="main.html#/post/${esc(c.target)}" target="_blank" rel="noopener">${esc(titleOf[c.target] || '(삭제된 글)')}</a>`}</td>
         <td class="c hide-m">${fmtDate(c.created)}</td>
         <td class="c">${c.status === 'pending' ? `<button class="btn sm" type="button" data-ok="${esc(c.id)}">✅ 승인</button> ` : ''}<button class="btn sm danger" type="button" data-del="${esc(c.id)}">🗑 삭제</button></td></tr>`).join('')}</tbody></table></div>`
         : `<div class="empty">${filter === 'pending' ? '검토할 댓글이 없어요. 깨끗해요! ✨' : '댓글이 없어요.'}</div>`}`;
