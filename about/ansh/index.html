@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>서울교덕 포트폴리오 · 덕질역</title>
+<meta name="description" content="버스·철도를 좋아하는 서울교덕의 포트폴리오. 덕질역을 비롯해 만든 것들과 활용 가능한 언어를 노선도로 소개해요.">
+<link rel="canonical" href="https://deokjil.xyz/about/ansh/">
+<meta property="og:title" content="서울교덕 포트폴리오 · 덕질역"><meta property="og:description" content="버스·철도 덕후가 만든 것들을 노선도로 소개해요."><meta property="og:type" content="website"><meta property="og:url" content="https://deokjil.xyz/about/ansh/"><meta property="og:image" content="https://deokjil.xyz/images/logo-180.png">
+<meta name="theme-color" content="#3182f6">
+<link rel="icon" href="../../images/logo.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@latest/dist/galmuri.css">
+<style>
+:root{--blue:#3182f6;--navy:#0b2a5b;--ink:#191f28;--sub:#6b7684;--bg:#f2f4f6;--card:#fff;--line:#d9dee6;
+  --l1:#0052a4;--l2:#00a84d;--l3:#ef7c1c;--l4:#00a5de;--l5:#996cac;--l6:#cd7c2f;--l7:#747f00;--l8:#e6186c;--l9:#bdb092}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:'Galmuri11','Galmuri9',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.7;word-break:keep-all;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:980px;margin:0 auto;padding:0 20px}
+nav.top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav.top .wrap{display:flex;align-items:center;gap:14px;height:54px}
+nav.top img{width:28px;height:28px}
+nav.top b{font-size:17px}
+nav.top .sp{flex:1}
+nav.top a.btn{font-size:13px;padding:7px 14px;border-radius:999px;background:var(--blue);color:#fff;text-decoration:none}
+.hide-m{display:inline}
+/* 역명판 */
+.hero{padding:52px 0 28px}
+.sign{background:#fff;border:3px solid var(--navy);border-radius:16px;box-shadow:0 14px 34px rgba(11,42,91,.14);overflow:hidden}
+.sign .bar{display:flex;align-items:center;justify-content:space-between;background:var(--navy);color:#fff;padding:8px 18px;font-size:13px}
+.sign .bar .ln{display:inline-flex;align-items:center;gap:6px}
+.sign .bar .ln i{width:20px;height:20px;border-radius:50%;background:var(--blue);display:inline-grid;place-items:center;font-style:normal;font-size:11px;border:2px solid #fff}
+.sign .mid{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;padding:26px 18px 22px;text-align:center}
+.sign .nb{font-size:13px;color:var(--sub)} .sign .nb small{display:block;font-size:11px}
+.sign .cur{border:4px solid var(--navy);border-radius:50%;padding:0;width:min(34vw,210px);aspect-ratio:1;display:grid;place-items:center;margin:0 auto;position:relative;background:#fff}
+.sign .cur h1{font-size:clamp(26px,6.4vw,46px);line-height:1.1}
+.sign .cur em{display:block;font-style:normal;font-size:clamp(10px,2.2vw,13px);color:var(--sub);margin-top:6px;letter-spacing:.04em}
+.sign .cur .no{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--blue);color:#fff;font-size:12px;padding:2px 10px;border-radius:999px}
+.sign .arr{font-size:18px;color:var(--blue)}
+.sign .foot{border-top:2px dashed var(--line);padding:12px 18px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;font-size:13px;color:var(--sub)}
+.sign .foot span{background:var(--bg);border-radius:999px;padding:3px 12px}
+.lead{margin:30px 0 6px;font-size:clamp(18px,3.4vw,24px);font-weight:700;text-align:center}
+.lead b{color:var(--blue)}
+.lead2{text-align:center;color:var(--sub);font-size:14px}
+section{padding:46px 0 10px}
+h2{font-size:22px;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+h2 .dot{width:14px;height:14px;border-radius:50%;border:4px solid var(--blue);background:#fff;flex:none}
+.sec-sub{color:var(--sub);font-size:14px;margin-bottom:22px}
+/* 노선도 타임라인 */
+.route{position:relative;margin:10px 0 0;padding-left:34px}
+.route::before{content:"";position:absolute;left:11px;top:6px;bottom:6px;width:8px;border-radius:8px;background:linear-gradient(var(--l4),var(--blue),var(--l5))}
+.st{position:relative;background:var(--card);border-radius:14px;padding:14px 18px;margin-bottom:12px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.st::before{content:"";position:absolute;left:-30px;top:20px;width:18px;height:18px;border-radius:50%;background:#fff;border:5px solid var(--navy)}
+.st.now::before{border-color:var(--l8);box-shadow:0 0 0 6px rgba(230,24,108,.18)}
+.st .yr{font-size:12px;color:var(--blue);font-weight:700}
+.st h3{font-size:16px;margin:2px 0}
+.st p{font-size:14px;color:var(--sub)}
+/* 프로젝트 */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.card{background:var(--card);border-radius:16px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:8px;text-decoration:none;transition:transform .2s,box-shadow .2s;border-top:6px solid var(--c,var(--blue))}
+a.card:hover{transform:translateY(-4px);box-shadow:0 10px 24px rgba(0,0,0,.1)}
+.card .tag{align-self:flex-start;font-size:11px;color:#fff;background:var(--c,var(--blue));border-radius:999px;padding:1px 10px}
+.card h3{font-size:17px}.card p{font-size:14px;color:var(--sub);flex:1}
+.card .go{font-size:13px;color:var(--blue)}
+.card .wip{font-size:12px;color:var(--l3)}
+/* 언어 노선 */
+.lines{display:flex;flex-direction:column;gap:10px}
+.lang{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:14px;padding:10px 14px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.lang .badge{width:34px;height:34px;border-radius:50%;background:var(--c);color:#fff;display:grid;place-items:center;font-size:14px;flex:none}
+.lang b{min-width:86px}
+.lang .track{flex:1;height:10px;border-radius:10px;background:#e8ecf2;position:relative;overflow:hidden}
+.lang .track i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--c);border-radius:10px;transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+.lang.in .track i{width:var(--w)}
+.lang small{color:var(--sub);font-size:12px;min-width:74px;text-align:right}
+.note{font-size:12px;color:var(--sub);margin-top:8px}
+/* 활동 */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:14px;text-decoration:none}
+#recent .card{--c:var(--l2)}
+footer{padding:48px 0 60px;text-align:center;color:var(--sub);font-size:13px}
+footer .sign2{display:inline-block;background:var(--navy);color:#fff;padding:8px 22px;border-radius:10px;margin-bottom:12px;text-decoration:none}
+.rv{opacity:0;transform:translateY(22px);transition:opacity .6s,transform .6s}
+.rv.in{opacity:1;transform:none}
+@media(max-width:600px){.hide-m{display:none}.sign .mid{padding:22px 8px 18px;gap:4px}.sign .nb{font-size:11px}.lang{flex-wrap:wrap}.lang b{min-width:0;flex:1}.lang .track{flex-basis:100%;order:5}.lang small{text-align:left}}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}.lang .track i{transition:none}}
+</style>
+</head>
+<body>
+<nav class="top"><div class="wrap"><img src="../../images/logo.png" alt=""><b>덕질역</b><span class="hide-m" style="color:var(--sub);font-size:13px">서울교덕 포트폴리오</span><span class="sp"></span><a class="btn" href="../../main.html#/">덕질역 둘러보기 →</a></div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="sign" role="img" aria-label="서울교덕 역명판. 이전역 버스 덕질, 다음역 앞으로의 기록">
+    <div class="bar"><span class="ln"><i>덕</i> 덕질선 · 포트폴리오</span><span>Duckjil Line</span></div>
+    <div class="mid">
+      <div class="nb">이전역<br><b style="color:var(--ink);font-size:15px">버스 덕질</b><small>Bus Fandom</small></div>
+      <div class="cur"><span class="no">ANSH</span><div><h1>서울교덕</h1><em>Seoul Gyodeok</em></div></div>
+      <div class="nb">다음역<br><b style="color:var(--ink);font-size:15px">앞으로의 기록</b><small>Next Stop</small></div>
+    </div>
+    <div class="foot"><span>🚌 버스</span><span>🚆 철도</span><span>🎬 유튜브</span><span>💻 코딩</span><span>🖋 폰트</span></div>
+  </div>
+  <p class="lead rv">2019년부터 버스와 철도를 좋아해 온 <b>교통 덕후</b>,<br>좋아하는 걸 <b>직접 만드는</b> 서울교덕입니다.</p>
+  <p class="lead2 rv">블로그·유튜브·인스타그램·스레드로 기록하고, 코딩으로 사이트와 게임을 만들어요.</p>
+</div></header>
+
+<main class="wrap">
+<section id="route"><h2 class="rv"><span class="dot"></span>걸어온 노선</h2><p class="sec-sub rv">덕질을 시작한 날부터 지금 정차 중인 역까지, 노선도처럼 정리했어요.</p>
+  <div class="route">
+    <div class="st rv"><div class="yr">2019</div><h3>버스·철도 덕질 시작</h3><p>버스와 열차를 타고 보고 기록하는 걸 좋아하게 됐어요. 어느새 7년차 교통 덕후.</p></div>
+    <div class="st rv"><div class="yr">기록의 확장</div><h3>블로그 → 유튜브 → 인스타그램 · 스레드</h3><p>네이버 블로그로 시작해 유튜브 영상, 인스타그램, 스레드까지 기록하는 곳을 넓혀 왔어요. 2026년 9월에는 서울교덕 이름으로 스레드 계정도 새로 만들었어요.</p></div>
+    <div class="st rv"><div class="yr">2026.10</div><h3>덕질역 개장 🚉</h3><p>네이버 블로그의 디자인 제한이 아쉬워서 직접 사이트를 만들었어요. 친구 지철덕과 함께 쓰는 교통동호인 커뮤니티로 운영 중이에요.</p></div>
+    <div class="st rv"><div class="yr">2026.11</div><h3>덕질역 업그레이드</h3><p>사진 갤러리, 운영진 센터, 열차 운행 게임, 출발 안내 전광판까지 — 계속 새 기능을 붙이고 있어요.</p></div>
+    <div class="st now rv"><div class="yr" style="color:var(--l8)">지금 정차 중</div><h3>더 만들고, 더 기록하는 중</h3><p>다음 역은 아직 비밀이에요. 곧 알려드릴게요. 🚇</p></div>
+  </div>
+</section>
+
+<section id="made"><h2 class="rv"><span class="dot"></span>만든 것들</h2><p class="sec-sub rv">좋아하는 걸 코드로 옮긴 결과물이에요. 눌러서 직접 구경해 보세요.</p>
+  <div class="grid">
+    <a class="card rv" style="--c:var(--blue)" href="../../"><span class="tag">운영 중</span><h3>🚉 덕질역</h3><p>버스·철도 덕후 두 명이 함께 쓰는 블로그. 게시판, 댓글, 사진 갤러리, 출발 안내 전광판, 관리자 센터까지 직접 만들었어요.</p><span class="go">사이트 열기 →</span></a>
+    <a class="card rv" style="--c:var(--l4)" href="../../main.html#/photos"><span class="tag">운영 중</span><h3>📷 사진 모아보기 · 출사 갤러리</h3><p>글에 올린 사진을 한곳에 모으고, 인스타그램처럼 사진을 올리는 피드도 만들었어요.</p><span class="go">구경하기 →</span></a>
+    <div class="card rv" style="--c:var(--l2)"><span class="tag">운영 중</span><h3>🎮 지하철 운전 시뮬레이터</h3><p>ATC·DSD·원핸들/투핸들까지 담은 운전실 시점 게임. 덕질역 운영진 센터에서 해볼 수 있어요.</p></div>
+    <div class="card rv" style="--c:var(--l3)"><span class="tag">제작 중</span><h3>🚆 열차 편성 제보 사이트</h3><p>열차·편성 정보를 제보하고 모아 보는 사이트. 덕질역 계정과 통합하는 것을 목표로 하고 있어요.</p><span class="wip">개발 중</span></div>
+    <div class="card rv" style="--c:var(--l5)"><span class="tag">제작 중</span><h3>🖋 서울교덕체</h3><p>직접 쓴 손글씨로 만드는 나만의 폰트. 영상 자막, 썸네일, SNS에 쓰려고 해요.</p><span class="wip">개발 중</span></div>
+    <div class="card rv" style="--c:var(--l6)"><span class="tag">공부 중</span><h3>📚 학원 숙제 플래너 · 학교 시간표 사이트</h3><p>숙제와 타이머를 관리하는 웹앱, 학교 시간표·급식을 조회하는 사이트를 만들며 API 연동을 익혔어요.</p></div>
+  </div>
+</section>
+
+<section id="skills"><h2 class="rv"><span class="dot"></span>활용 가능 언어</h2><p class="sec-sub rv">노선마다 색이 달라요. 길이는 제가 느끼는 익숙한 정도예요.</p>
+  <div class="lines">
+    <div class="lang rv" style="--c:var(--l1);--w:80%"><span class="badge">1</span><b>HTML / CSS / JS</b><span class="track"><i></i></span><small>가장 자주 써요</small></div>
+    <div class="lang rv" style="--c:var(--l2);--w:55%"><span class="badge">2</span><b>C / C++</b><span class="track"><i></i></span><small>학원에서 배우는 중</small></div>
+    <div class="lang rv" style="--c:var(--l3);--w:50%"><span class="badge">3</span><b>파이썬</b><span class="track"><i></i></span><small>할 수 있어요</small></div>
+    <div class="lang rv" style="--c:var(--l4);--w:70%"><span class="badge">4</span><b>엔트리</b><span class="track"><i></i></span><small>익숙해요</small></div>
+    <div class="lang rv" style="--c:var(--l5);--w:70%"><span class="badge">5</span><b>스크래치</b><span class="track"><i></i></span><small>익숙해요</small></div>
+  </div>
+  <p class="note">덕질역은 Vanilla JS(프레임워크 없이)와 Supabase로 만들었어요.</p>
+</section>
+
+<section id="where"><h2 class="rv"><span class="dot"></span>활동하는 곳</h2><p class="sec-sub rv">서울교덕을 만날 수 있는 곳이에요.</p>
+  <div class="chips rv"><a class="chip" href="../../">🚉 덕질역</a><span class="chip">▶ 유튜브 서울교덕</span><span class="chip">📝 네이버 블로그</span><span class="chip">📸 인스타그램</span><span class="chip">🧵 스레드 서울교덕</span></div>
+  <div id="recent" style="margin-top:22px" hidden><h3 style="font-size:16px;margin-bottom:10px">🆕 덕질역 최근 글</h3><div class="grid" id="recentList"></div></div>
+</section>
+</main>
+
+<footer><a class="sign2" href="../../main.html#/">🚉 덕질역으로 가기</a><div>© 서울교덕 · 덕질역 (deokjil.xyz)</div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="void 0"></script>
+<script src="../../js/config.js"></script>
+<script src="../../js/api.js"></script>
+<script>
+(function(){
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.15});
+  document.querySelectorAll('.rv,.lang').forEach(function(el){io.observe(el)});
+  var esc=function(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+  (async function(){
+    try{
+      if(!window.API)return; await API.init();
+      var list=(await API.listPosts()||[]).slice().sort(function(a,b){return new Date(b.created)-new Date(a.created)}).slice(0,3);
+      if(!list.length)return;
+      document.getElementById('recentList').innerHTML=list.map(function(p){var d=new Date(p.created);
+        return '<a class="card" href="../../main.html#/post/'+encodeURIComponent(p.id)+'"><span class="tag">'+d.getFullYear()+'.'+(d.getMonth()+1)+'.'+d.getDate()+'</span><h3>'+esc(p.title)+'</h3><span class="go">글 읽기 →</span></a>'}).join('');
+      document.getElementById('recent').hidden=false;
+    }catch(e){}
+  })();
+})();
+</script>
+</body>
+</html>
