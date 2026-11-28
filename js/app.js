@@ -65,8 +65,8 @@
     return d.toDateString() === n.toDateString() ? `${pad2(d.getHours())}:${pad2(d.getMinutes())}` : `${pad2(d.getMonth() + 1)}/${pad2(d.getDate())}`;
   }
   function boardLabel(p) {
-    const b = boardOf(p.board), cat = b && b.cat ? (C.categories || []).find(c => c.id === b.cat) : null;
-    return (b ? b.name : p.board) + (cat ? ' · ' + cat.name : '');
+    const b = boardOf(p.board);
+    return b ? b.name : p.board;
   }
   function departureBoard(list) {
     if (!list.length) return '';
